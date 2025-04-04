@@ -4,11 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../models/surah_model.dart';
 import '../models/ayah_model.dart';
-import '../services/quran_service.dart';
+import '../services/quran_hive_service.dart';
 
 class QuranController extends GetxController {
-  // Use late initialization to delay finding the service
-  late final QuranService _quranService;
+  final QuranHiveService _quranService = Get.find<QuranHiveService>();
   
   // Main data
   final RxList<Surah> surahs = <Surah>[].obs;
@@ -27,6 +26,9 @@ class QuranController extends GetxController {
   final RxInt preloadedCount = 0.obs;
   final int totalSurahCount = 114;
   
+  // Cache complete indicator
+  final RxBool isCacheComplete = false.obs;
+  
   // Search query
   final RxString searchQuery = ''.obs;
   
@@ -36,12 +38,36 @@ class QuranController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    // Initialize the service here
-    _quranService = Get.find<QuranService>();
-    fetchSurahs();
     
-    // Start monitoring preloading status
-    _startPreloadingMonitor();
+    // Start observing initialization state
+    ever(_quranService.isInitialized, _onServiceInitialized);
+    
+    // If service is already initialized, fetch data right away
+    if (_quranService.isInitialized.value) {
+      _onServiceInitialized(true);
+    }
+  }
+  
+  // Called when service is initialized
+  void _onServiceInitialized(bool isInit) {
+    if (isInit) {
+      // Set the cache completion flag
+      isCacheComplete.value = _quranService.isFullCacheLoaded.value;
+      
+      // Bind local value to service value for reactivity
+      ever(_quranService.isFullCacheLoaded, (value) {
+        isCacheComplete.value = value;
+        if (value) {
+          isPreloading.value = false;  // Stop preloading indicator when cache is complete
+        }
+      });
+      
+      // Start fetching data
+      fetchSurahs();
+      
+      // Start monitoring preloading status
+      _startPreloadingMonitor();
+    }
   }
   
   @override
@@ -55,16 +81,16 @@ class QuranController extends GetxController {
     // Update preloaded count initially
     preloadedCount.value = _quranService.cachedSurahCount;
     
-    // Check every 500ms until all surahs are preloaded
-    _preloadingTimer = Timer.periodic(const Duration(milliseconds: 500), (timer) {
+    // Check every 300ms until all surahs are preloaded
+    _preloadingTimer = Timer.periodic(const Duration(milliseconds: 300), (timer) {
       // Update the preloaded count
       preloadedCount.value = _quranService.cachedSurahCount;
       
-      // If all surahs are preloaded, stop monitoring
-      if (preloadedCount.value >= totalSurahCount) {
+      // If all surahs are preloaded or cache is complete, stop monitoring
+      if (preloadedCount.value >= totalSurahCount || isCacheComplete.value) {
         isPreloading.value = false;
         timer.cancel();
-        print('All surahs preloaded. Preloading complete.');
+        print('All surahs preloaded or cache completed. Preloading complete.');
       }
     });
   }
@@ -92,11 +118,22 @@ class QuranController extends GetxController {
     }
   }
   
+  // Pre-load a surah detail without showing the loading state
+  // This is used for pre-loading before navigation to ensure instant display
+  Future<SurahDetail?> preloadSurahDetail(int surahNumber) async {
+    try {
+      // Use the QuranService to get surah details
+      return await _quranService.getSurahDetail(surahNumber);
+    } catch (e) {
+      print('Error preloading surah detail for surah $surahNumber: $e');
+      return null;
+    }
+  }
+  
   // Fetch details for a specific surah
   Future<void> fetchSurahDetail(int surahNumber) async {
-    // Don't show loading if we have data already (avoid flickering)
-    final bool hadDataBefore = currentSurahDetail.value != null;
-    if (!hadDataBefore) {
+    // Only show loading if not already cached
+    if (!_quranService.isSurahLoaded(surahNumber)) {
       isLoading.value = true;
     }
     
@@ -121,7 +158,7 @@ class QuranController extends GetxController {
   
   // Check if a specific surah is already fully loaded
   bool isSurahLoaded(int surahNumber) {
-    return _quranService.cachedSurahCount >= surahNumber;
+    return _quranService.isSurahLoaded(surahNumber);
   }
   
   // Get ayahs from current surah detail
@@ -155,5 +192,10 @@ class QuranController extends GetxController {
     } catch (e) {
       return null;
     }
+  }
+  
+  // Force start a background preload of all surahs
+  void startBackgroundPreload() {
+    _quranService.preloadAllSurahs();
   }
 } 

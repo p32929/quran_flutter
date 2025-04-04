@@ -2,20 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:pref/pref.dart';
-import 'controllers/quran_controller.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:hive_flutter/hive_flutter.dart';
 import 'controllers/theme_controller.dart';
-import 'controllers/bookmark_controller.dart';
-import 'services/quran_service.dart';
 import 'routes/app_routes.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'utils/font_settings_manager.dart';
+import 'bindings/app_binding.dart';
 
 void main() async {
   // ignore: prefer_const_constructors
   setUrlStrategy(PathUrlStrategy());
   WidgetsFlutterBinding.ensureInitialized();
   
-  // Initialize the pref service first - this should ensure consistent storage across platforms
+  // Initialize Hive for all platforms
+  await Hive.initFlutter();
+  print('Initialized Hive for ${kIsWeb ? 'web' : 'mobile/desktop'}');
+  
+  // Initialize the pref service
   final prefService = await PrefServiceShared.init(
     defaults: {
       'theme_mode': 'system',
@@ -35,12 +39,6 @@ void main() async {
   final themeController = Get.put(ThemeController());
   await themeController.initializeSettings();
   print('Theme controller initialized with settings');
-  
-  // Initialize remaining services and controllers
-  await initServices();
-
-  // Preload all surah data
-  preloadAllSurahs();
 
   runApp(
     PrefService(
@@ -48,52 +46,6 @@ void main() async {
       child: const QuranApp(),
     ),
   );
-}
-
-Future<void> initServices() async {
-  // Initialize the QuranService
-  await Get.putAsync(() async => QuranService());
-
-  // Initialize QuranController (ThemeController is already initialized)
-  Get.put(QuranController());
-
-  // Initialize bookmark controller
-  Get.put(BookmarkController());
-}
-
-// Preload all surahs for better offline experience
-void preloadAllSurahs() {
-  // Let the UI render first before starting preloading
-  Future.delayed(const Duration(milliseconds: 500), () {
-    final quranService = Get.find<QuranService>();
-    print('Starting to preload all 114 surahs...');
-
-    // Load all 114 surahs in batches to avoid blocking the UI
-    _loadSurahBatch(quranService, 1, 114);
-  });
-}
-
-// Load surahs in batches to prevent UI freezing
-void _loadSurahBatch(QuranService service, int startSurah, int endSurah, {int batchSize = 10}) {
-  final int end = startSurah + batchSize - 1 <= endSurah ? startSurah + batchSize - 1 : endSurah;
-
-  print('Preloading surahs $startSurah to $end (${service.cachedSurahCount}/${endSurah} cached)');
-
-  // Load the current batch
-  for (int i = startSurah; i <= end; i++) {
-    service.getSurahDetail(i).then((_) {
-      service.recordPreloadedSurah();
-    });
-  }
-
-  // Schedule the next batch if needed
-  if (end < endSurah) {
-    Future.delayed(const Duration(milliseconds: 300), () {
-      _loadSurahBatch(service, end + 1, endSurah, batchSize: batchSize);
-    });
-  } else {
-    print('Completed preloading all surahs');
-  }
 }
 
 class QuranApp extends StatelessWidget {
@@ -117,6 +69,7 @@ class QuranApp extends StatelessWidget {
           themeMode: themeController.useSystemTheme.value ? ThemeMode.system : (themeController.isDarkMode.value ? ThemeMode.dark : ThemeMode.light),
           debugShowCheckedModeBanner: false,
           initialRoute: AppRoutes.home,
+          initialBinding: AppBinding(),
           getPages: AppRoutes.routes,
         ));
       }
