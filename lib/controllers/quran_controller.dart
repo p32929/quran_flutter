@@ -130,12 +130,34 @@ class QuranController extends GetxController {
     }
   }
   
-  // Fetch details for a specific surah
+  // Fetch details for a specific surah with no loading for cached data
   Future<void> fetchSurahDetail(int surahNumber) async {
-    // Only show loading if not already cached
-    if (!_quranService.isSurahLoaded(surahNumber)) {
-      isLoading.value = true;
+    // Check if we already have this surah loaded
+    if (currentSurahDetail.value?.surahNo == surahNumber) {
+      print('Surah $surahNumber is already loaded and set as current - instant return');
+      return; // Already loaded and set as current, no need to reload
     }
+    
+    // Check if the surah is already cached in the service
+    final bool isCached = _quranService.isSurahLoaded(surahNumber);
+    
+    // If cached, set it as current instantly without any loading indicators
+    if (isCached) {
+      try {
+        // Get the cached surah detail without loading indicator
+        final surahDetail = await _quranService.getSurahDetail(surahNumber);
+        currentSurahDetail.value = surahDetail;
+        print('Set cached surah $surahNumber as current - no loading shown');
+        return;
+      } catch (e) {
+        // If there's an error, we'll fallback to the standard loading process below
+        print('Error fetching cached surah $surahNumber: $e');
+      }
+    }
+    
+    // Only show loading if not already cached
+    isLoading.value = true;
+    print('Showing loading for surah $surahNumber (not cached)');
     
     hasError.value = false;
     errorMessage.value = '';

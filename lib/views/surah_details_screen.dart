@@ -34,27 +34,44 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
   void initState() {
     super.initState();
     
-    // Handle initial data loading first, then check for scrollToAyah in a callback
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadData();
-    });
+    // Always initialize without loading if the data is cached
+    if (quranController.isSurahLoaded(widget.surah.number) || 
+        quranController.currentSurahDetail.value?.surahNo == widget.surah.number) {
+      // Data already available, no loading needed
+      isInitializing.value = false;
+      
+      // Check for scroll-to-ayah in the next frame
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _checkForScrollToAyah();
+      });
+    } else {
+      // Only show loading if we need to fetch from assets
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _loadData();
+      });
+    }
   }
   
   void _loadData() async {
     try {
-      // Set initializing to true
-      isInitializing.value = true;
+      // Check if the surah is already in cache
+      final bool isCached = quranController.isSurahLoaded(widget.surah.number);
       
-      // First load the data
+      // Only show loading state if not cached
+      if (!isCached) {
+        isInitializing.value = true;
+      } else {
+        // No loading for cached surahs
+        isInitializing.value = false;
+      }
+      
+      // Load the data
       await quranController.fetchSurahDetail(widget.surah.number);
       
       // Then check for scrolling arguments after data is loaded
       if (!quranController.hasError.value) {
         _checkForScrollToAyah();
       }
-      
-      // Add a slight delay to ensure UI has time to render properly
-      await Future.delayed(const Duration(milliseconds: 300));
       
       // Mark initialization as complete
       isInitializing.value = false;
@@ -142,12 +159,18 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
           // Content area - completely scrollable
           Expanded(
             child: Obx(() {
-              // Show loading if controller is loading, initializing, or the specific surah is still preloading
+              // Fast path: if the surah is cached or already current, skip all loading checks
+              final bool isCached = quranController.isSurahLoaded(widget.surah.number);
+              final bool isCurrentSurah = quranController.currentSurahDetail.value?.surahNo == widget.surah.number;
+              
+              if (isCached || isCurrentSurah) {
+                // Immediately show content for cached data
+                return _buildContent();
+              }
+              
+              // Only show loading if neither cached nor current
               final bool isGlobalPreloading = quranController.isPreloading.value;
-              final bool isSurahLoaded = quranController.isSurahLoaded(widget.surah.number);
-              final bool showLoading = isInitializing.value || 
-                                     quranController.isLoading.value || 
-                                     (isGlobalPreloading && !isSurahLoaded);
+              final bool showLoading = isInitializing.value || quranController.isLoading.value;
               
               if (showLoading) {
                 return _buildLoadingView(
@@ -172,34 +195,34 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
               }
               
               // If everything is ready, show the content
-              return GetBuilder<ThemeController>(
-                id: 'surah_details_view',
-                key: ValueKey('surah_details_${themeController.translationLanguage.value}_${themeController.showArabicText.value}_${themeController.showTranslation.value}'),
-                builder: (themeCtrl) {
-                  final showArabic = themeCtrl.showArabicText.value;
-                  final arabicFontSize = themeCtrl.arabicFontSize.value;
-                  final englishFontSize = themeCtrl.englishFontSize.value;
-                  final showTranslation = themeCtrl.showTranslation.value;
-                  final translationLanguage = themeCtrl.translationLanguage.value;
-                  
-                  print('Rebuilding surah details view with:');
-                  print('- Translation language: $translationLanguage');
-                  print('- Show Arabic: $showArabic');
-                  print('- Show Translation: $showTranslation');
-                  
-                  return _buildAyahsList(
-                    showArabic: showArabic,
-                    arabicFontSize: arabicFontSize,
-                    englishFontSize: englishFontSize,
-                    showTranslation: showTranslation,
-                    translationLanguage: translationLanguage
-                  );
-                }
-              );
+              return _buildContent();
             }),
           ),
         ],
       ),
+    );
+  }
+  
+  // Extracted method to build content to avoid duplication
+  Widget _buildContent() {
+    return GetBuilder<ThemeController>(
+      id: 'surah_details_view',
+      key: ValueKey('surah_details_${themeController.translationLanguage.value}_${themeController.showArabicText.value}_${themeController.showTranslation.value}'),
+      builder: (themeCtrl) {
+        final showArabic = themeCtrl.showArabicText.value;
+        final arabicFontSize = themeCtrl.arabicFontSize.value;
+        final englishFontSize = themeCtrl.englishFontSize.value;
+        final showTranslation = themeCtrl.showTranslation.value;
+        final translationLanguage = themeCtrl.translationLanguage.value;
+        
+        return _buildAyahsList(
+          showArabic: showArabic,
+          arabicFontSize: arabicFontSize,
+          englishFontSize: englishFontSize,
+          showTranslation: showTranslation,
+          translationLanguage: translationLanguage
+        );
+      }
     );
   }
   
@@ -208,6 +231,13 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
     required int preloadedCount,
     required int totalCount,
   }) {
+    final bool isCached = quranController.isSurahLoaded(widget.surah.number);
+    final String message = isCached 
+        ? 'Preparing Surah Display...' 
+        : isPreloading 
+            ? 'Loading Surah Content...' 
+            : 'Loading Surah...';
+            
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -215,12 +245,10 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
           CircularProgressIndicator(),
           SizedBox(height: 16),
           Text(
-            isPreloading 
-              ? 'Loading Surah...' 
-              : 'Loading Surah...',
+            message,
             style: const TextStyle(fontSize: 16),
           ),
-          if (isPreloading) ...[
+          if (isPreloading && !isCached) ...[
             SizedBox(height: 8),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40),

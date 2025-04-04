@@ -30,6 +30,12 @@ class QuranHiveService extends GetxService {
   Future<QuranHiveService> init() async {
     if (!isInitialized.value) {
       await _initializeHive();
+      
+      // Start preloading all surahs in the background after initialization
+      if (!isFullCacheLoaded.value) {
+        preloadAllSurahs();
+      }
+      
       isInitialized.value = true;
     }
     return this;
@@ -247,23 +253,53 @@ class QuranHiveService extends GetxService {
     return _cachedSurahDetails.containsKey(surahNumber);
   }
   
-  // Preload all surahs in background
+  // Preload all surahs in background - optimized for speed
   void preloadAllSurahs() async {
     if (isFullCacheLoaded.value) return;
     
-    print('Starting background preload of all surahs');
+    print('Starting background preload of all surahs - aggressive mode');
+
+    // Get all surah numbers to preload
+    List<int> surahsToLoad = [];
     for (int i = 1; i <= 114; i++) {
       if (!_cachedSurahDetails.containsKey(i)) {
-        try {
-          await getSurahDetail(i);
-          _preloadedCount.value = _cachedSurahDetails.length;
-        } catch (e) {
-          print('Error preloading surah $i: $e');
-        }
+        surahsToLoad.add(i);
       }
     }
     
+    // If all surahs are already cached, mark as complete and return
+    if (surahsToLoad.isEmpty) {
+      isFullCacheLoaded.value = true;
+      return;
+    }
+    
+    print('Need to preload ${surahsToLoad.length} surahs');
+    
+    // Process surahs in parallel for faster loading
+    // Use a reasonable batch size (5-10) to avoid excessive memory usage
+    const int batchSize = 8;
+    
+    for (int i = 0; i < surahsToLoad.length; i += batchSize) {
+      final endIdx = (i + batchSize < surahsToLoad.length) ? i + batchSize : surahsToLoad.length;
+      final batch = surahsToLoad.sublist(i, endIdx);
+      
+      // Load all surahs in this batch in parallel
+      await Future.wait(
+        batch.map((surahNumber) async {
+          try {
+            await getSurahDetail(surahNumber);
+          } catch (e) {
+            print('Error preloading surah $surahNumber: $e');
+          }
+        })
+      );
+      
+      // Update preload count after each batch
+      _preloadedCount.value = _cachedSurahDetails.length;
+      print('Preloaded batch: $_preloadedCount / 114 surahs');
+    }
+    
     isFullCacheLoaded.value = true;
-    print('Background preload complete');
+    print('Background preload complete - all surahs cached');
   }
 } 
