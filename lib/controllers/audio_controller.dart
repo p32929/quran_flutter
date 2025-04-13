@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
+import 'dart:async';
 
 class ReciterInfo {
   final String id;
@@ -86,11 +87,38 @@ class AudioController extends GetxController {
       // Stop any currently playing audio
       await audioPlayer.stop();
       
-      // Load and play the new audio
+      // Add a small artificial delay to ensure the loading UI is visible
+      await Future.delayed(const Duration(milliseconds: 500));
+      
+      // Load the audio
+      print('Loading audio from URL: ${reciter.url}');
       await audioPlayer.setUrl(reciter.url);
+      
+      // Setup a listener for when playback actually starts 
+      final completer = Completer<void>();
+      
+      final subscription = audioPlayer.playerStateStream.listen((state) {
+        if (state.playing) {
+          completer.complete();
+        }
+      });
+      
+      // Start playing
       await audioPlayer.play();
       
-      // Clear loading state once audio has started playing
+      // Wait for playback to actually start or timeout after 10 seconds
+      await Future.any([
+        completer.future,
+        Future.delayed(const Duration(seconds: 10))
+      ]);
+      
+      // Clean up the subscription
+      subscription.cancel();
+      
+      // Give a brief moment for the UI to update before closing
+      await Future.delayed(const Duration(milliseconds: 200));
+      
+      // Only mark loading as complete after playback starts or times out
       isLoading.value = false;
     } catch (e) {
       // Make sure to clear loading state even if there's an error

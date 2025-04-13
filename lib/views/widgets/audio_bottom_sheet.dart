@@ -25,19 +25,7 @@ class _AudioBottomSheetState extends State<AudioBottomSheet> {
     super.initState();
     audioController = Get.find<AudioController>();
     
-    // Listen to loading changes to close the sheet when audio starts playing
-    ever(audioController.isLoading, (bool isLoading) {
-      if (!isLoading && isReciterLoading.value) {
-        // When loading completes and we were previously loading a reciter,
-        // close the bottom sheet
-        isReciterLoading.value = false;
-        if (mounted) {
-          Navigator.of(context).pop();
-        }
-      }
-    });
-    
-    // Also listen to playing state to close sheet when audio starts playing
+    // Only listen to playing state to close sheet when audio starts playing
     ever(audioController.isPlaying, (bool isPlaying) {
       if (isPlaying && isReciterLoading.value) {
         // When audio starts playing and we were loading a reciter,
@@ -46,6 +34,17 @@ class _AudioBottomSheetState extends State<AudioBottomSheet> {
         if (mounted) {
           Navigator.of(context).pop();
         }
+      }
+    });
+    
+    // Listen to errors or completion of loading without playing
+    ever(audioController.isLoading, (bool isLoading) {
+      // Only handle the case when loading stops but audio isn't playing
+      if (!isLoading && isReciterLoading.value && !audioController.isPlaying.value) {
+        // This might be an error case, but don't close the sheet
+        // just reset the loading state for the selected reciter
+        isReciterLoading.value = false;
+        loadingReciterId.value = '';
       }
     });
   }
@@ -92,15 +91,39 @@ class _AudioBottomSheetState extends State<AudioBottomSheet> {
           
           const SizedBox(height: 8),
           
-          // Subtitle
+          // Subtitle and loading indicator
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Text(
-              'Select a reciter',
-              style: TextStyle(
-                fontSize: 14,
-                color: colorScheme.onBackground.withOpacity(0.7),
-              ),
+            child: Row(
+              children: [
+                Obx(() => Text(
+                  isReciterLoading.value 
+                    ? 'Loading audio, please wait...' 
+                    : 'Select a reciter',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: isReciterLoading.value 
+                      ? colorScheme.primary
+                      : colorScheme.onBackground.withOpacity(0.7),
+                    fontWeight: isReciterLoading.value 
+                      ? FontWeight.bold 
+                      : FontWeight.normal,
+                  ),
+                )),
+                const SizedBox(width: 10),
+                // Global loading indicator
+                Obx(() => isReciterLoading.value 
+                  ? SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: colorScheme.primary,
+                      ),
+                    )
+                  : const SizedBox.shrink()
+                ),
+              ],
             ),
           ),
           
@@ -108,19 +131,6 @@ class _AudioBottomSheetState extends State<AudioBottomSheet> {
           
           // Divider
           Divider(height: 1, color: Colors.grey.withOpacity(0.2)),
-          
-          // Global loading indicator (when all reciters are loading)
-          Obx(() {
-            if (audioController.isLoading.value && !isReciterLoading.value) {
-              return Container(
-                padding: const EdgeInsets.all(20),
-                child: const Center(
-                  child: CircularProgressIndicator(),
-                ),
-              );
-            }
-            return const SizedBox.shrink();
-          }),
           
           // Reciter list
           Obx(() {
@@ -138,51 +148,88 @@ class _AudioBottomSheetState extends State<AudioBottomSheet> {
               );
             }
             
-            return ListView.builder(
+            return ListView.separated(
               shrinkWrap: true,
               physics: const BouncingScrollPhysics(),
               itemCount: audioController.reciters.length,
+              separatorBuilder: (context, index) => const Divider(height: 1, indent: 64),
               itemBuilder: (context, index) {
                 final reciter = audioController.reciters[index];
                 final isSelected = audioController.isCurrentlyPlaying(widget.surah.number.toString()) && 
                                audioController.currentReciterId.value == reciter.id;
                 final isLoading = isReciterLoading.value && loadingReciterId.value == reciter.id;
                 
-                return ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: colorScheme.primaryContainer,
-                    child: isLoading 
-                      ? SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: colorScheme.primary,
-                          ),
-                        )
-                      : Icon(
-                          isSelected ? Icons.pause : Icons.play_arrow,
-                          color: colorScheme.primary,
-                        ),
-                  ),
-                  title: Text(
-                    reciter.name,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: colorScheme.onBackground,
+                return Material(
+                  color: isLoading 
+                    ? colorScheme.primaryContainer.withOpacity(0.3)
+                    : Colors.transparent,
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    leading: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: colorScheme.primaryContainer,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                        child: isLoading 
+                          ? SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2.5,
+                                color: colorScheme.primary,
+                              ),
+                            )
+                          : Icon(
+                              isSelected ? Icons.pause : Icons.play_arrow,
+                              color: colorScheme.primary,
+                              size: 22,
+                            ),
+                      ),
                     ),
+                    title: Text(
+                      reciter.name,
+                      style: TextStyle(
+                        fontWeight: isLoading ? FontWeight.bold : FontWeight.w500,
+                        color: colorScheme.onBackground,
+                      ),
+                    ),
+                    subtitle: isLoading 
+                      ? Row(
+                          children: [
+                            Text(
+                              'Loading audio...',
+                              style: TextStyle(
+                                color: colorScheme.primary,
+                                fontSize: 12,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            SizedBox(
+                              width: 12,
+                              height: 12,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: colorScheme.primary,
+                              ),
+                            ),
+                          ],
+                        )
+                      : null,
+                    onTap: isLoading ? null : () {
+                      // Set loading state for this specific reciter
+                      isReciterLoading.value = true;
+                      loadingReciterId.value = reciter.id;
+                      
+                      // Play the audio
+                      audioController.playAudio(
+                        widget.surah.number.toString(),
+                        reciter,
+                      );
+                    },
                   ),
-                  onTap: isLoading ? null : () {
-                    // Set loading state for this specific reciter
-                    isReciterLoading.value = true;
-                    loadingReciterId.value = reciter.id;
-                    
-                    // Play the audio
-                    audioController.playAudio(
-                      widget.surah.number.toString(),
-                      reciter,
-                    );
-                  },
                 );
               },
             );
