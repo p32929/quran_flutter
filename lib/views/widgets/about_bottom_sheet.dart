@@ -200,38 +200,57 @@ class AboutBottomSheet extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 2),
-        InkWell(
-          onTap: () async {
-            final Uri uri = Uri.parse(url);
-            if (await canLaunchUrl(uri)) {
-              await launchUrl(uri, mode: LaunchMode.externalApplication);
-            }
-          },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4),
-            child: Row(
-              children: [
-                Icon(
-                  icon,
-                  size: 16,
-                  color: colorScheme.primary,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    url,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: colorScheme.primary,
+        Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () async {
+              try {
+                final Uri uri = Uri.parse(url);
+                // First try to launch in external app
+                if (await canLaunchUrl(uri)) {
+                  if (!await launchUrl(
+                    uri,
+                    mode: LaunchMode.externalApplication,
+                  )) {
+                    // If that fails, try to launch in browser
+                    await launchUrl(
+                      uri,
+                      mode: LaunchMode.platformDefault,
+                    );
+                  }
+                }
+              } catch (e) {
+                print('Could not launch $url: $e');
+              }
+            },
+            borderRadius: BorderRadius.circular(8),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+              child: Row(
+                children: [
+                  Icon(
+                    icon,
+                    size: 16,
+                    color: colorScheme.primary,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      url,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: colorScheme.primary,
+                        decoration: TextDecoration.underline,
+                      ),
                     ),
                   ),
-                ),
-                Icon(
-                  Icons.arrow_forward_ios,
-                  size: 14,
-                  color: colorScheme.onBackground.withOpacity(0.6),
-                ),
-              ],
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    size: 14,
+                    color: colorScheme.onBackground.withOpacity(0.6),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
