@@ -40,6 +40,7 @@ class SurahDetail {
   final List<String> arabic1;
   final List<String> bengali;
   final List<Ayah> ayahs;
+  final Map<String, dynamic>? rawData;
 
   SurahDetail({
     required this.surahName,
@@ -53,6 +54,7 @@ class SurahDetail {
     required this.arabic1,
     required this.bengali,
     required this.ayahs,
+    this.rawData,
   });
 
   factory SurahDetail.fromJson(Map<String, dynamic> json) {
@@ -84,6 +86,7 @@ class SurahDetail {
       arabic1: arabicVerses,
       bengali: bengaliVerses,
       ayahs: ayahsList,
+      rawData: json,
     );
   }
 } 

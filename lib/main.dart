@@ -5,6 +5,7 @@ import 'package:pref/pref.dart';
 import 'controllers/quran_controller.dart';
 import 'controllers/theme_controller.dart';
 import 'controllers/bookmark_controller.dart';
+import 'controllers/audio_controller.dart';
 import 'services/quran_service.dart';
 import 'routes/app_routes.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
@@ -59,6 +60,9 @@ Future<void> initServices() async {
 
   // Initialize bookmark controller
   Get.put(BookmarkController());
+  
+  // Initialize audio controller
+  Get.put(AudioController());
 }
 
 // Preload all surahs for better offline experience

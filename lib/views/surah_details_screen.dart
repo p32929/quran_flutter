@@ -5,11 +5,13 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import '../controllers/quran_controller.dart';
 import '../controllers/theme_controller.dart';
 import '../controllers/bookmark_controller.dart';
+import '../controllers/audio_controller.dart';
 import '../models/surah_model.dart';
 import '../models/ayah_model.dart';
 import '../utils/text_styles.dart';
 import '../utils/share_utils.dart';
 import 'widgets/settings_bottom_sheet.dart';
+import 'widgets/audio_bottom_sheet.dart';
 
 class SurahDetailsScreen extends StatefulWidget {
   final Surah surah;
@@ -26,6 +28,7 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
   final QuranController quranController = Get.find<QuranController>();
   final BookmarkController bookmarkController = Get.find<BookmarkController>();
   final ThemeController themeController = Get.find<ThemeController>();
+  late final AudioController audioController;
   
   // Add a local loading state to ensure complete loading
   final RxBool isInitializing = true.obs;
@@ -34,10 +37,26 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
   void initState() {
     super.initState();
     
+    // Check if AudioController exists or initialize it
+    if (!Get.isRegistered<AudioController>()) {
+      Get.put(AudioController());
+    }
+    
+    audioController = Get.find<AudioController>();
+    
     // Handle initial data loading first, then check for scrollToAyah in a callback
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadData();
     });
+  }
+  
+  @override
+  void dispose() {
+    // Stop audio when leaving the surah details screen
+    if (audioController.isCurrentlyPlaying(widget.surah.number.toString())) {
+      audioController.stopAudio();
+    }
+    super.dispose();
   }
   
   void _loadData() async {
@@ -51,6 +70,9 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
       // Then check for scrolling arguments after data is loaded
       if (!quranController.hasError.value) {
         _checkForScrollToAyah();
+        
+        // Load audio data for this surah
+        _loadAudioData();
       }
       
       // Add a slight delay to ensure UI has time to render properly
@@ -61,6 +83,19 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
     } catch (e) {
       print('Error in _loadData: $e');
       isInitializing.value = false;
+    }
+  }
+  
+  void _loadAudioData() {
+    // Get the surah detail and parse the audio data
+    final surahDetail = quranController.currentSurahDetail.value;
+    if (surahDetail != null) {
+      // Access the raw JSON to get audio data
+      final rawData = surahDetail.rawData;
+      if (rawData != null && rawData.containsKey('audio')) {
+        final audioData = rawData['audio'] as Map<String, dynamic>;
+        audioController.loadReciters(audioData);
+      }
     }
   }
   
@@ -321,6 +356,26 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
               ],
             ),
           ),
+          
+          // Audio play button
+          Obx(() => IconButton(
+            icon: Icon(
+              audioController.isCurrentlyPlaying(widget.surah.number.toString())
+                  ? Icons.stop_circle
+                  : Icons.play_circle,
+            ),
+            color: colorScheme.onPrimary,
+            tooltip: audioController.isCurrentlyPlaying(widget.surah.number.toString())
+                ? 'Stop Audio'
+                : 'Play Audio',
+            onPressed: () {
+              if (audioController.isCurrentlyPlaying(widget.surah.number.toString())) {
+                audioController.stopAudio();
+              } else {
+                _showAudioBottomSheet(context);
+              }
+            },
+          )),
           
           // Settings button
           IconButton(
@@ -667,6 +722,15 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
           ],
         ),
       ),
+    );
+  }
+  
+  void _showAudioBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => AudioBottomSheet(surah: widget.surah),
     );
   }
   
