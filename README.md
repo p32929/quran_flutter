@@ -8,7 +8,11 @@ A simple Quran app using flutter.
 
 ## Surah details
 
-![Image](https://github.com/user-attachments/assets/49fb2866-2a15-46ca-9491-03a55e3682ea)
+![Image](https://github.com/user-attachments/assets/91a2477e-b810-4187-a229-2b0af2d62ba6)
+
+## Listen to recitations
+
+![Image](https://github.com/user-attachments/assets/6d48eacc-6c1d-464f-9ef4-880721f67804)
 
 ## Settings
 
