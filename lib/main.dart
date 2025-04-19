@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:get/get.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:pref/pref.dart';
@@ -14,6 +15,7 @@ import 'utils/font_settings_manager.dart';
 void main() async {
   // ignore: prefer_const_constructors
   setUrlStrategy(PathUrlStrategy());
+  
   WidgetsFlutterBinding.ensureInitialized();
   
   // Initialize the pref service first - this should ensure consistent storage across platforms
