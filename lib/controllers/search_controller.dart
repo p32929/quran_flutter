@@ -219,19 +219,19 @@ class SearchController extends GetxController {
           
           if (matchedText != null) {
             allAyahs.add(AyahSearchResult(
-              ayah: ayah,
-              surahNumber: surah.number,
-              surahName: surah.name,
+            ayah: ayah,
+            surahNumber: surah.number,
+            surahName: surah.name,
               matchedText: matchedText,
               matchLanguage: matchLanguage,
-            ));
-          }
+          ));
         }
-      } catch (e) {
-        print('Error searching in surah ${surah.number}: $e');
       }
+    } catch (e) {
+      print('Error searching in surah ${surah.number}: $e');
     }
-    
+  }
+  
     ayahResults.value = allAyahs;
   }
   

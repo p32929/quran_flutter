@@ -23,7 +23,7 @@ class _SearchScreenState extends State<SearchScreen> {
       searchController.onQueryChanged(textController.text);
     });
   }
-
+  
   @override
   void dispose() {
     textController.dispose();
@@ -65,14 +65,14 @@ class _SearchScreenState extends State<SearchScreen> {
                   Row(
                     children: [
                       IconButton(
-                        onPressed: () => Get.back(),
+          onPressed: () => Get.back(),
                         icon: const Icon(Icons.arrow_back_rounded),
                       ),
                       Expanded(
-                        child: TextField(
-                          controller: textController,
-                          focusNode: searchFocusNode,
-                          decoration: InputDecoration(
+                  child: TextField(
+                    controller: textController,
+                    focusNode: searchFocusNode,
+                    decoration: InputDecoration(
                             hintText: 'Search Quran...',
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
@@ -83,9 +83,9 @@ class _SearchScreenState extends State<SearchScreen> {
                             prefixIcon: const Icon(Icons.search_rounded),
                             suffixIcon: Obx(() => searchController.searchQuery.value.isNotEmpty
                               ? IconButton(
-                                  onPressed: () {
-                                    textController.clear();
-                                    searchController.clearSearch();
+                            onPressed: () {
+                              textController.clear();
+                              searchController.clearSearch();
                                   },
                                   icon: const Icon(Icons.clear_rounded),
                                 )
@@ -104,15 +104,15 @@ class _SearchScreenState extends State<SearchScreen> {
                     children: [
                       Expanded(
                         child: SingleChildScrollView(
-                                                     scrollDirection: Axis.horizontal,
+                          scrollDirection: Axis.horizontal,
                            child: Row(
-                             children: [
+                            children: [
                                _buildFilterChip(
                                  'English', 
                                  searchController.searchInEnglish.value,
                                  searchController.toggleEnglishSearch,
                                ),
-                               const SizedBox(width: 8),
+                              const SizedBox(width: 8),
                                _buildFilterChip(
                                  'Bengali', 
                                  searchController.searchInBengali.value,
@@ -124,13 +124,13 @@ class _SearchScreenState extends State<SearchScreen> {
                       ),
                     ],
                   )),
-                ],
-              ),
+              ],
             ),
-            
+          ),
+          
             // Content area
-            Expanded(
-              child: Obx(() {
+          Expanded(
+            child: Obx(() {
                 if (searchController.isSearching.value) {
                   return const Center(child: CircularProgressIndicator());
                 }
@@ -140,10 +140,10 @@ class _SearchScreenState extends State<SearchScreen> {
                 }
                 
                 return _buildResultsView();
-              }),
-            ),
-          ],
-        ),
+            }),
+          ),
+        ],
+      ),
       ),
     );
   }
@@ -155,13 +155,13 @@ class _SearchScreenState extends State<SearchScreen> {
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
+              decoration: BoxDecoration(
           color: isSelected ? colorScheme.primary : colorScheme.surfaceVariant,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Text(
           label,
-          style: TextStyle(
+                    style: TextStyle(
             fontSize: 12,
             color: isSelected ? colorScheme.onPrimary : colorScheme.onSurfaceVariant,
             fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
@@ -170,11 +170,11 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
     );
   }
-
+  
   Widget _buildSuggestionsView() {
     return ListView(
       padding: const EdgeInsets.all(16),
-      children: [
+        children: [
         Text(
           'Search Suggestions',
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -240,17 +240,17 @@ class _SearchScreenState extends State<SearchScreen> {
       final ayahResults = searchController.ayahResults;
       
       if (surahResults.isEmpty && ayahResults.isEmpty) {
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
+    return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
                 Icons.search_off_rounded,
-                size: 64,
+              size: 64,
                 color: colorScheme.onSurface.withOpacity(0.5),
-              ),
-              const SizedBox(height: 16),
-              Text(
+            ),
+            const SizedBox(height: 16),
+            Text(
                 'No results found',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
@@ -260,10 +260,10 @@ class _SearchScreenState extends State<SearchScreen> {
                 style: TextStyle(color: colorScheme.onSurface.withOpacity(0.7)),
               ),
             ],
-          ),
-        );
-      }
-      
+      ),
+    );
+  }
+  
       return ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -272,23 +272,23 @@ class _SearchScreenState extends State<SearchScreen> {
               'Surahs (${surahResults.length})',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: colorScheme.primary,
-              ),
+              color: colorScheme.primary,
             ),
+          ),
             const SizedBox(height: 12),
             ...surahResults.map((result) => Card(
               margin: const EdgeInsets.only(bottom: 8),
               child: ListTile(
                 leading: CircleAvatar(
                   backgroundColor: colorScheme.primary.withOpacity(0.1),
-                  child: Text(
+            child: Text(
                     result.surah.number.toString(),
-                    style: TextStyle(
+              style: TextStyle(
                       color: colorScheme.primary,
                       fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+              ),
+            ),
+          ),
                 title: Text(
                   result.surah.name,
                   style: const TextStyle(fontWeight: FontWeight.w600),
@@ -312,27 +312,27 @@ class _SearchScreenState extends State<SearchScreen> {
             const SizedBox(height: 12),
             ...ayahResults.map((result) => Card(
               margin: const EdgeInsets.only(bottom: 8),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Container(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: colorScheme.primaryContainer,
+                    decoration: BoxDecoration(
+                      color: colorScheme.primaryContainer,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
-                            '${result.surahName} ${result.surahNumber}:${result.ayah.number}',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              color: colorScheme.primary,
-                            ),
+                          '${result.surahName} ${result.surahNumber}:${result.ayah.number}',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: colorScheme.primary,
                           ),
+                        ),
                         ),
                         const Spacer(),
                         Text(
