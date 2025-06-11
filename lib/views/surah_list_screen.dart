@@ -169,93 +169,116 @@ class SurahListScreen extends StatelessWidget {
               ),
             ),
             
-            // Enhanced search box that can search both surahs and ayats
+            // Enhanced unified search box
             Padding(
               padding: const EdgeInsets.all(16),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: colorScheme.surface,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
+              child: GestureDetector(
+                onTap: () => Get.toNamed('/search'),
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: colorScheme.surface,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: colorScheme.outline.withOpacity(0.2),
+                      width: 1,
                     ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    // Search field
-                    TextField(
-                      controller: searchController,
-                      onChanged: quranController.filterSurahs,
-                      decoration: InputDecoration(
-                        hintText: 'Search surah by name or number',
-                        prefixIcon: const Icon(Icons.search),
-                        suffixIcon: Obx(() {
-                          if (quranController.searchQuery.value.isNotEmpty) {
-                            return IconButton(
-                              icon: const Icon(Icons.clear),
-                              onPressed: () {
-                                searchController.clear();
-                                quranController.filterSurahs('');
-                              },
-                            );
-                          }
-                          return const SizedBox.shrink();
-                        }),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide.none,
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide.none,
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: colorScheme.primary, width: 1),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(vertical: 12),
-                        filled: true,
-                        fillColor: colorScheme.surface,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
                       ),
-                    ),
-                    
-                    // Search ayats button
-                    InkWell(
-                      onTap: () => Get.toNamed('/search'),
-                      child: Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        decoration: BoxDecoration(
-                          color: colorScheme.surfaceVariant,
-                          borderRadius: const BorderRadius.only(
-                            bottomLeft: Radius.circular(12),
-                            bottomRight: Radius.circular(12),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.search_rounded,
+                        color: colorScheme.primary,
+                        size: 24,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(Icons.format_align_left, 
-                              size: 18, color: colorScheme.primary),
-                            const SizedBox(width: 8),
-                            Text('Search full text of verses',
+                            Text(
+                              'Search the Quran',
                               style: TextStyle(
-                                color: colorScheme.primary,
+                                fontSize: 16,
                                 fontWeight: FontWeight.w500,
+                                color: colorScheme.onSurface,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              'Find surahs, verses, topics...',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: colorScheme.onSurface.withOpacity(0.6),
                               ),
                             ),
                           ],
                         ),
                       ),
-                    ),
-                  ],
+                      Icon(
+                        Icons.arrow_forward_rounded,
+                        color: colorScheme.onSurface.withOpacity(0.4),
+                        size: 20,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
+            
+            // Quick surah filter (compact)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: colorScheme.surfaceVariant.withOpacity(0.5),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: TextField(
+                  controller: searchController,
+                  onChanged: quranController.filterSurahs,
+                  decoration: InputDecoration(
+                    hintText: 'Quick filter surahs...',
+                    hintStyle: TextStyle(
+                      color: colorScheme.onSurface.withOpacity(0.5),
+                      fontSize: 14,
+                    ),
+                    prefixIcon: Icon(
+                      Icons.filter_list_rounded,
+                      color: colorScheme.onSurface.withOpacity(0.6),
+                      size: 20,
+                    ),
+                    suffixIcon: Obx(() {
+                      if (quranController.searchQuery.value.isNotEmpty) {
+                        return IconButton(
+                          icon: Icon(
+                            Icons.clear_rounded,
+                            color: colorScheme.onSurface.withOpacity(0.6),
+                            size: 18,
+                          ),
+                          onPressed: () {
+                            searchController.clear();
+                            quranController.filterSurahs('');
+                          },
+                        );
+                      }
+                      return const SizedBox.shrink();
+                    }),
+                    border: InputBorder.none,
+                    contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+                  ),
+                ),
+              ),
+            ),
+            
+            const SizedBox(height: 16),
             
             // List view of surahs
             Expanded(
