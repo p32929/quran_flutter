@@ -724,14 +724,14 @@ class SurahListScreen extends StatelessWidget {
             const SizedBox(height: 24),
             
             // Menu items
-            ListTile(
-              leading: Icon(Icons.search, color: colorScheme.primary),
-              title: const Text('Advanced Search'),
-              onTap: () {
-                Navigator.pop(context);
-                Get.toNamed('/search');
-              },
-            ),
+            // ListTile(
+            //   leading: Icon(Icons.search, color: colorScheme.primary),
+            //   title: const Text('Advanced Search'),
+            //   onTap: () {
+            //     Navigator.pop(context);
+            //     Get.toNamed('/search');
+            //   },
+            // ),
             ListTile(
               leading: Icon(Icons.info_outline, color: colorScheme.primary),
               title: const Text('About'),
