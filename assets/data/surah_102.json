@@ -1,0 +1,61 @@
+{
+  "surahName": "At-Takaathur",
+  "surahNameArabic": "التكاثر",
+  "surahNameArabicLong": "سورة التكاثر",
+  "surahNameTranslation": "Competition",
+  "revelationPlace": "Mecca",
+  "totalAyah": 8,
+  "surahNo": 102,
+  "audio": {
+    "1": {
+      "reciter": "Mishary Rashid Al-Afasy",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/1/102.mp3",
+      "originalUrl": "https://server8.mp3quran.net/afs/102.mp3"
+    },
+    "2": {
+      "reciter": "Abu Bakr Al-Shatri",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/2/102.mp3",
+      "originalUrl": "https://server11.mp3quran.net/shatri/102.mp3"
+    },
+    "3": {
+      "reciter": "Nasser Al-Qatami",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/3/102.mp3",
+      "originalUrl": "https://server6.mp3quran.net/qtm/102.mp3"
+    },
+    "4": {
+      "reciter": "Yasser Al-Dosari",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/4/102.mp3",
+      "originalUrl": "https://server11.mp3quran.net/yasser/102.mp3"
+    }
+  },
+  "english": [
+    "Competition for more ˹gains˺ diverts you ˹from Allah˺",
+    "until you end up in ˹your˺ graves.",
+    "But no! You will soon come to know.",
+    "Again, no! You will soon come to know.",
+    "Indeed, if you were to know ˹your fate˺ with certainty, ˹you would have acted differently˺.",
+    "˹But˺ you will surely see the Hellfire.",
+    "Again, you will surely see it with the eye of certainty.",
+    "Then, on that Day, you will definitely be questioned about ˹your worldly˺ pleasures."
+  ],
+  "arabic1": [
+    "اَلْهٰىكُمُ التَّكَاثُرُ",
+    "حَتّٰی زُرْتُمُ الْمَقَابِرَ",
+    "كَلَّا سَوْفَ تَعْلَمُوْنَ",
+    "ثُمَّ كَلَّا سَوْفَ تَعْلَمُوْنَ",
+    "كَلَّا لَوْ تَعْلَمُوْنَ عِلْمَ الْیَقِیْنِ",
+    "لَتَرَوُنَّ الْجَحِیْمَ",
+    "ثُمَّ لَتَرَوُنَّهَا عَیْنَ الْیَقِیْنِ",
+    "ثُمَّ لَتُسْـَٔلُنَّ یَوْمَىِٕذٍ عَنِ النَّعِیْمِ"
+  ],
+  "bengali": [
+    "প্রাচুর্যের প্রতিযোগিতা তোমাদেরকে ভুলিয়ে রেখেছে।",
+    "যতক্ষণ না তোমরা কবরের সাক্ষাৎ করবে।",
+    "কখনো নয়, শীঘ্রই তোমরা জানবে,",
+    "তারপর কখনো নয়, তোমরা শীঘ্রই জানতে পারবে।",
+    "কখনো নয়, তোমরা যদি নিশ্চিত জ্ঞানে জানতে!",
+    "তোমরা অবশ্যই জাহান্নাম দেখবে;",
+    "তারপর তোমরা তা নিশ্চিত চাক্ষুষ দেখবে।",
+    "তারপর সেদিন অবশ্যই তোমরা নিআমত সম্পর্কে জিজ্ঞাসিত হবে।"
+  ]
+}
