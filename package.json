@@ -1,0 +1,18 @@
+{
+  "name": "quran_flutter",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/p32929/quran_flutter.git",
+  "author": "p32929.github.io",
+  "license": "MIT",
+  "scripts": {
+    "predeploy": "flutter build web --release --base-href /quran_flutter/",
+    "deploy": "npm run predeploy && gh-pages -d build/web",
+    "build": "flutter build web --release",
+    "serve": "python -m http.server 8000 --directory build/web"
+  },
+  "devDependencies": {
+    "gh-pages": "^3.2.0"
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+}

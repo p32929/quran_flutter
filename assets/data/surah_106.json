@@ -1,0 +1,49 @@
+{
+  "surahName": "Quraish",
+  "surahNameArabic": "قريش",
+  "surahNameArabicLong": "سورة قريش",
+  "surahNameTranslation": "Quraysh",
+  "revelationPlace": "Mecca",
+  "totalAyah": 4,
+  "surahNo": 106,
+  "audio": {
+    "1": {
+      "reciter": "Mishary Rashid Al-Afasy",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/1/106.mp3",
+      "originalUrl": "https://server8.mp3quran.net/afs/106.mp3"
+    },
+    "2": {
+      "reciter": "Abu Bakr Al-Shatri",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/2/106.mp3",
+      "originalUrl": "https://server11.mp3quran.net/shatri/106.mp3"
+    },
+    "3": {
+      "reciter": "Nasser Al-Qatami",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/3/106.mp3",
+      "originalUrl": "https://server6.mp3quran.net/qtm/106.mp3"
+    },
+    "4": {
+      "reciter": "Yasser Al-Dosari",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/4/106.mp3",
+      "originalUrl": "https://server11.mp3quran.net/yasser/106.mp3"
+    }
+  },
+  "english": [
+    "˹At least˺ for ˹the favour of˺ making Quraysh habitually secure—",
+    "secure in their trading caravan ˹to Yemen˺ in the winter and ˹Syria˺ in the summer—",
+    "let them worship the Lord of this ˹Sacred˺ House",
+    "Who has fed them against hunger and made them secure against fear."
+  ],
+  "arabic1": [
+    "لِاِیْلٰفِ قُرَیْشٍ",
+    "اٖلٰفِهِمْ رِحْلَةَ الشِّتَآءِ وَالصَّیْفِ",
+    "فَلْیَعْبُدُوْا رَبَّ هٰذَا الْبَیْتِ",
+    "الَّذِیْۤ اَطْعَمَهُمْ مِّنْ جُوْعٍ وَّاٰمَنَهُمْ مِّنْ خَوْفٍ"
+  ],
+  "bengali": [
+    "যেহেতু কুরাইশ অভ্যস্ত,",
+    "শীত ও গ্রীষ্মের সফরে তারা অভ্যস্ত হওয়ায়।",
+    "অতএব তারা যেন এ গৃহের রবের ‘ইবাদাত করে,",
+    "যিনি ক্ষুধায় তাদেরকে আহার দিয়েছেন আর ভয় থেকে তাদেরকে নিরাপদ করেছেন।"
+  ]
+}

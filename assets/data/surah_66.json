@@ -1,0 +1,73 @@
+{
+  "surahName": "At-Tahrim",
+  "surahNameArabic": "التحريم",
+  "surahNameArabicLong": "سورة التحريم",
+  "surahNameTranslation": "The Prohibition",
+  "revelationPlace": "Madina",
+  "totalAyah": 12,
+  "surahNo": 66,
+  "audio": {
+    "1": {
+      "reciter": "Mishary Rashid Al-Afasy",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/1/66.mp3",
+      "originalUrl": "https://server8.mp3quran.net/afs/066.mp3"
+    },
+    "2": {
+      "reciter": "Abu Bakr Al-Shatri",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/2/66.mp3",
+      "originalUrl": "https://server11.mp3quran.net/shatri/066.mp3"
+    },
+    "3": {
+      "reciter": "Nasser Al-Qatami",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/3/66.mp3",
+      "originalUrl": "https://server6.mp3quran.net/qtm/066.mp3"
+    },
+    "4": {
+      "reciter": "Yasser Al-Dosari",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/4/66.mp3",
+      "originalUrl": "https://server11.mp3quran.net/yasser/066.mp3"
+    }
+  },
+  "english": [
+    "O Prophet! Why do you prohibit ˹yourself˺ from what Allah has made lawful to you, seeking to please your wives? And Allah is All-Forgiving, Most Merciful.",
+    "Allah has already ordained for you ˹believers˺ the way to absolve yourselves from your oaths. For Allah is your Guardian. And He is the All-Knowing, All-Wise.",
+    "˹Remember˺ when the Prophet had ˹once˺ confided something to one of his wives, then when she disclosed it ˹to another wife˺ and Allah made it known to him, he presented ˹to her˺ part of what was disclosed and overlooked a part. So when he informed her of it, she exclaimed, “Who told you this?” He replied, “I was informed by the All-Knowing, All-Aware.”",
+    "˹It will be better˺ if you ˹wives˺ both turn to Allah in repentance, for your hearts have certainly faltered. But if you ˹continue to˺ collaborate against him, then ˹know that˺ Allah Himself is his Guardian. And Gabriel, the righteous believers, and the angels are ˹all˺ his supporters as well.",
+    "Perhaps, if he were to divorce you ˹all˺, his Lord would replace you with better wives who are submissive ˹to Allah˺, faithful ˹to Him˺, devout, repentant, dedicated to worship and fasting—previously married or virgins.",
+    "O believers! Protect yourselves and your families from a Fire whose fuel is people and stones, overseen by formidable and severe angels, who never disobey whatever Allah orders—always doing as commanded.",
+    "˹The deniers will then be told,˺ “O disbelievers! Make no excuses this Day! You are only rewarded for what you used to do.”",
+    "O believers! Turn to Allah in sincere repentance, so your Lord may absolve you of your sins and admit you into Gardens, under which rivers flow, on the Day Allah will not disgrace the Prophet or the believers with him. Their light will shine ahead of them and on their right. They will say, “Our Lord! Perfect our light for us, and forgive us. ˹For˺ You are truly Most Capable of everything.”",
+    "O Prophet! Struggle against the disbelievers and the hypocrites, and be firm with them. Hell will be their home. What an evil destination!",
+    "Allah sets forth an example for the disbelievers: the wife of Noah and the wife of Lot. Each was married to one of Our righteous servants, yet betrayed them. So their husbands were of no benefit to them against Allah whatsoever. Both were told, “Enter the Fire, along with the others!”",
+    "And Allah sets forth an example for the believers: the wife of Pharaoh, who prayed, “My Lord! Build me a house in Paradise near You, deliver me from Pharaoh and his ˹evil˺ doing, and save me from the wrongdoing people.”",
+    "˹There is˺ also ˹the example of˺ Mary, the daughter of ’Imrân, who guarded her chastity, so We breathed into her ˹womb˺ through Our angel ˹Gabriel˺. She testified to the words of her Lord and His Scriptures, and was one of the ˹sincerely˺ devout."
+  ],
+  "arabic1": [
+    "یٰۤاَیُّهَا النَّبِیُّ لِمَ تُحَرِّمُ مَاۤ اَحَلَّ اللّٰهُ لَكَ تَبْتَغِیْ مَرْضَاتَ اَزْوَاجِكَ وَاللّٰهُ غَفُوْرٌ رَّحِیْمٌ",
+    "قَدْ فَرَضَ اللّٰهُ لَكُمْ تَحِلَّةَ اَیْمَانِكُمْ وَاللّٰهُ مَوْلٰىكُمْ وَهُوَ الْعَلِیْمُ الْحَكِیْمُ",
+    "وَاِذْ اَسَرَّ النَّبِیُّ اِلٰی بَعْضِ اَزْوَاجِهٖ حَدِیْثًا فَلَمَّا نَبَّاَتْ بِهٖ وَاَظْهَرَهُ اللّٰهُ عَلَیْهِ عَرَّفَ بَعْضَهٗ وَاَعْرَضَ عَنْ بَعْضٍ فَلَمَّا نَبَّاَهَا بِهٖ قَالَتْ مَنْ اَنْۢبَاَكَ هٰذَا قَالَ نَبَّاَنِیَ الْعَلِیْمُ الْخَبِیْرُ",
+    "اِنْ تَتُوْبَاۤ اِلَی اللّٰهِ فَقَدْ صَغَتْ قُلُوْبُكُمَا وَاِنْ تَظٰهَرَا عَلَیْهِ فَاِنَّ اللّٰهَ هُوَ مَوْلٰىهُ وَجِبْرِیْلُ وَصَالِحُ الْمُؤْمِنِیْنَ وَالْمَلٰٓىِٕكَةُ بَعْدَ ذٰلِكَ ظَهِیْرٌ",
+    "عَسٰی رَبُّهٗۤ اِنْ طَلَّقَكُنَّ اَنْ یُّبْدِلَهٗۤ اَزْوَاجًا خَیْرًا مِّنْكُنَّ مُسْلِمٰتٍ مُّؤْمِنٰتٍ قٰنِتٰتٍ تٰٓىِٕبٰتٍ عٰبِدٰتٍ سٰٓىِٕحٰتٍ ثَیِّبٰتٍ وَّاَبْكَارًا",
+    "یٰۤاَیُّهَا الَّذِیْنَ اٰمَنُوْا قُوْۤا اَنْفُسَكُمْ وَاَهْلِیْكُمْ نَارًا وَّقُوْدُهَا النَّاسُ وَالْحِجَارَةُ عَلَیْهَا مَلٰٓىِٕكَةٌ غِلَاظٌ شِدَادٌ لَّا یَعْصُوْنَ اللّٰهَ مَاۤ اَمَرَهُمْ وَیَفْعَلُوْنَ مَا یُؤْمَرُوْنَ",
+    "یٰۤاَیُّهَا الَّذِیْنَ كَفَرُوْا لَا تَعْتَذِرُوا الْیَوْمَ اِنَّمَا تُجْزَوْنَ مَا كُنْتُمْ تَعْمَلُوْنَ",
+    "یٰۤاَیُّهَا الَّذِیْنَ اٰمَنُوْا تُوْبُوْۤا اِلَی اللّٰهِ تَوْبَةً نَّصُوْحًا عَسٰی رَبُّكُمْ اَنْ یُّكَفِّرَ عَنْكُمْ سَیِّاٰتِكُمْ وَیُدْخِلَكُمْ جَنّٰتٍ تَجْرِیْ مِنْ تَحْتِهَا الْاَنْهٰرُ یَوْمَ لَا یُخْزِی اللّٰهُ النَّبِیَّ وَالَّذِیْنَ اٰمَنُوْا مَعَهٗ نُوْرُهُمْ یَسْعٰی بَیْنَ اَیْدِیْهِمْ وَبِاَیْمَانِهِمْ یَقُوْلُوْنَ رَبَّنَاۤ اَتْمِمْ لَنَا نُوْرَنَا وَاغْفِرْ لَنَا اِنَّكَ عَلٰی كُلِّ شَیْءٍ قَدِیْرٌ",
+    "یٰۤاَیُّهَا النَّبِیُّ جَاهِدِ الْكُفَّارَ وَالْمُنٰفِقِیْنَ وَاغْلُظْ عَلَیْهِمْ وَمَاْوٰىهُمْ جَهَنَّمُ وَبِئْسَ الْمَصِیْرُ",
+    "ضَرَبَ اللّٰهُ مَثَلًا لِّلَّذِیْنَ كَفَرُوا امْرَاَتَ نُوْحٍ وَّامْرَاَتَ لُوْطٍ كَانَتَا تَحْتَ عَبْدَیْنِ مِنْ عِبَادِنَا صَالِحَیْنِ فَخَانَتٰهُمَا فَلَمْ یُغْنِیَا عَنْهُمَا مِنَ اللّٰهِ شَیْـًٔا وَّقِیْلَ ادْخُلَا النَّارَ مَعَ الدّٰخِلِیْنَ",
+    "وَضَرَبَ اللّٰهُ مَثَلًا لِّلَّذِیْنَ اٰمَنُوا امْرَاَتَ فِرْعَوْنَ اِذْ قَالَتْ رَبِّ ابْنِ لِیْ عِنْدَكَ بَیْتًا فِی الْجَنَّةِ وَنَجِّنِیْ مِنْ فِرْعَوْنَ وَعَمَلِهٖ وَنَجِّنِیْ مِنَ الْقَوْمِ الظّٰلِمِیْنَ",
+    "وَمَرْیَمَ ابْنَتَ عِمْرٰنَ الَّتِیْۤ اَحْصَنَتْ فَرْجَهَا فَنَفَخْنَا فِیْهِ مِنْ رُّوْحِنَا وَصَدَّقَتْ بِكَلِمٰتِ رَبِّهَا وَكُتُبِهٖ وَكَانَتْ مِنَ الْقٰنِتِیْنَ"
+  ],
+  "bengali": [
+    "হে নবী, আল্লাহ তোমার জন্য যা হালাল করেছেন তোমার স্ত্রীদের সন্তুষ্টি কামনায় তুমি কেন তা হারাম করছ? আর আল্লাহ অতীব ক্ষমাশীল, পরম দয়ালু।",
+    "নিশ্চয় তোমাদের জন্য শপথ হতে মুক্তির বিধান দিয়েছেন; আর আল্লাহ তোমাদের অভিভাবক এবং তিনি সর্বজ্ঞ, প্রজ্ঞাবান।",
+    "আর যখন নবী তার এক স্ত্রীকে গোপনে একটি কথা বলেছিলেন; অতঃপর যখন সে (স্ত্রী) অন্যকে তা জানিয়ে দিল এবং আল্লাহ তার (নবীর) কাছে এটি প্রকাশ করে দিলেন, তখন নবী কিছুটা তার স্ত্রীকে অবহিত করল আর কিছু এড়িয়ে গেল। যখন সে তাকে বিষয়টি জানাল তখন সে বলল, ‘আপনাকে এ সংবাদ কে দিল?’ সে বলল, ‘মহাজ্ঞানী ও সর্বজ্ঞ আল্লাহ আমাকে জানিয়েছেন।’",
+    "যদি তোমরা উভয়ে আল্লাহর কাছে তওবা কর (তবে তা তোমাদের জন্য উত্তম)। কারণ তোমাদের উভয়ের অন্তর বাঁকা হয়েছে, আর তোমরা যদি তার বিরুদ্ধে পরস্পরকে সাহায্য কর তবে আল্লাহই তার অভিভাবক এবং জিব্রীল ও সৎকর্মশীল মু’মিনরাও। তাছাড়া অন্যান্য ফেরেশতারাও তার সাহায্যকারী।",
+    "সে যদি তোমাদেরকে তালাক দেয়, তবে আশা করা যায় তার রব তোমাদের পরিবর্তে তোমাদের চাইতে উত্তম স্ত্রী তাকে দিবেন, যারা মুসলিম, মুমিনা, অনুগত, তাওবাকারী, ‘ইবাদতকারী, সিয়াম পালনকারী, অকুমারী ও কুমারী।",
+    "হে ঈমানদারগণ, তোমরা নিজেদেরকে ও তোমাদের পরিবার-পরিজনকে আগুন হতে বাঁচাও যার জ্বালানি হবে মানুষ ও পাথর; যেখানে রয়েছে নির্মম ও কঠোর ফেরেশতাকূল, আল্লাহ তাদেরকে যে নির্দেশ দিয়েছেন তারা সে ব্যাপারে তার অবাধ্য হয় না। আর তারা তা-ই করে যা তাদেরকে আদেশ করা হয়।",
+    "হে কাফিরগণ, আজ তোমরা ওজর পেশ করো না; তোমরা যে ‘আমল করতে তার প্রতিফলই তোমাদেরকে দেয়া হচ্ছে।",
+    "হে ঈমানদারগণ, তোমরা আল্লাহর কাছে তাওবা কর, খাঁটি তাওবা; আশা করা যায় তোমাদের রব তোমাদের পাপসমূহ মোচন করবেন এবং তোমাদেরকে এমন জান্নাতসমূহে প্রবেশ করাবেন যার পাদদেশে নহরসমূহ প্রবাহিত, নবী ও তার সাথে যারা ঈমান এনেছে তাদেরকে সেদিন আল্লাহ লাঞ্ছিত করবেন না। তাদের আলো তাদের সামনে ও ডানে ধাবিত হবে। তারা বলবে, ‘হে আমাদের রব, আমাদের জন্য আমাদের আলো পূর্ণ করে দিন এবং আমাদেরকে ক্ষমা করুন; নিশ্চয় আপনি সর্ববিষয়ে সর্বক্ষমতাবান।’",
+    "‘হে নবী, কাফির ও মুনাফিকদের বিরুদ্ধে জিহাদ কর এবং তাদের ব্যাপারে কঠোর হও; আর তাদের আশ্রয়স্থল হবে জাহান্নাম এবং তা কত নিকৃষ্ট গন্তব্যস্থল!",
+    "যারা কুফরি করে তাদের জন্য আল্লাহ নূহের স্ত্রীর ও লূতের স্ত্রীর উদাহরণ পেশ করেন; তারা আমার বান্দাদের মধ্য হতে দু’জন সৎবান্দার অধীনে ছিল, কিন্তু তারা উভয়ে তাদের সাথে বিশ্বাসঘাতকতা করেছিল, অতঃপর আল্লাহর আযাব হতে রক্ষায় নূহ ও লূত তাদের কোন কাজে আসেনি। বলা হল, ‘তোমরা উভয়ে প্রবেশকারীদের সাথে জাহান্নামে প্রবেশ কর।’",
+    "আর যারা ঈমান আনে তাদের জন্য আল্লাহ ফির‘আউনের স্ত্রীর উদাহরণ পেশ করেন, যখন সে বলেছিল, ‘হে আমার রব, আপনার কাছে আমার জন্য জান্নাতে একটি বাড়ি নির্মাণ করুন এবং আমাকে ফির‘আউন ও তার কর্ম হতে নাজাত দিন, আর আমাকে নাজাত দিন যালিম সম্প্রদায় হতে।",
+    "(আল্লাহ আরো উদাহরণ পেশ করেন) ইমরান কন্যা মারয়াম-এর, যে নিজের সতীত্ব রক্ষা করেছিল, ফলে আমি তাতে আমার রূহ থেকে ফুঁকে দিয়েছিলাম। আর সে তার রবের বাণীসমূহ ও তাঁর কিতাবসমূহের সত্যতা স্বীকার করেছিল এবং সে ছিল অনুগতদের অন্তর্ভুক্ত।"
+  ]
+}

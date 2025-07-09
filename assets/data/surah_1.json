@@ -1,0 +1,58 @@
+{
+  "surahName": "Al-Faatiha",
+  "surahNameArabic": "الفاتحة",
+  "surahNameArabicLong": "سُورَةُ ٱلْفَاتِحَةِ",
+  "surahNameTranslation": "The Opening",
+  "revelationPlace": "Mecca",
+  "totalAyah": 7,
+  "surahNo": 1,
+  "audio": {
+    "1": {
+      "reciter": "Mishary Rashid Al-Afasy",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/1/1.mp3",
+      "originalUrl": "https://server8.mp3quran.net/afs/001.mp3"
+    },
+    "2": {
+      "reciter": "Abu Bakr Al-Shatri",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/2/1.mp3",
+      "originalUrl": "https://server11.mp3quran.net/shatri/001.mp3"
+    },
+    "3": {
+      "reciter": "Nasser Al-Qatami",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/3/1.mp3",
+      "originalUrl": "https://server6.mp3quran.net/qtm/001.mp3"
+    },
+    "4": {
+      "reciter": "Yasser Al-Dosari",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/4/1.mp3",
+      "originalUrl": "https://server11.mp3quran.net/yasser/001.mp3"
+    }
+  },
+  "english": [
+    "In the Name of Allah—the Most Compassionate, Most Merciful.",
+    "All praise is for Allah—Lord of all worlds",
+    "the Most Compassionate, Most Merciful",
+    "Master of the Day of Judgment.",
+    "You ˹alone˺ we worship and You ˹alone˺ we ask for help.",
+    "Guide us along the Straight Path",
+    "the Path of those You have blessed—not those You are displeased with, or those who are astray."
+  ],
+  "arabic1": [
+    "بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِیْمِ",
+    "اَلْحَمْدُ لِلّٰهِ رَبِّ الْعٰلَمِیْنَ",
+    "الرَّحْمٰنِ الرَّحِیْمِ",
+    "مٰلِكِ یَوْمِ الدِّیْنِ",
+    "اِیَّاكَ نَعْبُدُ وَاِیَّاكَ نَسْتَعِیْنُ",
+    "اِهْدِنَا الصِّرَاطَ الْمُسْتَقِیْمَ",
+    "صِرَاطَ الَّذِیْنَ اَنْعَمْتَ عَلَیْهِمْ غَیْرِ الْمَغْضُوْبِ عَلَیْهِمْ وَلَا الضَّآلِّیْنَ"
+  ],
+  "bengali": [
+    "পরম করুণাময় অতি দয়ালু আল্লাহর নামে।",
+    "সমস্ত প্রশংসা আল্লাহর জন্য, যিনি সৃষ্টিকুলের রব।",
+    "দয়াময়, পরম দয়ালু, পরম করুণাময়, অতি দয়ালু।",
+    "বিচার দিবসের মালিক।",
+    "আপনারই আমরা ইবাদাত করি এবং আপনারই নিকট আমরা সাহায্য চাই।",
+    "আমাদেরকে সরল পথ দেখান। পথের হিদায়াত দিন।",
+    "তাদের পথ, যাদের উপর আপনি অনুগ্রহ করেছেন। যাদেরকে নিয়ামত দিয়েছেন।যাদের উপর (আপনার) ক্রোধ আপতিত হয়নি এবং যারা পথভ্রষ্টও নয়।"
+  ]
+}

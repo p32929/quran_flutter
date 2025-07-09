@@ -1,0 +1,70 @@
+{
+  "surahName": "Al-Aadiyaat",
+  "surahNameArabic": "العاديات",
+  "surahNameArabicLong": "سورة العاديات",
+  "surahNameTranslation": "The Chargers",
+  "revelationPlace": "Mecca",
+  "totalAyah": 11,
+  "surahNo": 100,
+  "audio": {
+    "1": {
+      "reciter": "Mishary Rashid Al-Afasy",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/1/100.mp3",
+      "originalUrl": "https://server8.mp3quran.net/afs/100.mp3"
+    },
+    "2": {
+      "reciter": "Abu Bakr Al-Shatri",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/2/100.mp3",
+      "originalUrl": "https://server11.mp3quran.net/shatri/100.mp3"
+    },
+    "3": {
+      "reciter": "Nasser Al-Qatami",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/3/100.mp3",
+      "originalUrl": "https://server6.mp3quran.net/qtm/100.mp3"
+    },
+    "4": {
+      "reciter": "Yasser Al-Dosari",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/4/100.mp3",
+      "originalUrl": "https://server11.mp3quran.net/yasser/100.mp3"
+    }
+  },
+  "english": [
+    "’ By the galloping, panting horses",
+    "striking sparks of fire ˹with their hoofs˺",
+    "launching raids at dawn",
+    "stirring up ˹clouds of˺ dust",
+    "and penetrating into the heart of enemy lines!",
+    "Surely humankind is ungrateful to their Lord—",
+    "and they certainly attest to this—",
+    "and they are truly extreme in their love of ˹worldly˺ gains.",
+    "Do they not know that when the contents of the graves will be spilled out",
+    "and the secrets of the hearts will be laid bare—",
+    "surely their Lord is All-Aware of them on that Day."
+  ],
+  "arabic1": [
+    "وَالْعٰدِیٰتِ ضَبْحًا",
+    "فَالْمُوْرِیٰتِ قَدْحًا",
+    "فَالْمُغِیْرٰتِ صُبْحًا",
+    "فَاَثَرْنَ بِهٖ نَقْعًا",
+    "فَوَسَطْنَ بِهٖ جَمْعًا",
+    "اِنَّ الْاِنْسَانَ لِرَبِّهٖ لَكَنُوْدٌ",
+    "وَاِنَّهٗ عَلٰی ذٰلِكَ لَشَهِیْدٌ",
+    "وَاِنَّهٗ لِحُبِّ الْخَیْرِ لَشَدِیْدٌ",
+    "اَفَلَا یَعْلَمُ اِذَا بُعْثِرَ مَا فِی الْقُبُوْرِ",
+    "وَحُصِّلَ مَا فِی الصُّدُوْرِ",
+    "اِنَّ رَبَّهُمْ بِهِمْ یَوْمَىِٕذٍ لَّخَبِیْرٌ"
+  ],
+  "bengali": [
+    "কসম ঊর্ধশ্বাসে ছুটে যাওয়া অশ্বরাজির,",
+    "অতঃপর যারা ক্ষুরাঘাতে অগ্নি-স্ফূলিঙ্গ ছড়ায়,",
+    "অতঃপর যারা প্রত্যুষে হানা দেয়,",
+    "অতঃপর সে তা দ্বারা ধুলি উড়ায়,",
+    "অতঃপর এর দ্বারা শত্রুদলের ভেতরে ঢুকে পড়ে;",
+    "নিশ্চয় মানুষ তার রবের প্রতি বড়ই অকৃতজ্ঞ।",
+    "আর নিশ্চয় সে এর উপর (স্বয়ং) সাক্ষী হয়।",
+    "আর নিশ্চয় ধন-সম্পদের লোভে সে প্রবল।",
+    "তবে কি সে জানে না যখন কবরে যা আছে তা উত্থিত হবে?",
+    "আর অন্তরে যা আছে তা প্রকাশিত হবে।",
+    "নিশ্চয় তোমার রব সেদিন তাদের ব্যাপারে সবিশেষ অবহিত।"
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "surahName": "Al-Jumu'a",
+  "surahNameArabic": "الجمعة",
+  "surahNameArabicLong": "سورة الجمعة",
+  "surahNameTranslation": "Friday",
+  "revelationPlace": "Madina",
+  "totalAyah": 11,
+  "surahNo": 62,
+  "audio": {
+    "1": {
+      "reciter": "Mishary Rashid Al-Afasy",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/1/62.mp3",
+      "originalUrl": "https://server8.mp3quran.net/afs/062.mp3"
+    },
+    "2": {
+      "reciter": "Abu Bakr Al-Shatri",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/2/62.mp3",
+      "originalUrl": "https://server11.mp3quran.net/shatri/062.mp3"
+    },
+    "3": {
+      "reciter": "Nasser Al-Qatami",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/3/62.mp3",
+      "originalUrl": "https://server6.mp3quran.net/qtm/062.mp3"
+    },
+    "4": {
+      "reciter": "Yasser Al-Dosari",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/4/62.mp3",
+      "originalUrl": "https://server11.mp3quran.net/yasser/062.mp3"
+    }
+  },
+  "english": [
+    "Whatever is in the heavens and whatever is on the earth ˹constantly˺ glorifies Allah—the King, the Most Holy, the Almighty, the All-Wise.",
+    "He is the One Who raised for the illiterate ˹people˺ a messenger from among themselves—reciting to them His revelations, purifying them, and teaching them the Book and wisdom, for indeed they had previously been clearly astray—",
+    "along with others of them who have not yet joined them ˹in faith˺. For He is the Almighty, All-Wise.",
+    "This is the favour of Allah. He grants it to whoever He wills. And Allah is the Lord of infinite bounty.",
+    "The example of those who were entrusted with ˹observing˺ the Torah but failed to do so, is that of a donkey carrying books. How evil is the example of those who reject Allah’s signs! For Allah does not guide the wrongdoing people.",
+    "Say, ˹O Prophet,˺ “O Jews! If you claim to be Allah’s chosen ˹people˺ out of all humanity, then wish for death, if what you say is true.”",
+    "But they will never wish for that because of what their hands have done. And Allah has ˹perfect˺ knowledge of the wrongdoers.",
+    "Say, “The death you are running away from will inevitably come to you. Then you will be returned to the Knower of the seen and unseen, and He will inform you of what you used to do.”",
+    "O believers! When the call to prayer is made on Friday, then proceed ˹diligently˺ to the remembrance of Allah and leave off ˹your˺ business. That is best for you, if only you knew.",
+    "Once the prayer is over, disperse throughout the land and seek the bounty of Allah. And remember Allah often so you may be successful.",
+    "When they saw the fanfare along with the caravan, they ˹almost all˺ flocked to it, leaving you ˹O Prophet˺ standing ˹on the pulpit˺. Say, “What is with Allah is far better than amusement and merchandise. And Allah is the Best Provider.”"
+  ],
+  "arabic1": [
+    "یُسَبِّحُ لِلّٰهِ مَا فِی السَّمٰوٰتِ وَمَا فِی الْاَرْضِ الْمَلِكِ الْقُدُّوْسِ الْعَزِیْزِ الْحَكِیْمِ",
+    "هُوَ الَّذِیْ بَعَثَ فِی الْاُمِّیّٖنَ رَسُوْلًا مِّنْهُمْ یَتْلُوْا عَلَیْهِمْ اٰیٰتِهٖ وَیُزَكِّیْهِمْ وَیُعَلِّمُهُمُ الْكِتٰبَ وَالْحِكْمَةَ وَاِنْ كَانُوْا مِنْ قَبْلُ لَفِیْ ضَلٰلٍ مُّبِیْنٍ",
+    "وَّاٰخَرِیْنَ مِنْهُمْ لَمَّا یَلْحَقُوْا بِهِمْ وَهُوَ الْعَزِیْزُ الْحَكِیْمُ",
+    "ذٰلِكَ فَضْلُ اللّٰهِ یُؤْتِیْهِ مَنْ یَّشَآءُ وَاللّٰهُ ذُو الْفَضْلِ الْعَظِیْمِ",
+    "مَثَلُ الَّذِیْنَ حُمِّلُوا التَّوْرٰىةَ ثُمَّ لَمْ یَحْمِلُوْهَا كَمَثَلِ الْحِمَارِ یَحْمِلُ اَسْفَارًا بِئْسَ مَثَلُ الْقَوْمِ الَّذِیْنَ كَذَّبُوْا بِاٰیٰتِ اللّٰهِ وَاللّٰهُ لَا یَهْدِی الْقَوْمَ الظّٰلِمِیْنَ",
+    "قُلْ یٰۤاَیُّهَا الَّذِیْنَ هَادُوْۤا اِنْ زَعَمْتُمْ اَنَّكُمْ اَوْلِیَآءُ لِلّٰهِ مِنْ دُوْنِ النَّاسِ فَتَمَنَّوُا الْمَوْتَ اِنْ كُنْتُمْ صٰدِقِیْنَ",
+    "وَلَا یَتَمَنَّوْنَهٗۤ اَبَدًا بِمَا قَدَّمَتْ اَیْدِیْهِمْ وَاللّٰهُ عَلِیْمٌۢ بِالظّٰلِمِیْنَ",
+    "قُلْ اِنَّ الْمَوْتَ الَّذِیْ تَفِرُّوْنَ مِنْهُ فَاِنَّهٗ مُلٰقِیْكُمْ ثُمَّ تُرَدُّوْنَ اِلٰی عٰلِمِ الْغَیْبِ وَالشَّهَادَةِ فَیُنَبِّئُكُمْ بِمَا كُنْتُمْ تَعْمَلُوْنَ",
+    "یٰۤاَیُّهَا الَّذِیْنَ اٰمَنُوْۤا اِذَا نُوْدِیَ لِلصَّلٰوةِ مِنْ یَّوْمِ الْجُمُعَةِ فَاسْعَوْا اِلٰی ذِكْرِ اللّٰهِ وَذَرُوا الْبَیْعَ ذٰلِكُمْ خَیْرٌ لَّكُمْ اِنْ كُنْتُمْ تَعْلَمُوْنَ",
+    "فَاِذَا قُضِیَتِ الصَّلٰوةُ فَانْتَشِرُوْا فِی الْاَرْضِ وَابْتَغُوْا مِنْ فَضْلِ اللّٰهِ وَاذْكُرُوا اللّٰهَ كَثِیْرًا لَّعَلَّكُمْ تُفْلِحُوْنَ",
+    "وَاِذَا رَاَوْا تِجَارَةً اَوْ لَهْوَا ١نْفَضُّوْۤا اِلَیْهَا وَتَرَكُوْكَ قَآىِٕمًا قُلْ مَا عِنْدَ اللّٰهِ خَیْرٌ مِّنَ اللَّهْوِ وَمِنَ التِّجَارَةِ وَاللّٰهُ خَیْرُ الرّٰزِقِیْنَ"
+  ],
+  "bengali": [
+    "আসমানসমূহে এবং যমীনে যা আছে সবই পবিত্রতা ঘোষণা করে আল্লাহর। যিনি বাদশাহ, মহাপবিত্র, মহাপরাক্রমশালী, প্রজ্ঞাময়।",
+    "তিনিই উম্মীদের* মাঝে একজন রাসূল পাঠিয়েছেন তাদের মধ্য থেকে, যে তাদের কাছে তেলাওয়াত করে তাঁর আয়াতসমূহ, তাদেরকে পবিত্র করে এবং তাদেরকে শিক্ষা দেয় কিতাব ও হিকমাত। যদিও ইতঃপূর্বে তারা স্পষ্ট গোমরাহীতে ছিল। \n*উম্মী দ্বারা আরবের লোকদেরকে বুঝানো হয়েছে।",
+    "এবং তাদের মধ্য হতে অন্যান্যদের জন্যও, (এ রাসূলকেই পাঠানো হয়েছে) যারা এখনো তাদের সাথে মিলিত হয়নি। আর তিনিই মহা পরাক্রমশালী, প্রজ্ঞাময়।",
+    "এটা আল্লাহর অনুগ্রহ, যাকে ইচ্ছা তিনি তা দান করেন। আর আল্লাহ মহা অনুগ্রহের অধিকারী।",
+    "যাদেরকে তাওরাতের দায়িত্বভার দেয়া হয়েছিল তারপর তারা তা বহন করেনি, তারা গাধার মত! যে বহু কিতাবের বোঝা বহন করে। সে সম্প্রদায়ের উপমা কতইনা নিকৃষ্ট, যারা আল্লাহর আয়াতসমূহকে অস্বীকার করে। আর আল্লাহ যালিম সম্প্রদায়কে হিদায়াত করেন না।",
+    "বল, হে ইয়াহুদীরা, যদি তোমরা মনে কর যে, (অন্য) মানুষেরা নয়, কেবল তোমরাই আল্লাহর বন্ধু, তাহলে তোমরা মৃত্যু কামনা কর, যদি তোমরা সত্যবাদী হও।",
+    "আর তারা, তাদের হাত যা আগে পাঠিয়েছে সে কারণে কখনো মৃত্যু কামনা করবে না। আর আল্লাহ যালিমদের সম্পর্কে সম্যক অবহিত।",
+    "বল যে মৃত্যু হতে তোমরা পলায়ন করছ তা অবশ্যই তোমাদের সাথে সাক্ষাৎ করবে। তারপর তোমাদেরকে অদৃশ্য ও দৃশ্য সম্পর্কে পরিজ্ঞাত আল্লাহর কাছে ফিরিয়ে নেয়া হবে। তারপর তিনি তোমাদেরকে জানিয়ে দেবেন যা তোমরা করতে।",
+    "হে মুমিনগণ, যখন জুমু‘আর দিনে সালাতের জন্য আহবান করা হয়, তখন তোমরা আল্লাহর স্মরণের দিকে ধাবিত হও। আর বেচা-কেনা বর্জন কর। এটাই তোমাদের জন্য সর্বোত্তম, যদি তোমরা জানতে।",
+    "অতঃপর যখন সালাত সমাপ্ত হবে তখন তোমরা পৃথিবীতে ছড়িয়ে পড় আর আল্লাহর অনুগ্রহ হতে অনুসন্ধান কর এবং আল্লাহকে বেশি বেশি স্মরণ কর, যাতে তোমরা সফল হতে পার।",
+    "আর তারা যখন ব্যবসায় অথবা ক্রীড়া কৌতুক দেখে তখন তারা তার দিকে ছুটে যায়, আর তোমাকে দাঁড়ান অবস্থায় রেখে যায়। বল, আল্লাহর কাছে যা আছে তা ক্রীড়া- কৌতুক ও ব্যবসায় অপেক্ষা উত্তম। আর আল্লাহ সর্বোত্তম রিযকদাতা।"
+  ]
+}

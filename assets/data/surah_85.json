@@ -1,0 +1,103 @@
+{
+  "surahName": "Al-Burooj",
+  "surahNameArabic": "البروج",
+  "surahNameArabicLong": "سورة البروج",
+  "surahNameTranslation": "The Constellations",
+  "revelationPlace": "Mecca",
+  "totalAyah": 22,
+  "surahNo": 85,
+  "audio": {
+    "1": {
+      "reciter": "Mishary Rashid Al-Afasy",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/1/85.mp3",
+      "originalUrl": "https://server8.mp3quran.net/afs/085.mp3"
+    },
+    "2": {
+      "reciter": "Abu Bakr Al-Shatri",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/2/85.mp3",
+      "originalUrl": "https://server11.mp3quran.net/shatri/085.mp3"
+    },
+    "3": {
+      "reciter": "Nasser Al-Qatami",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/3/85.mp3",
+      "originalUrl": "https://server6.mp3quran.net/qtm/085.mp3"
+    },
+    "4": {
+      "reciter": "Yasser Al-Dosari",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/4/85.mp3",
+      "originalUrl": "https://server11.mp3quran.net/yasser/085.mp3"
+    }
+  },
+  "english": [
+    "By the sky full of constellations",
+    "and the promised Day ˹of Judgment˺",
+    "and the witness and what is witnessed!",
+    "Condemned are the makers of the ditch—",
+    "the fire ˹pit˺, filled with fuel—",
+    "when they sat around it",
+    "watching what they had ˹ordered to be˺ done to the believers",
+    "who they resented for no reason other than belief in Allah—the Almighty, the Praiseworthy—",
+    "˹the One˺ to Whom belongs the kingdom of the heavens and earth. And Allah is a Witness over all things.",
+    "Those who persecute the believing men and women and then do not repent will certainly suffer the punishment of Hell and the torment of burning.",
+    "Surely those who believe and do good will have Gardens under which rivers flow. That is the greatest triumph.",
+    "Indeed, the ˹crushing˺ grip of your Lord is severe.",
+    "˹For˺ He is certainly the One Who originates and resurrects ˹all˺.",
+    "And He is the All-Forgiving, All-Loving—",
+    "Lord of the Throne, the All-Glorious",
+    "Doer of whatever He wills.",
+    "Has the story of the ˹destroyed˺ forces reached you ˹O Prophet˺—",
+    "˹the forces of˺ Pharaoh and Thamûd?",
+    "Yet the disbelievers ˹still˺ persist in denial.",
+    "But Allah encompasses them from all sides.",
+    "In fact, this is a glorious Quran",
+    "˹recorded˺ in a Preserved Tablet."
+  ],
+  "arabic1": [
+    "وَالسَّمَآءِ ذَاتِ الْبُرُوْجِ",
+    "وَالْیَوْمِ الْمَوْعُوْدِ",
+    "وَشَاهِدٍ وَّمَشْهُوْدٍ",
+    "قُتِلَ اَصْحٰبُ الْاُخْدُوْدِ",
+    "النَّارِ ذَاتِ الْوَقُوْدِ",
+    "اِذْ هُمْ عَلَیْهَا قُعُوْدٌ",
+    "وَّهُمْ عَلٰی مَا یَفْعَلُوْنَ بِالْمُؤْمِنِیْنَ شُهُوْدٌ",
+    "وَمَا نَقَمُوْا مِنْهُمْ اِلَّاۤ اَنْ یُّؤْمِنُوْا بِاللّٰهِ الْعَزِیْزِ الْحَمِیْدِ",
+    "الَّذِیْ لَهٗ مُلْكُ السَّمٰوٰتِ وَالْاَرْضِ وَاللّٰهُ عَلٰی كُلِّ شَیْءٍ شَهِیْدٌ",
+    "اِنَّ الَّذِیْنَ فَتَنُوا الْمُؤْمِنِیْنَ وَالْمُؤْمِنٰتِ ثُمَّ لَمْ یَتُوْبُوْا فَلَهُمْ عَذَابُ جَهَنَّمَ وَلَهُمْ عَذَابُ الْحَرِیْقِ",
+    "اِنَّ الَّذِیْنَ اٰمَنُوْا وَعَمِلُوا الصّٰلِحٰتِ لَهُمْ جَنّٰتٌ تَجْرِیْ مِنْ تَحْتِهَا الْاَنْهٰرُ ذٰلِكَ الْفَوْزُ الْكَبِیْرُ",
+    "اِنَّ بَطْشَ رَبِّكَ لَشَدِیْدٌ",
+    "اِنَّهٗ هُوَ یُبْدِئُ وَیُعِیْدُ",
+    "وَهُوَ الْغَفُوْرُ الْوَدُوْدُ",
+    "ذُو الْعَرْشِ الْمَجِیْدُ",
+    "فَعَّالٌ لِّمَا یُرِیْدُ",
+    "هَلْ اَتٰىكَ حَدِیْثُ الْجُنُوْدِ",
+    "فِرْعَوْنَ وَثَمُوْدَ",
+    "بَلِ الَّذِیْنَ كَفَرُوْا فِیْ تَكْذِیْبٍ",
+    "وَّاللّٰهُ مِنْ وَّرَآىِٕهِمْ مُّحِیْطٌ",
+    "بَلْ هُوَ قُرْاٰنٌ مَّجِیْدٌ",
+    "فِیْ لَوْحٍ مَّحْفُوْظٍ"
+  ],
+  "bengali": [
+    "কক্ষপথ বিশিষ্ট আসমানের কসম,",
+    "আর ওয়াদাকৃত দিনের কসম,",
+    "আর কসম সাক্ষ্যদাতার এবং যার ব্যাপারে সাক্ষ্য দেয়া হবে তার,",
+    "ধ্বংস হয়েছে গর্তের অধিপতিরা,",
+    "(যাতে ছিল) ইন্ধনপূর্ণ আগুন।",
+    "যখন তারা তার কিনারায় উপবিষ্ট ছিল।",
+    "আর তারা মুমিনদের সাথে যা করছিল তার প্রত্যক্ষদর্শী।",
+    "আর তারা তাদেরকে নির্যাতন করেছিল শুধুমাত্র এ কারণে যে, তারা মহাপরাক্রমশালী প্রশংসিত আল্লাহর প্রতি ঈমান এনেছিল।",
+    "আসমানসমূহ ও যমীনের রাজত্ব যার। আর আল্লাহ প্রতিটি বিষয়ের প্রত্যক্ষদর্শী।",
+    "নিশ্চয় যারা মুমিন পুরুষ ও মুমিন নারীদেরকে আযাব দেয়, তারপর তাওবা করে না, তাদের জন্য রয়েছে জাহান্নামের আযাব। আর তাদের জন্য রয়েছে আগুনে দগ্ধ হওয়ার আযাব।",
+    "নিশ্চয় যারা ঈমান আনে এবং সৎকর্ম করে তাদের জন্য রয়েছে জান্নাত। যার তলদেশে প্রবাহিত হবে নহরসমূহ। এটাই বিরাট সফলতা।",
+    "নিশ্চয় তোমার রবের পাকড়াও বড়ই কঠিন।",
+    "নিশ্চয় তিনি সৃষ্টির সূচনা করেন এবং তিনিই পুনরায় সৃষ্টি করবেন।",
+    "আর তিনি অত্যন্ত ক্ষমাশীল, প্রেমময়।",
+    "আরশের অধিপতি, মহান।",
+    "তিনি তা-ই করেন যা চান ।",
+    "তোমার কাছে কি সৈন্যবাহিনীর খবর পৌঁছেছে?",
+    "ফির‘আউন ও সামূদের।",
+    "বরং কাফিররা মিথ্যারোপে লিপ্ত।",
+    "আর আল্লাহ তাদের অলক্ষ্যে তাদের পরিবেষ্টনকারী।",
+    "বরং তা সম্মানিত কুরআন।",
+    "সুরক্ষিত ফলকে (লিপিবদ্ধ)।"
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "surahName": "Al-Alaq",
+  "surahNameArabic": "العلق",
+  "surahNameArabicLong": "سورة العلق",
+  "surahNameTranslation": "The Clot",
+  "revelationPlace": "Mecca",
+  "totalAyah": 19,
+  "surahNo": 96,
+  "audio": {
+    "1": {
+      "reciter": "Mishary Rashid Al-Afasy",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/1/96.mp3",
+      "originalUrl": "https://server8.mp3quran.net/afs/096.mp3"
+    },
+    "2": {
+      "reciter": "Abu Bakr Al-Shatri",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/2/96.mp3",
+      "originalUrl": "https://server11.mp3quran.net/shatri/096.mp3"
+    },
+    "3": {
+      "reciter": "Nasser Al-Qatami",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/3/96.mp3",
+      "originalUrl": "https://server6.mp3quran.net/qtm/096.mp3"
+    },
+    "4": {
+      "reciter": "Yasser Al-Dosari",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/4/96.mp3",
+      "originalUrl": "https://server11.mp3quran.net/yasser/096.mp3"
+    }
+  },
+  "english": [
+    "Read, ˹O Prophet,˺ in the Name of your Lord Who created—",
+    "created humans from a clinging clot.",
+    "Read! And your Lord is the Most Generous",
+    "Who taught by the pen—",
+    "taught humanity what they knew not.",
+    "Most certainly, one exceeds all bounds",
+    "once they think they are self-sufficient.",
+    "˹But˺ surely to your Lord is the return ˹of all˺.",
+    "Have you seen the man who prevents",
+    "a servant ˹of Ours˺ from praying?",
+    "What if this ˹servant˺ is ˹rightly˺ guided",
+    "or encourages righteousness?",
+    "What if that ˹man˺ persists in denial and turns away?",
+    "Does he not know that Allah sees ˹all˺?",
+    "But no! If he does not desist, We will certainly drag him by the forelock—",
+    "a lying, sinful forelock.",
+    "So let him call his associates.",
+    "We will call the wardens of Hell.",
+    "Again, no! Never obey him ˹O Prophet˺! Rather, ˹continue to˺ prostrate and draw near ˹to Allah˺."
+  ],
+  "arabic1": [
+    "اِقْرَاْ بِاسْمِ رَبِّكَ الَّذِیْ خَلَقَ",
+    "خَلَقَ الْاِنْسَانَ مِنْ عَلَقٍ",
+    "اِقْرَاْ وَرَبُّكَ الْاَكْرَمُ",
+    "الَّذِیْ عَلَّمَ بِالْقَلَمِ",
+    "عَلَّمَ الْاِنْسَانَ مَا لَمْ یَعْلَمْ",
+    "كَلَّاۤ اِنَّ الْاِنْسَانَ لَیَطْغٰۤی",
+    "اَنْ رَّاٰهُ اسْتَغْنٰی",
+    "اِنَّ اِلٰی رَبِّكَ الرُّجْعٰی",
+    "اَرَءَیْتَ الَّذِیْ یَنْهٰی",
+    "عَبْدًا اِذَا صَلّٰی",
+    "اَرَءَیْتَ اِنْ كَانَ عَلَی الْهُدٰۤی",
+    "اَوْ اَمَرَ بِالتَّقْوٰی",
+    "اَرَءَیْتَ اِنْ كَذَّبَ وَتَوَلّٰی",
+    "اَلَمْ یَعْلَمْ بِاَنَّ اللّٰهَ یَرٰی",
+    "كَلَّا لَىِٕنْ لَّمْ یَنْتَهِ لَنَسْفَعًا بِالنَّاصِیَةِ",
+    "نَاصِیَةٍ كَاذِبَةٍ خَاطِئَةٍ",
+    "فَلْیَدْعُ نَادِیَهٗ",
+    "سَنَدْعُ الزَّبَانِیَةَ",
+    "كَلَّا لَا تُطِعْهُ وَاسْجُدْ وَاقْتَرِبْ"
+  ],
+  "bengali": [
+    "পড় তোমার রবের নামে, যিনি সৃষ্টি করেছেন।",
+    "তিনি সৃষ্টি করেছেন মানুষকে 'আলাক' থেকে।",
+    "পড়, আর তোমার রব মহামহিম।",
+    "যিনি কলমের সাহায্যে শিক্ষা দিয়েছেন।",
+    "তিনি মানুষকে তা শিক্ষা দিয়েছেন, যা সে জানত না।",
+    "কখনো নয়, নিশ্চয় মানুষ সীমালঙ্ঘন করে থাকে।",
+    "কেননা সে নিজকে মনে করে স্বয়ংসম্পূর্ণ।",
+    "নিশ্চয় তোমার রবের দিকেই প্রত্যাবর্তন।",
+    "তুমি কি তাকে দেখেছ যে নিষেধ করে।",
+    "এক বান্দাকে, যখন সে সালাত আদায় করে?",
+    "তুমি কি দেখেছ, যদি সে হিদায়াতের উপর থাকে,",
+    "অথবা তাকওয়ার নির্দেশ দেয়?",
+    "যদি সে মিথ্যারোপ করে এবং মুখ ফিরিয়ে নেয়?",
+    "সে কি জানেনা যে, নিঃসন্দেহে আল্লাহ দেখেন?",
+    "কখনো নয়, যদি সে বিরত না হয়, তবে আমি তাকে কপালের সম্মুখভাগের চুল ধরে টেনে- হিঁচড়ে নিয়ে যাব।",
+    "মিথ্যাবাদী, পাপিষ্ঠ কপাল।",
+    "অতএব, সে তার সভাসদদের আহবান করুক।",
+    "অচিরেই আমি ডেকে নেব জাহান্নামের প্রহরীদেরকে।",
+    "কখনো নয়, তুমি তার আনুগত্য করবে না। আর সিজদা কর এবং নৈকট্য লাভ কর।[সাজদাহ]"
+  ]
+}
