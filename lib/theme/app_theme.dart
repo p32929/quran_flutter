@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   static ThemeData lightTheme(ColorScheme? dynamicColorScheme) {
-    final ColorScheme colorScheme = dynamicColorScheme ?? ColorScheme.fromSeed(
-      seedColor: Colors.green,
-      brightness: Brightness.light,
-    );
-    
+    final ColorScheme colorScheme = dynamicColorScheme ??
+        ColorScheme.fromSeed(
+          seedColor: Colors.green,
+          brightness: Brightness.light,
+        );
+
     return ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
@@ -15,7 +16,7 @@ class AppTheme {
         foregroundColor: colorScheme.onPrimaryContainer,
         elevation: 0,
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         elevation: 2,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
@@ -35,11 +36,12 @@ class AppTheme {
   }
 
   static ThemeData darkTheme(ColorScheme? dynamicColorScheme) {
-    final ColorScheme colorScheme = dynamicColorScheme ?? ColorScheme.fromSeed(
-      seedColor: Colors.green,
-      brightness: Brightness.dark,
-    );
-    
+    final ColorScheme colorScheme = dynamicColorScheme ??
+        ColorScheme.fromSeed(
+          seedColor: Colors.green,
+          brightness: Brightness.dark,
+        );
+
     return ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
@@ -48,7 +50,7 @@ class AppTheme {
         foregroundColor: colorScheme.onPrimaryContainer,
         elevation: 0,
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         elevation: 2,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
@@ -66,4 +68,4 @@ class AppTheme {
       ),
     );
   }
-} 
+}
