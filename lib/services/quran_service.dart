@@ -3,13 +3,17 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../models/surah_model.dart';
 import '../models/ayah_model.dart';
+import 'quran_repository.dart';
 
 class QuranService extends GetxService {
-  // Cache for loaded data
+  // Repository (Sembast) injected or lazily found
+  late final QuranRepository _repo;
+
+  // In-memory caches
   final Map<int, SurahDetail> _cachedSurahDetails = {};
   List<Surah>? _cachedSurahs;
-  
-  // Fallback data for when assets fail to load
+
+  // Fallback data if everything fails
   final List<Surah> _fallbackSurahs = [
     Surah(
       number: 1,
@@ -18,130 +22,170 @@ class QuranService extends GetxService {
       nameArabicLong: 'سُورَةُ ٱلْفَاتِحَةِ',
       nameTranslation: 'The Opening',
       totalAyah: 7,
-      revelationPlace: 'Mecca'
+      revelationPlace: 'Mecca',
     ),
     Surah(
       number: 2,
       name: 'Al-Baqara',
       nameArabic: 'البقرة',
-      nameArabicLong: 'سورة البقرة',
+      nameArabicLong: 'সورة البقرة',
       nameTranslation: 'The Cow',
       totalAyah: 286,
-      revelationPlace: 'Madina'
+      revelationPlace: 'Madina',
     ),
-    // More fallback surahs would be added here in production
   ];
-  
+
   @override
   void onInit() {
     super.onInit();
-    // Preload surahs data
-    getSurahs();
+    // Find an existing repo (opened in bootstrap)
+    if (Get.isRegistered<QuranRepository>()) {
+      _repo = Get.find<QuranRepository>();
+    } else {
+      // As a fallback, create and open a repo (should already be opened by bootstrap)
+      _repo = QuranRepository();
+      _repo.open();
+    }
+    // Do not block here; let UI call getSurahs() which will be DB-first and fast.
   }
-  
+
+  // DB-first: memory -> DB -> assets (write-through)
   Future<List<Surah>> getSurahs() async {
-    // Return cached data if available
     if (_cachedSurahs != null) {
-      print('Returning cached surahs: ${_cachedSurahs!.length}');
       return _cachedSurahs!;
     }
-    
+
+    // Try DB
     try {
-      print('Loading surahs.json from assets...');
-      // Load from local assets
+      final listMaps = await _repo.getAllSurahIndex();
+      if (listMaps.isNotEmpty) {
+        _cachedSurahs = listMaps.map((m) => Surah.fromJson(m)).toList();
+        return _cachedSurahs!;
+      }
+    } catch (e) {
+      // proceed to assets fallback
+      print('DB read for surah index failed, falling back to assets: $e');
+    }
+
+    // Fallback to assets (first run or DB unavailable)
+    try {
       final String data = await rootBundle.loadString('assets/data/surahs.json');
-      print('surahs.json loaded, length: ${data.length}');
-      
       final List<dynamic> surahsData = json.decode(data);
-      print('JSON decoded successfully: ${surahsData.length} surahs found');
-      
-      // Add the surah number to each surah object since it's not in the JSON
+
       _cachedSurahs = [];
       for (int i = 0; i < surahsData.length; i++) {
         var surahData = Map<String, dynamic>.from(surahsData[i]);
-        surahData['number'] = i + 1; // Add the surah number (1-indexed)
+        surahData['number'] = surahData['number'] ?? (i + 1);
+        // Normalize for Surah.fromJson
+        surahData['surahName'] = surahData['surahName'] ?? surahData['name'] ?? '';
+        surahData['surahNameArabic'] = surahData['surahNameArabic'] ?? surahData['nameArabic'] ?? '';
+        surahData['surahNameArabicLong'] = surahData['surahNameArabicLong'] ?? surahData['nameArabicLong'] ?? '';
+        surahData['surahNameTranslation'] = surahData['surahNameTranslation'] ?? surahData['nameTranslation'] ?? '';
+        surahData['revelationPlace'] = surahData['revelationPlace'] ?? surahData['revelation'] ?? '';
+        surahData['totalAyah'] = surahData['totalAyah'] ?? surahData['ayahCount'] ?? 0;
+
         _cachedSurahs!.add(Surah.fromJson(surahData));
       }
-      
-      print('Surahs parsed: ${_cachedSurahs!.length}');
+
+      // Write-through to DB
+      await _repo.putSurahIndexBatch(_cachedSurahs!
+          .map((s) => {
+                'number': s.number,
+                'surahName': s.name,
+                'surahNameArabic': s.nameArabic,
+                'surahNameArabicLong': s.nameArabicLong,
+                'surahNameTranslation': s.nameTranslation,
+                'revelationPlace': s.revelationPlace,
+                'totalAyah': s.totalAyah,
+              })
+          .toList());
+
       return _cachedSurahs!;
     } catch (e) {
-      print('ERROR loading surahs: $e');
-      // Fallback to hard-coded data when assets fail to load
-      print('Using fallback surah data');
+      print('ERROR loading surahs from assets: $e');
       _cachedSurahs = _fallbackSurahs;
       return _fallbackSurahs;
     }
   }
 
-  Future<SurahDetail> getSurahDetail(int surahNumber) async {
-    // Return cached data if available
-    if (_cachedSurahDetails.containsKey(surahNumber)) {
-      print('Returning cached surah detail for surah $surahNumber');
-      return _cachedSurahDetails[surahNumber]!;
-    }
-    
+  // Ensure a detail is in memory using only memory -> DB (no assets), for instant navigation
+  Future<void> ensureDetailCached(int surahNumber) async {
+    if (_cachedSurahDetails.containsKey(surahNumber)) return;
     try {
-      print('Loading details for surah $surahNumber from assets...');
-      
-      // Try up to 3 times to load from assets
-      SurahDetail? surahDetail;
-      int attempts = 0;
-      bool success = false;
-      Exception? lastError;
-      
-      while (!success && attempts < 3) {
-        try {
-          attempts++;
-          // Load from local assets
-          final String data = await rootBundle.loadString('assets/data/surah_$surahNumber.json');
-          final Map<String, dynamic> surahData = json.decode(data);
-          
-          // Ensure surahNo is set
-          if (!surahData.containsKey('surahNo')) {
-            surahData['surahNo'] = surahNumber;
-          }
-          
-          surahDetail = SurahDetail.fromJson(surahData);
-          success = true;
-          print('Successfully loaded surah detail $surahNumber');
-        } catch (e) {
-          print('Failed to load surah detail $surahNumber on attempt $attempts: $e');
-          lastError = e as Exception;
-          // Wait a short time before retrying
-          await Future.delayed(const Duration(milliseconds: 200));
+      final jsonMap = await _repo.getSurahDetail(surahNumber);
+      if (jsonMap != null) {
+        jsonMap['surahNo'] = jsonMap['surahNo'] ?? surahNumber;
+        _cachedSurahDetails[surahNumber] = SurahDetail.fromJson(jsonMap);
+      }
+    } catch (_) {
+      // Ignore here; asset fallback handled in getSurahDetail
+    }
+  }
+
+  // Prefetch multiple details non-blocking from DB into memory (no assets)
+  void prefetchDetailsFromDb(List<int> surahNumbers, {int batchSize = 12, Duration delay = const Duration(milliseconds: 30)}) {
+    Future<void> _prefetchBatch(int start) async {
+      final end = (start + batchSize) > surahNumbers.length ? surahNumbers.length : (start + batchSize);
+      for (int i = start; i < end; i++) {
+        final n = surahNumbers[i];
+        if (!_cachedSurahDetails.containsKey(n)) {
+          await ensureDetailCached(n);
         }
       }
-      
-      if (success && surahDetail != null) {
-        // Cache for future use
-        _cachedSurahDetails[surahNumber] = surahDetail;
-        return surahDetail;
-      } else {
-        // If we couldn't load the surah after retries, log the error but don't crash
-        print('ERROR: Failed to load surah detail $surahNumber after multiple attempts: $lastError');
-        // Use a safe fallback approach - try to get a default surah detail
-        return _getDefaultFallbackSurahDetail(surahNumber);
+      if (end < surahNumbers.length) {
+        Future.delayed(delay, () => _prefetchBatch(end));
+      }
+    }
+
+    if (surahNumbers.isNotEmpty) {
+      _prefetchBatch(0);
+    }
+  }
+
+  Future<SurahDetail> getSurahDetail(int surahNumber) async {
+    // Memory
+    final cached = _cachedSurahDetails[surahNumber];
+    if (cached != null) return cached;
+
+    // DB
+    try {
+      final jsonMap = await _repo.getSurahDetail(surahNumber);
+      if (jsonMap != null) {
+        // Ensure consistency
+        jsonMap['surahNo'] = jsonMap['surahNo'] ?? surahNumber;
+        final detail = SurahDetail.fromJson(jsonMap);
+        _cachedSurahDetails[surahNumber] = detail;
+        return detail;
       }
     } catch (e) {
-      print('ERROR loading details for surah $surahNumber: $e');
+      print('DB read for surah detail $surahNumber failed, will try assets: $e');
+    }
+
+    // Assets fallback (write-through)
+    try {
+      final String data = await rootBundle.loadString('assets/data/surah_$surahNumber.json');
+      final Map<String, dynamic> surahData = json.decode(data);
+      surahData['surahNo'] = surahData['surahNo'] ?? surahNumber;
+
+      // Write-through to DB
+      await _repo.putSurahDetail(surahNumber, surahData);
+
+      final detail = SurahDetail.fromJson(surahData);
+      _cachedSurahDetails[surahNumber] = detail;
+      return detail;
+    } catch (e) {
+      print('ERROR loading details for surah $surahNumber from assets: $e');
       return _getDefaultFallbackSurahDetail(surahNumber);
     }
   }
-  
-  // Provide a fallback for any surah that fails to load
+
+  // Fallback Al-Fatiha
   SurahDetail _getDefaultFallbackSurahDetail(int surahNumber) {
-    // If we have at least surah 1 cached, return that as a fallback
     if (_cachedSurahDetails.containsKey(1)) {
-      print('Using cached Al-Fatiha as fallback for surah $surahNumber');
       return _cachedSurahDetails[1]!;
     }
-    
-    // If all else fails, return a hardcoded Al-Fatiha
-    print('Using hardcoded Al-Fatiha as fallback for surah $surahNumber');
-    
-    // Create a basic fallback Surah Al-Fatiha
-    List<String> arabicVerses = [
+
+    final arabicVerses = [
       'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ',
       'الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ',
       'الرَّحْمَٰنِ الرَّحِيمِ',
@@ -150,18 +194,16 @@ class QuranService extends GetxService {
       'اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ',
       'صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ'
     ];
-    
-    List<String> englishVerses = [
+    final englishVerses = [
       'In the name of Allah, the Entirely Merciful, the Especially Merciful.',
       'All praise is due to Allah, Lord of the worlds.',
       'The Entirely Merciful, the Especially Merciful,',
       'Sovereign of the Day of Recompense.',
       'It is You we worship and You we ask for help.',
       'Guide us to the straight path -',
-      'The path of those upon whom You have bestowed favor, not of those who have evoked [Your] anger or of those who are astray.'
+      'The path of those upon whom You have bestowed favor, not of those who have evoked anger or of those who are astray.'
     ];
-    
-    List<String> bengaliVerses = [
+    final bengaliVerses = [
       'পরম করুণাময় অতি দয়ালু আল্লাহর নামে',
       'সকল প্রশংসা আল্লাহর জন্য, যিনি সমস্ত জগতের প্রতিপালক',
       'পরম করুণাময়, অতি দয়ালু',
@@ -170,19 +212,17 @@ class QuranService extends GetxService {
       'আমাদেরকে সরল পথে পরিচালিত কর',
       'তাদের পথে যাদেরকে তুমি নিয়ামত দান করেছ, তাদের নয় যাদের প্রতি তোমার রোষ হয়েছে এবং যারা পথভ্রষ্ট'
     ];
-    
-    // Create ayahs
-    List<Ayah> ayahs = [];
-    for (int i = 0; i < 7; i++) {
-      ayahs.add(Ayah(
+
+    final ayahs = List<Ayah>.generate(7, (i) {
+      return Ayah(
         number: i + 1,
         arabic: arabicVerses[i],
         english: englishVerses[i],
         bengali: bengaliVerses[i],
-      ));
-    }
-    
-    SurahDetail fallbackSurahDetail = SurahDetail(
+      );
+    });
+
+    final fallback = SurahDetail(
       surahName: 'Al-Faatiha',
       surahNameArabic: 'الفاتحة',
       surahNameArabicLong: 'سُورَةُ ٱلْفَاتِحَةِ',
@@ -195,21 +235,18 @@ class QuranService extends GetxService {
       bengali: bengaliVerses,
       ayahs: ayahs,
     );
-    
-    // Cache the fallback for future use
-    _cachedSurahDetails[1] = fallbackSurahDetail;
-    return fallbackSurahDetail;
+    _cachedSurahDetails[1] = fallback;
+    return fallback;
   }
-  
-  // Track preloading progress
+
+  // Preloading counters no longer represent true caching state; keep for compatibility
   final RxInt _preloadedCount = 0.obs;
   int get preloadedCount => _preloadedCount.value;
-  
-  // Checks how many surahs are cached
+
+  // Checks how many surahs are cached (details loaded in memory)
   int get cachedSurahCount => _cachedSurahDetails.length;
-  
-  // Record preloading status for a surah
+
   void recordPreloadedSurah() {
     _preloadedCount.value++;
   }
-} 
+}

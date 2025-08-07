@@ -11,13 +11,16 @@ import 'services/quran_service.dart';
 import 'routes/app_routes.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'utils/font_settings_manager.dart';
+// Sembast bootstrap
+import 'services/quran_repository.dart';
+import 'services/data_bootstrapper.dart';
 
 void main() async {
   // ignore: prefer_const_constructors
   setUrlStrategy(PathUrlStrategy());
-  
+
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Initialize the pref service first - this should ensure consistent storage across platforms
   final prefService = await PrefServiceShared.init(
     defaults: {
@@ -30,20 +33,34 @@ void main() async {
       FontSettingsManager.TRANSLATION_LANGUAGE_KEY: FontSettingsManager.defaultLanguage,
     },
   );
-  
+
   // Provide the service to the app
   Get.put<BasePrefService>(prefService);
-  
+
   // Initialize theme controller with the pref service
   final themeController = Get.put(ThemeController());
   await themeController.initializeSettings();
   print('Theme controller initialized with settings');
-  
+
+  // STEP A: Open Sembast and import data if needed (version.txt gating)
+  final repo = QuranRepository();
+  // Register repo so services can find it
+  Get.put<QuranRepository>(repo, permanent: true);
+  final bootstrapper = DataBootstrapper(repo);
+  print('Starting data bootstrap (Sembast import if needed)...');
+  final result = await bootstrapper.initialize(onProgress: (done, total) {
+    if (done % 10 == 0 || done == total) {
+      // Throttle logs
+      print('Import progress: $done/$total');
+    }
+  });
+  print('Data bootstrap complete. Imported: ${result.imported}. AssetVersion: ${result.assetVersion}, DbVersion(before): ${result.dbVersion}');
+
   // Initialize remaining services and controllers
   await initServices();
 
-  // Preload all surah data
-  preloadAllSurahs();
+  // Remove heavy global preloader — DB-first reads are instant after first import
+  // preloadAllSurahs(); // disabled
 
   runApp(
     PrefService(
@@ -62,7 +79,7 @@ Future<void> initServices() async {
 
   // Initialize bookmark controller
   Get.put(BookmarkController());
-  
+
   // Initialize audio controller
   Get.put(AudioController());
 }
@@ -111,21 +128,19 @@ class QuranApp extends StatelessWidget {
     final themeController = Get.find<ThemeController>();
 
     // Use Obx to reactively rebuild when any observable changes
-    return DynamicColorBuilder(
-      builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
-        // Pass the dynamic color schemes to the theme controller
-        themeController.updateDynamicColorSchemes(lightDynamic, darkDynamic);
-        
-        return Obx(() => GetMaterialApp(
-          title: 'Quran App',
-          theme: themeController.lightTheme,
-          darkTheme: themeController.darkTheme,
-          themeMode: themeController.useSystemTheme.value ? ThemeMode.system : (themeController.isDarkMode.value ? ThemeMode.dark : ThemeMode.light),
-          debugShowCheckedModeBanner: false,
-          initialRoute: AppRoutes.home,
-          getPages: AppRoutes.routes,
-        ));
-      }
-    );
+    return DynamicColorBuilder(builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
+      // Pass the dynamic color schemes to the theme controller
+      themeController.updateDynamicColorSchemes(lightDynamic, darkDynamic);
+
+      return Obx(() => GetMaterialApp(
+            title: 'Quran App',
+            theme: themeController.lightTheme,
+            darkTheme: themeController.darkTheme,
+            themeMode: themeController.useSystemTheme.value ? ThemeMode.system : (themeController.isDarkMode.value ? ThemeMode.dark : ThemeMode.light),
+            debugShowCheckedModeBanner: false,
+            initialRoute: AppRoutes.home,
+            getPages: AppRoutes.routes,
+          ));
+    });
   }
 }
