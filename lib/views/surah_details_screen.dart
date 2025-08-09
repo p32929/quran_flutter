@@ -278,7 +278,6 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
-      padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top, left: 16, right: 16, bottom: 8),
       decoration: BoxDecoration(
         color: colorScheme.primary,
         boxShadow: [
@@ -289,8 +288,13 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
           ),
         ],
       ),
-      child: Row(
-        children: [
+      child: SafeArea(
+        child: Container(
+          height: 56, // Standard AppBar height
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
           // Back button
           IconButton(
             icon: const Icon(Icons.arrow_back),
@@ -299,28 +303,47 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
             onPressed: () => Get.back(),
           ),
 
-          // Surah info
+          // Surah info - single line, left-aligned
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  widget.surah.name,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: colorScheme.onPrimary,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Surah name
+                  Text(
+                    widget.surah.name,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: colorScheme.onPrimary,
+                    ),
                   ),
-                ),
-                Text(
-                  "${widget.surah.nameTranslation} • ${widget.surah.totalAyah} Ayahs",
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: colorScheme.onPrimary.withOpacity(0.8),
+                  const SizedBox(width: 12),
+                  // Separator dot
+                  Container(
+                    width: 4,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: colorScheme.onPrimary.withOpacity(0.6),
+                      shape: BoxShape.circle,
+                    ),
                   ),
-                ),
-              ],
+                  const SizedBox(width: 12),
+                  // Translation and ayah count
+                  Expanded(
+                    child: Text(
+                      "${widget.surah.nameTranslation} • ${widget.surah.totalAyah} Ayahs",
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: colorScheme.onPrimary.withOpacity(0.8),
+                        fontWeight: FontWeight.w500,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
 
@@ -347,7 +370,9 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
             tooltip: 'Settings',
             onPressed: () => _showSettingsBottomSheet(context),
           ),
-        ],
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -16,7 +16,7 @@ class BookmarksScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Bookmarks'),
-        centerTitle: true,
+        centerTitle: false, // Left align the title
       ),
       body: Obx(() {
         if (bookmarkController.bookmarks.isEmpty) {

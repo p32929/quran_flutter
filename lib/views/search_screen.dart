@@ -60,6 +60,7 @@ class _SearchScreenState extends State<SearchScreen> {
             color: colorScheme.onPrimary,
           ),
         ),
+        centerTitle: false, // Left align the title
         backgroundColor: colorScheme.primary,
         foregroundColor: colorScheme.onPrimary,
         elevation: 0,
