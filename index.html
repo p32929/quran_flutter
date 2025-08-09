@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
   <!--
     If you are serving your web app in a path other than the root, change the
@@ -24,36 +23,16 @@
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="quran">
+  <meta name="apple-mobile-web-app-title" content="quran_flutter_v2">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>quran</title>
+  <title>quran_flutter_v2</title>
   <link rel="manifest" href="manifest.json">
-  
-  <!-- Simple web audio support script -->
-  <script>
-    // Simple script to help with audio playback on mobile browsers
-    document.addEventListener('click', function() {
-      // Create audio context on first user interaction (needed for iOS)
-      if (window.AudioContext && !window._audioContextInitialized) {
-        try {
-          window._audioContext = new (window.AudioContext || window.webkitAudioContext)();
-          window._audioContextInitialized = true;
-          console.log('Audio context initialized');
-        } catch (e) {
-          console.log('Error initializing audio context', e);
-        }
-      }
-    }, { once: true });
-  </script>
 </head>
-
-<body style="margin: 0; position: relative; height: 100vh; display: flex; justify-content: center; align-items: center; background-color: #f5f5f5;">
-  <img src="spinner_animation.svg" style="display: block; width: 150px; height: 150px;" />
+<body>
   <script src="flutter_bootstrap.js" async></script>
 </body>
-
 </html>
