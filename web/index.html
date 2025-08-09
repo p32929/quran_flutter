@@ -40,6 +40,7 @@
       color: white;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       z-index: 9999;
+      transition: opacity 0.5s ease-out;
     }
 
     #loading h1 {
@@ -68,9 +69,21 @@
       100% { transform: rotate(360deg); }
     }
 
-    /* Hide loading screen when Flutter is ready */
+    /* Hide loading screen smoothly when Flutter renders */
     .flutter-loaded #loading {
-      display: none;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Ensure Flutter app is hidden until first paint */
+    flt-glass-pane, flutter-view {
+      opacity: 0;
+      transition: opacity 0.3s ease-in;
+    }
+
+    .flutter-loaded flt-glass-pane,
+    .flutter-loaded flutter-view {
+      opacity: 1;
     }
   </style>
 </head>
@@ -81,10 +94,60 @@
   </div>
 
   <script>
-    // Hide loading screen when Flutter is ready
+    let flutterReady = false;
+    let firstPaintDetected = false;
+    
+    // Hide loading screen only when Flutter actually renders
+    function hideLoadingScreen() {
+      if (flutterReady && firstPaintDetected) {
+        document.body.classList.add('flutter-loaded');
+        // Remove loading div after transition
+        setTimeout(() => {
+          const loading = document.getElementById('loading');
+          if (loading) loading.remove();
+        }, 500);
+      }
+    }
+    
+    // Listen for Flutter ready event
     window.addEventListener('flutter-first-frame', function() {
-      document.body.classList.add('flutter-loaded');
+      flutterReady = true;
+      hideLoadingScreen();
     });
+    
+    // Detect when Flutter actually paints something
+    function detectFlutterPaint() {
+      const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.type === 'childList') {
+            const flutterElements = document.querySelectorAll('flt-glass-pane, flutter-view');
+            if (flutterElements.length > 0) {
+              // Wait a bit to ensure Flutter has actually rendered content
+              setTimeout(() => {
+                firstPaintDetected = true;
+                hideLoadingScreen();
+                observer.disconnect();
+              }, 100);
+            }
+          }
+        });
+      });
+      
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+    }
+    
+    // Start detecting Flutter paint
+    detectFlutterPaint();
+    
+    // Fallback: hide loading screen after 10 seconds max
+    setTimeout(() => {
+      if (!document.body.classList.contains('flutter-loaded')) {
+        document.body.classList.add('flutter-loaded');
+      }
+    }, 10000);
   </script>
 
   <script src="flutter_bootstrap.js" async></script>
