@@ -143,10 +143,6 @@ class QuranWebApp extends StatefulWidget {
 }
 
 class _QuranWebAppState extends State<QuranWebApp> {
-  String _status = 'Initializing...';
-  double _progress = 0.0;
-  int _currentStep = 0;
-  int _totalSteps = 114;
   bool _isInitialized = false;
   BasePrefService? _prefService;
 
@@ -158,11 +154,6 @@ class _QuranWebAppState extends State<QuranWebApp> {
 
   Future<void> _initializeApp() async {
     try {
-      setState(() {
-        _status = 'Preparing preferences...';
-        _progress = 0.1;
-      });
-
       // Initialize the pref service first
       final prefService = await PrefServiceShared.init(
         defaults: {
@@ -179,46 +170,21 @@ class _QuranWebAppState extends State<QuranWebApp> {
       Get.put<BasePrefService>(prefService);
       _prefService = prefService;
 
-      setState(() {
-        _status = 'Setting up theme...';
-        _progress = 0.2;
-      });
-
       // Initialize theme controller
       final themeController = Get.put(ThemeController());
       await themeController.initializeSettings();
 
-      setState(() {
-        _status = 'Loading Quran data...';
-        _progress = 0.3;
-      });
-
-      // Initialize Sembast and import data with progress tracking
+      // Initialize Sembast and import data
       final repo = QuranRepository();
       Get.put<QuranRepository>(repo, permanent: true);
       final bootstrapper = DataBootstrapper(repo);
 
-      final result = await bootstrapper.initialize(onProgress: (done, total) {
-        setState(() {
-          _currentStep = done;
-          _totalSteps = total;
-          _status = 'Loading Surahs ($done/$total)...';
-          _progress = 0.3 + (done / total * 0.6); // 30% to 90%
-        });
-      });
-
-      setState(() {
-        _status = 'Finalizing...';
-        _progress = 0.95;
+      await bootstrapper.initialize(onProgress: (done, total) {
+        // Progress tracking happens in console logs only
       });
 
       // Initialize services
       await initServices();
-
-      setState(() {
-        _status = 'Ready!';
-        _progress = 1.0;
-      });
 
       // Small delay to show completion, then switch to main app
       await Future.delayed(const Duration(milliseconds: 500));
@@ -228,9 +194,6 @@ class _QuranWebAppState extends State<QuranWebApp> {
       });
 
     } catch (e) {
-      setState(() {
-        _status = 'Error: $e';
-      });
       print('Error during initialization: $e');
     }
   }
@@ -245,87 +208,16 @@ class _QuranWebAppState extends State<QuranWebApp> {
       );
     }
 
-    // Show loading screen
+    // Show loading screen - just circular progress indicator
     return MaterialApp(
       title: 'Quran',
       home: Scaffold(
         body: Container(
           color: const Color(0xffa1d39a), // Using the specified green color
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(32.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(
-                    Icons.book,
-                    size: 80,
-                    color: Colors.white,
-                  ),
-                  const SizedBox(height: 32),
-                  const Text(
-                    'القرآن الكريم',
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'Holy Quran',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.white70,
-                    ),
-                  ),
-                  const SizedBox(height: 48),
-                  
-                  // Progress bar
-                  Container(
-                    width: double.infinity,
-                    height: 6,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(3),
-                    ),
-                    child: FractionallySizedBox(
-                      alignment: Alignment.centerLeft,
-                      widthFactor: _progress,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(3),
-                        ),
-                      ),
-                    ),
-                  ),
-                  
-                  const SizedBox(height: 16),
-                  
-                  // Status text
-                  Text(
-                    _status,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  
-                  if (_currentStep > 0 && _totalSteps > 0)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Text(
-                        '${(_progress * 100).round()}%',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.white70,
-                        ),
-                      ),
-                    ),
-                ],
-              ),
+          child: const Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              strokeWidth: 3.0,
             ),
           ),
         ),
