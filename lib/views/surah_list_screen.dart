@@ -199,75 +199,40 @@ class _SurahListScreenState extends State<SurahListScreen> {
                     ),
                   ],
                 ),
-                child: Column(
-                  children: [
-                    // Search field
-                    TextField(
-                      controller: searchController,
-                      onChanged: quranController.filterSurahs,
-                      decoration: InputDecoration(
-                        hintText: 'Search surah by name or number',
-                        prefixIcon: const Icon(Icons.search),
-                        suffixIcon: Obx(() {
-                          if (quranController.searchQuery.value.isNotEmpty) {
-                            return IconButton(
-                              icon: const Icon(Icons.clear),
-                              onPressed: () {
-                                searchController.clear();
-                                quranController.filterSurahs('');
-                              },
-                            );
-                          }
-                          return const SizedBox.shrink();
-                        }),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide.none,
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide.none,
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: colorScheme.primary, width: 1),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(vertical: 12),
-                        filled: true,
-                        fillColor: colorScheme.surface,
-                      ),
+                child: TextField(
+                  controller: searchController,
+                  onChanged: quranController.filterSurahs,
+                  decoration: InputDecoration(
+                    hintText: 'Search surah by name or number',
+                    prefixIcon: const Icon(Icons.search),
+                    suffixIcon: Obx(() {
+                      if (quranController.searchQuery.value.isNotEmpty) {
+                        return IconButton(
+                          icon: const Icon(Icons.clear),
+                          onPressed: () {
+                            searchController.clear();
+                            quranController.filterSurahs('');
+                          },
+                        );
+                      }
+                      return const SizedBox.shrink();
+                    }),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
                     ),
-
-                    // Search ayats button
-                    InkWell(
-                      onTap: () => Get.toNamed('/search'),
-                      child: Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        decoration: BoxDecoration(
-                          color: colorScheme.surfaceVariant,
-                          borderRadius: const BorderRadius.only(
-                            bottomLeft: Radius.circular(12),
-                            bottomRight: Radius.circular(12),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.format_align_left, size: 18, color: colorScheme.primary),
-                            const SizedBox(width: 8),
-                            Text(
-                              'Search full text of verses',
-                              style: TextStyle(
-                                color: colorScheme.primary,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
                     ),
-                  ],
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: colorScheme.primary, width: 1),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                    filled: true,
+                    fillColor: colorScheme.surface,
+                  ),
                 ),
               ),
             ),

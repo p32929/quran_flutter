@@ -15,7 +15,7 @@ class SettingsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
-        centerTitle: true,
+        centerTitle: false, // Left align the title
         elevation: 0,
       ),
       body: ListView(

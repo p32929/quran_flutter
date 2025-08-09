@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../models/last_read_model.dart';
+import '../../controllers/last_read_controller.dart';
 
 class LastReadBottomSheet extends StatefulWidget {
   final LastRead lastRead;
@@ -174,7 +175,11 @@ class _LastReadBottomSheetState extends State<LastReadBottomSheet>
                                   color: Colors.transparent,
                                   child: InkWell(
                                     borderRadius: BorderRadius.circular(16),
-                                    onTap: () => Get.back(),
+                                    onTap: () async {
+                                      final lastReadController = Get.find<LastReadController>();
+                                      await lastReadController.clearLastRead();
+                                      Get.back();
+                                    },
                                     child: Center(
                                       child: Text(
                                         'Maybe Later',
@@ -219,7 +224,9 @@ class _LastReadBottomSheetState extends State<LastReadBottomSheet>
                                   color: Colors.transparent,
                                   child: InkWell(
                                     borderRadius: BorderRadius.circular(16),
-                                    onTap: () {
+                                    onTap: () async {
+                                      final lastReadController = Get.find<LastReadController>();
+                                      await lastReadController.clearLastRead();
                                       Get.back();
                                       Get.toNamed(
                                         '/surah/${widget.lastRead.surah}',
