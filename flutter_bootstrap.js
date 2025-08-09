@@ -37,8 +37,13 @@ if (!window._flutter) {
 _flutter.buildConfig = {"engineRevision":"ef0cd000916d64fa0c5d09cc809fa7ad244a5767","builds":[{"compileTarget":"dart2js","renderer":"canvaskit","mainJsPath":"main.dart.js"}]};
 
 
+// Simple, optimized Flutter bootstrap
 _flutter.loader.load({
-  serviceWorkerSettings: {
-    serviceWorkerVersion: "1883641366"
+  onEntrypointLoaded: async function(engineInitializer) {
+    const appRunner = await engineInitializer.initializeEngine();
+    await appRunner.runApp();
+    
+    // Notify that the app is ready
+    window.dispatchEvent(new Event('flutter-first-frame'));
   }
-});
+}); 
