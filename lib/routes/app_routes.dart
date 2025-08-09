@@ -14,11 +14,11 @@ class AppRoutes {
   static const String bookmarks = '/bookmarks';
   static const String settings = '/settings';
   static const String search = '/search';
-  
+
   static final routes = [
     GetPage(
       name: home,
-      page: () => SurahListScreen(),
+      page: () => const SurahListScreen(),
       binding: AppBinding(),
     ),
     GetPage(
@@ -38,28 +38,20 @@ class AppRoutes {
         } else {
           // Try to get from parameters (for direct URL navigation)
           final surahId = int.tryParse(Get.parameters['id'] ?? '1') ?? 1;
-          
+
           // Get the QuranController and find the surah
           final quranController = Get.find<QuranController>();
           final foundSurah = quranController.getSurahByNumber(surahId);
-          
+
           // If found, return it; otherwise create a placeholder
           if (foundSurah != null) {
             // Even if we found the surah info, we may still be loading its details
             return SurahDetailsScreen(surah: foundSurah);
           } else {
-            return SurahDetailsScreen(surah: Surah(
-              number: surahId,
-              name: 'Loading...',
-              nameArabic: '',
-              nameArabicLong: '',
-              nameTranslation: '',
-              totalAyah: 0,
-              revelationPlace: ''
-            ));
+            return SurahDetailsScreen(surah: Surah(number: surahId, name: 'Loading...', nameArabic: '', nameArabicLong: '', nameTranslation: '', totalAyah: 0, revelationPlace: ''));
           }
         }
       },
     ),
   ];
-} 
+}

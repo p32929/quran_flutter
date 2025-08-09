@@ -3,20 +3,49 @@ import 'package:get/get.dart';
 import '../controllers/quran_controller.dart';
 import '../controllers/theme_controller.dart';
 import '../controllers/bookmark_controller.dart';
+import '../controllers/last_read_controller.dart';
+import '../models/last_read_model.dart';
 import '../models/surah_model.dart';
 import '../routes/app_routes.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'widgets/last_read_bottom_sheet.dart';
 import 'widgets/about_bottom_sheet.dart';
 import 'widgets/theme_bottom_sheet.dart';
 import '../services/quran_service.dart';
 
-class SurahListScreen extends StatelessWidget {
-  SurahListScreen({super.key});
+class SurahListScreen extends StatefulWidget {
+  const SurahListScreen({super.key});
 
+  @override
+  State<SurahListScreen> createState() => _SurahListScreenState();
+}
+
+class _SurahListScreenState extends State<SurahListScreen> {
   final QuranController quranController = Get.find<QuranController>();
   final ThemeController themeController = Get.find<ThemeController>();
   final BookmarkController bookmarkController = Get.find<BookmarkController>();
+  final LastReadController lastReadController = Get.find<LastReadController>();
   final TextEditingController searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showLastReadBottomSheet();
+    });
+  }
+
+  void _showLastReadBottomSheet() {
+    final lastRead = lastReadController.lastRead.value;
+    if (lastRead != null) {
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) => LastReadBottomSheet(lastRead: lastRead),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

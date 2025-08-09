@@ -6,6 +6,7 @@ import '../controllers/quran_controller.dart';
 import '../controllers/theme_controller.dart';
 import '../controllers/bookmark_controller.dart';
 import '../controllers/audio_controller.dart';
+import '../controllers/last_read_controller.dart';
 import '../models/surah_model.dart';
 import '../models/ayah_model.dart';
 import '../utils/text_styles.dart';
@@ -29,6 +30,7 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
   final BookmarkController bookmarkController = Get.find<BookmarkController>();
   final ThemeController themeController = Get.find<ThemeController>();
   late final AudioController audioController;
+  final LastReadController lastReadController = Get.find<LastReadController>();
 
   // Add a local loading state to ensure complete loading
   final RxBool isInitializing = true.obs;
@@ -56,7 +58,29 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
     if (audioController.isCurrentlyPlaying(widget.surah.number.toString())) {
       audioController.stopAudio();
     }
+
+    // Save the last read position
+    final lastReadVerse = _getCurrentVerseNumber();
+    if (lastReadVerse != null) {
+      lastReadController.saveLastRead(widget.surah.number, lastReadVerse);
+    }
+
     super.dispose();
+  }
+
+  int? _getCurrentVerseNumber() {
+    final positions = itemPositionsListener.itemPositions.value;
+    if (positions.isNotEmpty) {
+      final firstVisibleItem = positions.first;
+      final showArabic = themeController.showArabicText.value;
+      final hasBismillah = widget.surah.number != 1 && widget.surah.number != 9 && showArabic;
+      final headerItemCount = 1 + (hasBismillah ? 1 : 0);
+      final ayahIndex = firstVisibleItem.index - headerItemCount;
+      if (ayahIndex >= 0 && ayahIndex < quranController.ayahs.length) {
+        return quranController.ayahs[ayahIndex].number;
+      }
+    }
+    return null;
   }
 
   void _loadData() async {
