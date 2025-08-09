@@ -38,4 +38,13 @@ class LastReadController extends GetxController {
       // Handle error
     }
   }
+
+  Future<void> clearLastRead() async {
+    try {
+      await _prefService.remove(LAST_READ_KEY);
+      lastRead.value = null;
+    } catch (e) {
+      // Handle error
+    }
+  }
 }
