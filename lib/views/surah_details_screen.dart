@@ -6,6 +6,7 @@ import '../controllers/quran_controller.dart';
 import '../controllers/theme_controller.dart';
 import '../controllers/bookmark_controller.dart';
 import '../controllers/audio_controller.dart';
+import '../controllers/last_read_controller.dart';
 import '../models/surah_model.dart';
 import '../models/ayah_model.dart';
 import '../utils/text_styles.dart';
@@ -29,55 +30,78 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
   final BookmarkController bookmarkController = Get.find<BookmarkController>();
   final ThemeController themeController = Get.find<ThemeController>();
   late final AudioController audioController;
-  
+  final LastReadController lastReadController = Get.find<LastReadController>();
+
   // Add a local loading state to ensure complete loading
   final RxBool isInitializing = true.obs;
-  
+
   @override
   void initState() {
     super.initState();
-    
+
     // Check if AudioController exists or initialize it
     if (!Get.isRegistered<AudioController>()) {
       Get.put(AudioController());
     }
-    
+
     audioController = Get.find<AudioController>();
-    
+
     // Handle initial data loading first, then check for scrollToAyah in a callback
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadData();
     });
   }
-  
+
   @override
   void dispose() {
     // Stop audio when leaving the surah details screen
     if (audioController.isCurrentlyPlaying(widget.surah.number.toString())) {
       audioController.stopAudio();
     }
+
+    // Save the last read position
+    final lastReadVerse = _getCurrentVerseNumber();
+    if (lastReadVerse != null) {
+      lastReadController.saveLastRead(widget.surah.number, lastReadVerse);
+    }
+
     super.dispose();
   }
-  
+
+  int? _getCurrentVerseNumber() {
+    final positions = itemPositionsListener.itemPositions.value;
+    if (positions.isNotEmpty) {
+      final firstVisibleItem = positions.first;
+      final showArabic = themeController.showArabicText.value;
+      final hasBismillah = widget.surah.number != 1 && widget.surah.number != 9 && showArabic;
+      final headerItemCount = 1 + (hasBismillah ? 1 : 0);
+      final ayahIndex = firstVisibleItem.index - headerItemCount;
+      if (ayahIndex >= 0 && ayahIndex < quranController.ayahs.length) {
+        return quranController.ayahs[ayahIndex].number;
+      }
+    }
+    return null;
+  }
+
   void _loadData() async {
     try {
       // Set initializing to true
       isInitializing.value = true;
-      
+
       // First load the data
       await quranController.fetchSurahDetail(widget.surah.number);
-      
+
       // Then check for scrolling arguments after data is loaded
       if (!quranController.hasError.value) {
         _checkForScrollToAyah();
-        
+
         // Load audio data for this surah
         _loadAudioData();
       }
-      
+
       // Add a slight delay to ensure UI has time to render properly
       await Future.delayed(const Duration(milliseconds: 300));
-      
+
       // Mark initialization as complete
       isInitializing.value = false;
     } catch (e) {
@@ -85,7 +109,7 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
       isInitializing.value = false;
     }
   }
-  
+
   void _loadAudioData() {
     // Get the surah detail and parse the audio data
     final surahDetail = quranController.currentSurahDetail.value;
@@ -98,7 +122,7 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
       }
     }
   }
-  
+
   void _checkForScrollToAyah() {
     // Get arguments (might be null)
     final args = Get.arguments;
@@ -107,18 +131,18 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
       if (args.containsKey('scrollToAyah')) {
         final ayahNumber = args['scrollToAyah'] as int;
         print('Found scrollToAyah argument: $ayahNumber');
-        
+
         // Give time for the list to render before scrolling
         Future.delayed(const Duration(milliseconds: 500), () {
           _scrollToAyah(ayahNumber);
         });
       }
-      
+
       // Handle temporary translation language if present
       if (args.containsKey('tempTranslationLanguage') && args['tempTranslationLanguage'] != null) {
         final tempLang = args['tempTranslationLanguage'] as String;
         print('Found tempTranslationLanguage argument: $tempLang');
-        
+
         // Only set if different from current
         if (tempLang != themeController.translationLanguage.value) {
           // Temporarily set the translation language based on the search language
@@ -127,24 +151,22 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
       }
     }
   }
-  
+
   void _scrollToAyah(int ayahNumber) {
     print('Attempting to scroll to ayah $ayahNumber');
     // Ayah numbers start from 1, but list indices start from 0
     final targetIndex = ayahNumber - 1;
-    
+
     // Ensure target index is valid
     if (targetIndex >= 0 && targetIndex < quranController.ayahs.length) {
       // Add header offset (surah header + bismillah if applicable and if Arabic text is shown)
       final showArabic = themeController.showArabicText.value;
-      final hasBismillah = widget.surah.number != 1 && 
-                          widget.surah.number != 9 && 
-                          showArabic;
+      final hasBismillah = widget.surah.number != 1 && widget.surah.number != 9 && showArabic;
       final headerItemCount = 1 + (hasBismillah ? 1 : 0); // 1 for surah header
-      
+
       // Calculate the actual index in the scrollable list (account for headers)
       final scrollIndex = headerItemCount + targetIndex;
-      
+
       if (itemScrollController.isAttached) {
         print('Scroll controller is attached, scrolling to index $scrollIndex');
         itemScrollController.scrollTo(
@@ -173,107 +195,57 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
         children: [
           // Custom app bar
           _buildAppBar(context),
-          
+
           // Content area - completely scrollable
           Expanded(
             child: Obx(() {
-              // Show loading if controller is loading, initializing, or the specific surah is still preloading
-              final bool isGlobalPreloading = quranController.isPreloading.value;
-              final bool isSurahLoaded = quranController.isSurahLoaded(widget.surah.number);
-              final bool showLoading = isInitializing.value || 
-                                     quranController.isLoading.value || 
-                                     (isGlobalPreloading && !isSurahLoaded);
-              
+              // Show loading only while this screen initializes or controller fetching detail
+              final bool showLoading = isInitializing.value || quranController.isLoading.value;
+
               if (showLoading) {
-                return _buildLoadingView(
-                  isPreloading: isGlobalPreloading,
-                  preloadedCount: quranController.preloadedCount.value,
-                  totalCount: quranController.totalSurahCount
-                );
+                return _buildLoadingView(isPreloading: false, preloadedCount: 0, totalCount: quranController.totalSurahCount);
               }
-              
+
               // Check for errors
               if (quranController.hasError.value) {
                 return _buildErrorView();
               }
-              
-              // Check if we actually have ayahs loaded
+
+              // If ayahs not yet available, still show a light loader (rare with DB-first)
               if (quranController.ayahs.isEmpty) {
-                return _buildLoadingView(
-                  isPreloading: isGlobalPreloading,
-                  preloadedCount: quranController.preloadedCount.value,
-                  totalCount: quranController.totalSurahCount
-                );
+                return _buildLoadingView(isPreloading: false, preloadedCount: 0, totalCount: quranController.totalSurahCount);
               }
-              
+
               // If everything is ready, show the content
               return GetBuilder<ThemeController>(
-                id: 'surah_details_view',
-                key: ValueKey('surah_details_${themeController.translationLanguage.value}_${themeController.showArabicText.value}_${themeController.showTranslation.value}'),
-                builder: (themeCtrl) {
-                  final showArabic = themeCtrl.showArabicText.value;
-                  final arabicFontSize = themeCtrl.arabicFontSize.value;
-                  final englishFontSize = themeCtrl.englishFontSize.value;
-                  final showTranslation = themeCtrl.showTranslation.value;
-                  final translationLanguage = themeCtrl.translationLanguage.value;
-                  
-                  print('Rebuilding surah details view with:');
-                  print('- Translation language: $translationLanguage');
-                  print('- Show Arabic: $showArabic');
-                  print('- Show Translation: $showTranslation');
-                  
-                  return _buildAyahsList(
-                    showArabic: showArabic,
-                    arabicFontSize: arabicFontSize,
-                    englishFontSize: englishFontSize,
-                    showTranslation: showTranslation,
-                    translationLanguage: translationLanguage
-                  );
-                }
-              );
+                  id: 'surah_details_view',
+                  key: ValueKey('surah_details_${themeController.translationLanguage.value}_${themeController.showArabicText.value}_${themeController.showTranslation.value}'),
+                  builder: (themeCtrl) {
+                    final showArabic = themeCtrl.showArabicText.value;
+                    final arabicFontSize = themeCtrl.arabicFontSize.value;
+                    final englishFontSize = themeCtrl.englishFontSize.value;
+                    final showTranslation = themeCtrl.showTranslation.value;
+                    final translationLanguage = themeCtrl.translationLanguage.value;
+
+                    return _buildAyahsList(showArabic: showArabic, arabicFontSize: arabicFontSize, englishFontSize: englishFontSize, showTranslation: showTranslation, translationLanguage: translationLanguage);
+                  });
             }),
           ),
         ],
       ),
     );
   }
-  
+
   Widget _buildLoadingView({
     required bool isPreloading,
     required int preloadedCount,
     required int totalCount,
   }) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CircularProgressIndicator(),
-          SizedBox(height: 16),
-          Text(
-            isPreloading 
-              ? 'Loading Surah...' 
-              : 'Loading Surah...',
-            style: const TextStyle(fontSize: 16),
-          ),
-          if (isPreloading) ...[
-            SizedBox(height: 8),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
-              child: LinearProgressIndicator(
-                value: preloadedCount / totalCount,
-              ),
-            ),
-            SizedBox(height: 8),
-            Text(
-              'Preloading surahs: $preloadedCount of $totalCount',
-              style: const TextStyle(fontSize: 12, color: Colors.grey),
-            ),
-          ],
-        ],
-      ),
+    return const Center(
+      child: CircularProgressIndicator(),
     );
   }
-  
+
   Widget _buildErrorView() {
     return Center(
       child: Column(
@@ -301,17 +273,12 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
       ),
     );
   }
-  
+
   Widget _buildAppBar(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    
+
     return Container(
-      padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top, 
-        left: 16, 
-        right: 16, 
-        bottom: 8
-      ),
+      padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top, left: 16, right: 16, bottom: 8),
       decoration: BoxDecoration(
         color: colorScheme.primary,
         boxShadow: [
@@ -331,7 +298,7 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
             tooltip: 'Back',
             onPressed: () => Get.back(),
           ),
-          
+
           // Surah info
           Expanded(
             child: Column(
@@ -356,27 +323,23 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
               ],
             ),
           ),
-          
+
           // Audio play button
           Obx(() => IconButton(
-            icon: Icon(
-              audioController.isCurrentlyPlaying(widget.surah.number.toString())
-                  ? Icons.stop_circle
-                  : Icons.play_circle,
-            ),
-            color: colorScheme.onPrimary,
-            tooltip: audioController.isCurrentlyPlaying(widget.surah.number.toString())
-                ? 'Stop Audio'
-                : 'Play Audio',
-            onPressed: () {
-              if (audioController.isCurrentlyPlaying(widget.surah.number.toString())) {
-                audioController.stopAudio();
-              } else {
-                _showAudioBottomSheet(context);
-              }
-            },
-          )),
-          
+                icon: Icon(
+                  audioController.isCurrentlyPlaying(widget.surah.number.toString()) ? Icons.stop_circle : Icons.play_circle,
+                ),
+                color: colorScheme.onPrimary,
+                tooltip: audioController.isCurrentlyPlaying(widget.surah.number.toString()) ? 'Stop Audio' : 'Play Audio',
+                onPressed: () {
+                  if (audioController.isCurrentlyPlaying(widget.surah.number.toString())) {
+                    audioController.stopAudio();
+                  } else {
+                    _showAudioBottomSheet(context);
+                  }
+                },
+              )),
+
           // Settings button
           IconButton(
             icon: const Icon(Icons.settings),
@@ -388,10 +351,10 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
       ),
     );
   }
-  
+
   Widget _buildSurahHeader(BuildContext context, double arabicFontSize) {
     final colorScheme = Theme.of(context).colorScheme;
-    
+
     return Container(
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(16),
@@ -435,7 +398,7 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
             ),
           ),
           const SizedBox(height: 16),
-          
+
           // Arabic name
           Text(
             widget.surah.nameArabic,
@@ -447,9 +410,9 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
             ),
             textAlign: TextAlign.center,
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Revelation place & ayah count
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -491,7 +454,7 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
       ),
     );
   }
-  
+
   Widget _buildAyahsList({
     required bool showArabic,
     required double arabicFontSize,
@@ -501,24 +464,18 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
   }) {
     final quranCtrl = Get.find<QuranController>();
     final ayahs = quranCtrl.ayahs;
-    
+
     // Safety check - show loading if no ayahs
     if (ayahs.isEmpty) {
-      return _buildLoadingView(
-        isPreloading: quranCtrl.isPreloading.value,
-        preloadedCount: quranCtrl.preloadedCount.value,
-        totalCount: quranCtrl.totalSurahCount
-      );
+      return _buildLoadingView(isPreloading: quranCtrl.isPreloading.value, preloadedCount: quranCtrl.preloadedCount.value, totalCount: quranCtrl.totalSurahCount);
     }
-    
+
     // We might have Bismillah (0 or 1 item) if Arabic text is shown
-    final hasBismillah = widget.surah.number != 1 && 
-                         widget.surah.number != 9 && 
-                         showArabic;
-    
+    final hasBismillah = widget.surah.number != 1 && widget.surah.number != 9 && showArabic;
+
     // Calculate total items (surah header + bismillah + ayahs)
     final totalItems = 1 + (hasBismillah ? 1 : 0) + ayahs.length;
-    
+
     return ScrollablePositionedList.builder(
       itemCount: totalItems,
       itemBuilder: (context, index) {
@@ -526,23 +483,23 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
         if (index == 0) {
           return _buildSurahHeader(context, arabicFontSize);
         }
-        
+
         // Bismillah is the second item (if present and Arabic is shown)
         if (hasBismillah && index == 1) {
           return _buildBismillah(context, arabicFontSize);
         }
-        
+
         // Adjust index for ayahs (account for surah header and bismillah if present)
         final ayahIndex = hasBismillah ? index - 2 : index - 1;
-        
+
         // Safety check to prevent index out of range
         if (ayahIndex < 0 || ayahIndex >= ayahs.length) {
           return SizedBox.shrink();
         }
-        
+
         return _buildAyahCard(
-          context, 
-          ayahs[ayahIndex], 
+          context,
+          ayahs[ayahIndex],
           ayahIndex,
           showArabic: showArabic,
           arabicFontSize: arabicFontSize,
@@ -556,10 +513,10 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
       padding: const EdgeInsets.only(bottom: 24),
     );
   }
-  
+
   Widget _buildBismillah(BuildContext context, double arabicFontSize) {
     final colorScheme = Theme.of(context).colorScheme;
-    
+
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
@@ -589,10 +546,10 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
       ),
     );
   }
-  
+
   Widget _buildAyahCard(
-    BuildContext context, 
-    Ayah ayah, 
+    BuildContext context,
+    Ayah ayah,
     int index, {
     required bool showArabic,
     required double arabicFontSize,
@@ -601,7 +558,7 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
     required String translationLanguage,
   }) {
     final colorScheme = Theme.of(context).colorScheme;
-    
+
     return Card(
       key: ValueKey('ayah_${ayah.number}_${translationLanguage}_${showArabic}_${showTranslation}'),
       margin: const EdgeInsets.fromLTRB(16, 8, 16, 8),
@@ -632,32 +589,26 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
                     ),
                   ),
                 ),
-                
+
                 const Spacer(),
-                
+
                 // Bookmark button (using GetBuilder to avoid nesting Obx)
-                GetBuilder<BookmarkController>(
-                  builder: (bookmarkCtrl) {
-                    final isBookmarked = bookmarkCtrl.isBookmarked(
-                    widget.surah.number, ayah.number
-                  );
+                GetBuilder<BookmarkController>(builder: (bookmarkCtrl) {
+                  final isBookmarked = bookmarkCtrl.isBookmarked(widget.surah.number, ayah.number);
                   return IconButton(
                     icon: Icon(
                       isBookmarked ? Icons.bookmark : Icons.bookmark_border,
-                      color: isBookmarked 
-                        ? colorScheme.primary 
-                        : colorScheme.onBackground.withOpacity(0.6),
+                      color: isBookmarked ? colorScheme.primary : colorScheme.onBackground.withOpacity(0.6),
                     ),
                     tooltip: 'Bookmark',
-                      onPressed: () => bookmarkCtrl.toggleBookmark(
+                    onPressed: () => bookmarkCtrl.toggleBookmark(
                       ayah,
                       widget.surah.number,
                       widget.surah.name,
                     ),
                   );
-                  }
-                ),
-                
+                }),
+
                 // Share button
                 IconButton(
                   icon: Icon(
@@ -673,49 +624,50 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Arabic text in decorated container - conditionally displayed
             if (showArabic)
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: colorScheme.surface,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: colorScheme.outline.withOpacity(0.2)),
-              ),
-                child: Text(
-                ayah.arabic,
-                style: TextStyle(
-                  fontFamily: 'IndoPak',
-                    fontSize: arabicFontSize,
-                  height: 1.8,
-                  color: colorScheme.onBackground,
-                ),
-                textAlign: TextAlign.right,
-                ),
-            ),
-            
-            // Only add spacing if both Arabic and translation are visible
-            if (showArabic && showTranslation)
-            const SizedBox(height: 16),
-            
-            // Translation text based on selected language - conditionally displayed
-            if (showTranslation)
               Container(
-                padding: showArabic ? null : const EdgeInsets.all(16),
-                decoration: showArabic ? null : BoxDecoration(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
                   color: colorScheme.surface,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: colorScheme.outline.withOpacity(0.2)),
                 ),
                 child: Text(
+                  ayah.arabic,
+                  style: TextStyle(
+                    fontFamily: 'IndoPak',
+                    fontSize: arabicFontSize,
+                    height: 1.8,
+                    color: colorScheme.onBackground,
+                  ),
+                  textAlign: TextAlign.right,
+                ),
+              ),
+
+            // Only add spacing if both Arabic and translation are visible
+            if (showArabic && showTranslation) const SizedBox(height: 16),
+
+            // Translation text based on selected language - conditionally displayed
+            if (showTranslation)
+              Container(
+                padding: showArabic ? null : const EdgeInsets.all(16),
+                decoration: showArabic
+                    ? null
+                    : BoxDecoration(
+                        color: colorScheme.surface,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: colorScheme.outline.withOpacity(0.2)),
+                      ),
+                child: Text(
                   translationLanguage == 'bengali' ? ayah.bengali : ayah.english,
-                style: TextStyle(
+                  style: TextStyle(
                     fontSize: englishFontSize,
-                  height: 1.6,
-                  color: colorScheme.onBackground.withOpacity(0.9),
+                    height: 1.6,
+                    color: colorScheme.onBackground.withOpacity(0.9),
                   ),
                 ),
               ),
@@ -724,7 +676,7 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
       ),
     );
   }
-  
+
   void _showAudioBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -733,7 +685,7 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
       builder: (context) => AudioBottomSheet(surah: widget.surah),
     );
   }
-  
+
   void _showSettingsBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -745,4 +697,4 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
       builder: (context) => const SettingsBottomSheet(),
     );
   }
-} 
+}

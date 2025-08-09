@@ -3,39 +3,58 @@ import 'package:get/get.dart';
 import '../controllers/quran_controller.dart';
 import '../controllers/theme_controller.dart';
 import '../controllers/bookmark_controller.dart';
+import '../controllers/last_read_controller.dart';
+import '../models/last_read_model.dart';
 import '../models/surah_model.dart';
 import '../routes/app_routes.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'widgets/last_read_bottom_sheet.dart';
 import 'widgets/about_bottom_sheet.dart';
 import 'widgets/theme_bottom_sheet.dart';
+import '../services/quran_service.dart';
 
-class SurahListScreen extends StatelessWidget {
-  SurahListScreen({super.key});
+class SurahListScreen extends StatefulWidget {
+  const SurahListScreen({super.key});
 
+  @override
+  State<SurahListScreen> createState() => _SurahListScreenState();
+}
+
+class _SurahListScreenState extends State<SurahListScreen> {
   final QuranController quranController = Get.find<QuranController>();
   final ThemeController themeController = Get.find<ThemeController>();
   final BookmarkController bookmarkController = Get.find<BookmarkController>();
+  final LastReadController lastReadController = Get.find<LastReadController>();
   final TextEditingController searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showLastReadBottomSheet();
+    });
+  }
+
+  void _showLastReadBottomSheet() {
+    final lastRead = lastReadController.lastRead.value;
+    if (lastRead != null) {
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) => LastReadBottomSheet(lastRead: lastRead),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Obx(() {
-        // Show loading if either initial loading or still preloading
-        if (quranController.isLoading.value || quranController.isPreloading.value) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const CircularProgressIndicator(),
-                const SizedBox(height: 16),
-                Text(
-                  quranController.isPreloading.value 
-                      ? 'Loading Quran Data (${quranController.preloadedCount.value}/${quranController.totalSurahCount})...'
-                      : 'Loading Quran...',
-                ),
-              ],
-            ),
+        // Show loading only during initial surah list fetch
+        if (quranController.isLoading.value) {
+          return const Center(
+            child: CircularProgressIndicator(),
           );
         }
 
@@ -74,7 +93,7 @@ class SurahListScreen extends StatelessWidget {
           );
         }
 
-        // Only show surah list when everything is completely loaded
+        // Always show list when available (DB-first makes this instant after first import)
         return _buildSurahsList(context);
       }),
     );
@@ -82,7 +101,7 @@ class SurahListScreen extends StatelessWidget {
 
   Widget _buildSurahsList(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    
+
     return Stack(
       children: [
         Column(
@@ -126,11 +145,7 @@ class SurahListScreen extends StatelessWidget {
                             alignment: Alignment.bottomRight,
                             children: [
                               // Show the actual current theme icon
-                              Icon(
-                                brightness == Brightness.dark 
-                                    ? Icons.dark_mode
-                                    : Icons.light_mode
-                              ),
+                              Icon(brightness == Brightness.dark ? Icons.dark_mode : Icons.light_mode),
                               // Add a small indicator that it's system-controlled
                               Container(
                                 height: 10,
@@ -168,7 +183,7 @@ class SurahListScreen extends StatelessWidget {
                 ),
               ),
             ),
-            
+
             // Enhanced search box that can search both surahs and ayats
             Padding(
               padding: const EdgeInsets.all(16),
@@ -222,7 +237,7 @@ class SurahListScreen extends StatelessWidget {
                         fillColor: colorScheme.surface,
                       ),
                     ),
-                    
+
                     // Search ayats button
                     InkWell(
                       onTap: () => Get.toNamed('/search'),
@@ -239,10 +254,10 @@ class SurahListScreen extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.format_align_left, 
-                              size: 18, color: colorScheme.primary),
+                            Icon(Icons.format_align_left, size: 18, color: colorScheme.primary),
                             const SizedBox(width: 8),
-                            Text('Search full text of verses',
+                            Text(
+                              'Search full text of verses',
                               style: TextStyle(
                                 color: colorScheme.primary,
                                 fontWeight: FontWeight.w500,
@@ -256,7 +271,7 @@ class SurahListScreen extends StatelessWidget {
                 ),
               ),
             ),
-            
+
             // List view of surahs
             Expanded(
               child: ListView.builder(
@@ -277,7 +292,7 @@ class SurahListScreen extends StatelessWidget {
 
   Widget _buildSurahTile(BuildContext context, Surah surah) {
     final colorScheme = Theme.of(context).colorScheme;
-    
+
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       elevation: 2,
@@ -286,8 +301,15 @@ class SurahListScreen extends StatelessWidget {
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
-        onTap: () {
+        onTap: () async {
           print('Tapped on surah: ${surah.name} (${surah.number})');
+          // Ensure detail is already cached in memory from DB for instant render
+          try {
+            final quranService = Get.find<QuranService>();
+            await quranService.ensureDetailCached(surah.number);
+          } catch (_) {
+            // ignore; detail will still resolve quickly due to DB-first path
+          }
           // Navigate to surah details with surah number in URL
           Get.toNamed(
             '/surah/${surah.number}',
@@ -318,7 +340,7 @@ class SurahListScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 16),
-              
+
               // Surah name and details
               Expanded(
                 child: Column(
@@ -357,7 +379,7 @@ class SurahListScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              
+
               // Arabic name on the right
               const SizedBox(width: 8),
               const Icon(Icons.chevron_right),
@@ -370,7 +392,7 @@ class SurahListScreen extends StatelessWidget {
 
   Widget _buildInfoChip(BuildContext context, String label) {
     final colorScheme = Theme.of(context).colorScheme;
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
@@ -395,10 +417,10 @@ class SurahListScreen extends StatelessWidget {
       builder: (context) => _buildBookmarksContent(context),
     );
   }
-  
+
   Widget _buildBookmarksContent(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    
+
     return Container(
       constraints: BoxConstraints(
         maxHeight: MediaQuery.of(context).size.height * 0.8,
@@ -424,7 +446,7 @@ class SurahListScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          
+
           // Title
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -452,7 +474,7 @@ class SurahListScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-          
+
           // Bookmarks list or empty state
           Obx(() {
             if (bookmarkController.bookmarks.isEmpty) {
@@ -487,7 +509,7 @@ class SurahListScreen extends StatelessWidget {
                 ),
               );
             }
-            
+
             return Expanded(
               child: ListView.builder(
                 itemCount: bookmarkController.bookmarks.length,
@@ -504,12 +526,12 @@ class SurahListScreen extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _buildBookmarkItem(BuildContext context, dynamic bookmark) {
     final colorScheme = Theme.of(context).colorScheme;
     final surahNumber = bookmark.surahNumber;
     final ayahNumber = bookmark.ayahNumber;
-    
+
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
       shape: RoundedRectangleBorder(
@@ -519,11 +541,11 @@ class SurahListScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         onTap: () {
           Navigator.pop(context); // Close bottom sheet
-          
+
           // Get the surah object from controller
           final quranController = Get.find<QuranController>();
           final surah = quranController.getSurahByNumber(surahNumber);
-          
+
           if (surah != null) {
             print('Navigating to surah ${surah.name} from bookmark, scrolling to ayah $ayahNumber');
             Get.toNamed(
@@ -615,7 +637,7 @@ class SurahListScreen extends StatelessWidget {
 
   void _showClearBookmarksDialog(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -649,7 +671,7 @@ class SurahListScreen extends StatelessWidget {
       ),
     );
   }
-  
+
   void _showAboutDialog(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -670,7 +692,7 @@ class SurahListScreen extends StatelessWidget {
 
   void _showMenuBottomSheet(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -699,7 +721,7 @@ class SurahListScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
-            
+
             // Menu items
             ListTile(
               leading: Icon(Icons.search, color: colorScheme.primary),
@@ -722,4 +744,4 @@ class SurahListScreen extends StatelessWidget {
       ),
     );
   }
-} 
+}

@@ -9,80 +9,88 @@ import '../services/quran_service.dart';
 class QuranController extends GetxController {
   // Use late initialization to delay finding the service
   late final QuranService _quranService;
-  
+
   // Main data
   final RxList<Surah> surahs = <Surah>[].obs;
   final Rx<SurahDetail?> currentSurahDetail = Rx<SurahDetail?>(null);
-  
+
   // Filtered data
   final RxList<Surah> filteredSurahs = <Surah>[].obs;
-  
+
   // Status indicators
   final RxBool isLoading = false.obs;
   final RxBool hasError = false.obs;
   final RxString errorMessage = ''.obs;
-  
-  // Global preloading state
-  final RxBool isPreloading = true.obs;
+
+  // Deprecated global preloading state (no longer used with DB-first). Keep for compatibility but set to false.
+  final RxBool isPreloading = false.obs;
   final RxInt preloadedCount = 0.obs;
   final int totalSurahCount = 114;
-  
+
   // Search query
   final RxString searchQuery = ''.obs;
-  
-  // Timer to periodically check preloading status
+
+  // Timer previously used to monitor preloading (disabled)
   Timer? _preloadingTimer;
-  
+
   @override
   void onInit() {
     super.onInit();
     // Initialize the service here
     _quranService = Get.find<QuranService>();
     fetchSurahs();
-    
-    // Start monitoring preloading status
-    _startPreloadingMonitor();
+
+    // DB-first path: no global preloading monitor needed
+    isPreloading.value = false;
   }
-  
+
   @override
   void onClose() {
     _preloadingTimer?.cancel();
     super.onClose();
   }
-  
-  // Start monitoring the preloading progress
-  void _startPreloadingMonitor() {
-    // Update preloaded count initially
-    preloadedCount.value = _quranService.cachedSurahCount;
-    
-    // Check every 500ms until all surahs are preloaded
-    _preloadingTimer = Timer.periodic(const Duration(milliseconds: 500), (timer) {
-      // Update the preloaded count
-      preloadedCount.value = _quranService.cachedSurahCount;
-      
-      // If all surahs are preloaded, stop monitoring
-      if (preloadedCount.value >= totalSurahCount) {
-        isPreloading.value = false;
-        timer.cancel();
-        print('All surahs preloaded. Preloading complete.');
-      }
-    });
-  }
-  
+
   // Fetch list of surahs from local assets
   Future<void> fetchSurahs() async {
     isLoading.value = true;
     hasError.value = false;
     errorMessage.value = '';
-    
+
     try {
       // Use the service to get surahs
       final surahsList = await _quranService.getSurahs();
       surahs.value = surahsList;
-      
+
       // Initialize filtered list
       filteredSurahs.value = List.from(surahs);
-      
+
+      // Kick off a background prefetch: ensure details are cached in memory from DB
+      // Prioritize commonly accessed surahs first for perceived performance, then the rest.
+      final priority = <int>[
+        1,
+        18,
+        36,
+        55,
+        56,
+        67,
+        68,
+        69,
+        78,
+        99,
+        112,
+        113,
+        114
+      ];
+      final allNumbers = surahsList.map((s) => s.number).toList();
+      // Add the rest that are not in priority
+      final rest = allNumbers.where((n) => !priority.contains(n)).toList();
+      final order = <int>[
+        ...priority.where(allNumbers.contains),
+        ...rest
+      ];
+      // Prefetch from DB only (no assets) in small batches so UI stays responsive
+      _quranService.prefetchDetailsFromDb(order, batchSize: 12, delay: const Duration(milliseconds: 20));
+
       isLoading.value = false;
     } catch (e) {
       isLoading.value = false;
@@ -91,7 +99,7 @@ class QuranController extends GetxController {
       print('Error loading surahs: $e');
     }
   }
-  
+
   // Fetch details for a specific surah
   Future<void> fetchSurahDetail(int surahNumber) async {
     // Don't show loading if we have data already (avoid flickering)
@@ -99,14 +107,14 @@ class QuranController extends GetxController {
     if (!hadDataBefore) {
       isLoading.value = true;
     }
-    
+
     hasError.value = false;
     errorMessage.value = '';
-    
+
     try {
       // Use the QuranService to get surah details
       final surahDetail = await _quranService.getSurahDetail(surahNumber);
-      
+
       // Update the current surah detail
       currentSurahDetail.value = surahDetail;
       print('Successfully loaded surah detail for surah $surahNumber');
@@ -118,36 +126,33 @@ class QuranController extends GetxController {
       isLoading.value = false;
     }
   }
-  
+
   // Check if a specific surah is already fully loaded
   bool isSurahLoaded(int surahNumber) {
     return _quranService.cachedSurahCount >= surahNumber;
   }
-  
+
   // Get ayahs from current surah detail
   List<Ayah> get ayahs {
     return currentSurahDetail.value?.ayahs ?? [];
   }
-  
+
   // Filter surahs based on search query
   void filterSurahs(String query) {
     searchQuery.value = query;
-    
+
     if (query.isEmpty) {
       filteredSurahs.value = List.from(surahs);
       return;
     }
-    
+
     final String lowercaseQuery = query.toLowerCase();
-    
+
     filteredSurahs.value = surahs.where((surah) {
-      return 
-        surah.name.toLowerCase().contains(lowercaseQuery) ||
-        surah.nameTranslation.toLowerCase().contains(lowercaseQuery) ||
-        surah.number.toString() == query;
+      return surah.name.toLowerCase().contains(lowercaseQuery) || surah.nameTranslation.toLowerCase().contains(lowercaseQuery) || surah.number.toString() == query;
     }).toList();
   }
-  
+
   // Get a single surah by number
   Surah? getSurahByNumber(int number) {
     try {
@@ -156,4 +161,4 @@ class QuranController extends GetxController {
       return null;
     }
   }
-} 
+}
