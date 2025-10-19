@@ -1,0 +1,52 @@
+{
+  "surahName": "Al-Fil",
+  "surahNameArabic": "الفيل",
+  "surahNameArabicLong": "سورة الفيل",
+  "surahNameTranslation": "The Elephant",
+  "revelationPlace": "Mecca",
+  "totalAyah": 5,
+  "surahNo": 105,
+  "audio": {
+    "1": {
+      "reciter": "Mishary Rashid Al-Afasy",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/1/105.mp3",
+      "originalUrl": "https://server8.mp3quran.net/afs/105.mp3"
+    },
+    "2": {
+      "reciter": "Abu Bakr Al-Shatri",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/2/105.mp3",
+      "originalUrl": "https://server11.mp3quran.net/shatri/105.mp3"
+    },
+    "3": {
+      "reciter": "Nasser Al-Qatami",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/3/105.mp3",
+      "originalUrl": "https://server6.mp3quran.net/qtm/105.mp3"
+    },
+    "4": {
+      "reciter": "Yasser Al-Dosari",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/4/105.mp3",
+      "originalUrl": "https://server11.mp3quran.net/yasser/105.mp3"
+    }
+  },
+  "english": [
+    "Have you not seen ˹O Prophet˺ how your Lord dealt with the Army of the Elephant?",
+    "Did He not frustrate their scheme?",
+    "For He sent against them flocks of birds",
+    "that pelted them with stones of baked clay",
+    "leaving them like chewed up straw."
+  ],
+  "arabic1": [
+    "اَلَمْ تَرَ كَیْفَ فَعَلَ رَبُّكَ بِاَصْحٰبِ الْفِیْلِ",
+    "اَلَمْ یَجْعَلْ كَیْدَهُمْ فِیْ تَضْلِیْلٍ",
+    "وَّاَرْسَلَ عَلَیْهِمْ طَیْرًا اَبَابِیْلَ",
+    "تَرْمِیْهِمْ بِحِجَارَةٍ مِّنْ سِجِّیْلٍ",
+    "فَجَعَلَهُمْ كَعَصْفٍ مَّاْكُوْلٍ"
+  ],
+  "bengali": [
+    "তুমি কি দেখনি তোমার রব হাতীওয়ালাদের সাথে কী করেছিলেন?",
+    "তিনি কি তাদের ষড়যন্ত্র ব্যর্থতায় পর্যবসিত করেননি?",
+    "আর তিনি তাদের বিরুদ্ধে ঝাঁকে ঝাঁকে পাখি প্রেরণ করেছিলেন।",
+    "তারা তাদের ওপর নিক্ষেপ করে পোড়ামাটির কঙ্কর।",
+    "অতঃপর তিনি তাদেরকে করলেন ভক্ষিত শস্যপাতার ন্যায়।"
+  ]
+}
