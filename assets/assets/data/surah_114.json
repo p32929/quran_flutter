@@ -1,0 +1,55 @@
+{
+  "surahName": "An-Naas",
+  "surahNameArabic": "الناس",
+  "surahNameArabicLong": "سورة الناس",
+  "surahNameTranslation": "Mankind",
+  "revelationPlace": "Mecca",
+  "totalAyah": 6,
+  "surahNo": 114,
+  "audio": {
+    "1": {
+      "reciter": "Mishary Rashid Al-Afasy",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/1/114.mp3",
+      "originalUrl": "https://server8.mp3quran.net/afs/114.mp3"
+    },
+    "2": {
+      "reciter": "Abu Bakr Al-Shatri",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/2/114.mp3",
+      "originalUrl": "https://server11.mp3quran.net/shatri/114.mp3"
+    },
+    "3": {
+      "reciter": "Nasser Al-Qatami",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/3/114.mp3",
+      "originalUrl": "https://server6.mp3quran.net/qtm/114.mp3"
+    },
+    "4": {
+      "reciter": "Yasser Al-Dosari",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/4/114.mp3",
+      "originalUrl": "https://server11.mp3quran.net/yasser/114.mp3"
+    }
+  },
+  "english": [
+    "Say, ˹O Prophet,˺ “I seek refuge in the Lord of humankind",
+    "the Master of humankind",
+    "the God of humankind",
+    "from the evil of the lurking whisperer—",
+    "who whispers into the hearts of humankind—",
+    "from among jinn and humankind.”"
+  ],
+  "arabic1": [
+    "قُلْ اَعُوْذُ بِرَبِّ النَّاسِ",
+    "مَلِكِ النَّاسِ",
+    "اِلٰهِ النَّاسِ",
+    "مِنْ شَرِّ الْوَسْوَاسِ الْخَنَّاسِ",
+    "الَّذِیْ یُوَسْوِسُ فِیْ صُدُوْرِ النَّاسِ",
+    "مِنَ الْجِنَّةِ وَالنَّاسِ"
+  ],
+  "bengali": [
+    "বল, ‘আমি আশ্রয় চাই মানুষের রব,",
+    "মানুষের অধিপতি,",
+    "মানুষের ইলাহ-এর কাছে,",
+    "কুমন্ত্রণাদাতার অনিষ্ট থেকে, যে দ্রুত আত্মগোপন করে।",
+    "যে মানুষের মনে কুমন্ত্রণা দেয়।",
+    "জিন ও মানুষ থেকে।"
+  ]
+}

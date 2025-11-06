@@ -1,0 +1,91 @@
+{
+  "surahName": "At-Taghaabun",
+  "surahNameArabic": "التغابن",
+  "surahNameArabicLong": "سورة التغابن",
+  "surahNameTranslation": "Mutual Disillusion",
+  "revelationPlace": "Madina",
+  "totalAyah": 18,
+  "surahNo": 64,
+  "audio": {
+    "1": {
+      "reciter": "Mishary Rashid Al-Afasy",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/1/64.mp3",
+      "originalUrl": "https://server8.mp3quran.net/afs/064.mp3"
+    },
+    "2": {
+      "reciter": "Abu Bakr Al-Shatri",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/2/64.mp3",
+      "originalUrl": "https://server11.mp3quran.net/shatri/064.mp3"
+    },
+    "3": {
+      "reciter": "Nasser Al-Qatami",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/3/64.mp3",
+      "originalUrl": "https://server6.mp3quran.net/qtm/064.mp3"
+    },
+    "4": {
+      "reciter": "Yasser Al-Dosari",
+      "url": "https://github.com/The-Quran-Project/Quran-Audio-Chapters/raw/refs/heads/main/Data/4/64.mp3",
+      "originalUrl": "https://server11.mp3quran.net/yasser/064.mp3"
+    }
+  },
+  "english": [
+    "Whatever is in the heavens and whatever is on the earth ˹constantly˺ glorifies Allah. The kingdom is His, and all praise is for Him. For He is Most Capable of everything.",
+    "He is the One Who created you, yet some of you are disbelievers while some are believers. And Allah is All-Seeing of what you do.",
+    "He created the heavens and the earth for a purpose. He shaped you ˹in the womb˺, perfecting your form. And to Him is the final return.",
+    "He knows whatever is in the heavens and the earth. And He knows whatever you conceal and whatever you reveal. For Allah knows best what is ˹hidden˺ in the heart.",
+    "Have the stories of those who disbelieved before not reached you ˹pagans˺? They tasted the evil consequences of their doings, and they will suffer a painful punishment.",
+    "That was because their messengers used to come to them with clear proofs, but they said ˹mockingly˺, “How can humans be our guides?” So they persisted in disbelief and turned away. And Allah was not in need ˹of their faith˺. For Allah is Self-Sufficient, Praiseworthy.",
+    "The disbelievers claim they will not be resurrected. Say, ˹O Prophet,˺ “Yes, by my Lord, you will surely be resurrected, then you will certainly be informed of what you have done. And that is easy for Allah.”",
+    "So believe in Allah and His Messenger and in the Light We have revealed. And Allah is All-Aware of what you do.",
+    "˹Consider˺ the Day He will gather you ˹all˺ for the Day of Gathering—that will be the Day of mutual loss and gain. So whoever believes in Allah and does good, He will absolve them of their sins and admit them into Gardens under which rivers flow, to stay there for ever and ever. That is the ultimate triumph.",
+    "As for those who disbelieve and reject Our revelations, they will be the residents of the Fire, staying there forever. What an evil destination!",
+    "No calamity befalls ˹anyone˺ except by Allah’s Will. And whoever has faith in Allah, He will ˹rightly˺ guide their hearts ˹through adversity˺. And Allah has ˹perfect˺ knowledge of all things.",
+    "Obey Allah and obey the Messenger! But if you turn away, then Our Messenger’s duty is only to deliver ˹the message˺ clearly.",
+    "Allah—there is no god ˹worthy of worship˺ except Him. So in Allah let the believers put their trust.",
+    "O believers! Indeed, some of your spouses and children are enemies to you, so beware of them. But if you pardon, overlook, and forgive ˹their faults˺, then Allah is truly All-Forgiving, Most Merciful.",
+    "Your wealth and children are only a test, but Allah ˹alone˺ has a great reward.",
+    "So be mindful of Allah to the best of your ability, hear and obey, and spend in charity—that will be best for you. And whoever is saved from the selfishness of their own souls, it is they who are ˹truly˺ successful.",
+    "If you lend to Allah a good loan, He will multiply it for you and forgive you. For Allah is Most Appreciative, Most Forbearing.",
+    "˹He is the˺ Knower of the seen and unseen—the Almighty, All-Wise."
+  ],
+  "arabic1": [
+    "یُسَبِّحُ لِلّٰهِ مَا فِی السَّمٰوٰتِ وَمَا فِی الْاَرْضِ لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلٰی كُلِّ شَیْءٍ قَدِیْرٌ",
+    "هُوَ الَّذِیْ خَلَقَكُمْ فَمِنْكُمْ كَافِرٌ وَّمِنْكُمْ مُّؤْمِنٌ وَاللّٰهُ بِمَا تَعْمَلُوْنَ بَصِیْرٌ",
+    "خَلَقَ السَّمٰوٰتِ وَالْاَرْضَ بِالْحَقِّ وَصَوَّرَكُمْ فَاَحْسَنَ صُوَرَكُمْ وَاِلَیْهِ الْمَصِیْرُ",
+    "یَعْلَمُ مَا فِی السَّمٰوٰتِ وَالْاَرْضِ وَیَعْلَمُ مَا تُسِرُّوْنَ وَمَا تُعْلِنُوْنَ وَاللّٰهُ عَلِیْمٌۢ بِذَاتِ الصُّدُوْرِ",
+    "اَلَمْ یَاْتِكُمْ نَبَؤُا الَّذِیْنَ كَفَرُوْا مِنْ قَبْلُ فَذَاقُوْا وَبَالَ اَمْرِهِمْ وَلَهُمْ عَذَابٌ اَلِیْمٌ",
+    "ذٰلِكَ بِاَنَّهٗ كَانَتْ تَّاْتِیْهِمْ رُسُلُهُمْ بِالْبَیِّنٰتِ فَقَالُوْۤا اَبَشَرٌ یَّهْدُوْنَنَا فَكَفَرُوْا وَتَوَلَّوْا وَّاسْتَغْنَی اللّٰهُ وَاللّٰهُ غَنِیٌّ حَمِیْدٌ",
+    "زَعَمَ الَّذِیْنَ كَفَرُوْۤا اَنْ لَّنْ یُّبْعَثُوْا قُلْ بَلٰی وَرَبِّیْ لَتُبْعَثُنَّ ثُمَّ لَتُنَبَّؤُنَّ بِمَا عَمِلْتُمْ وَذٰلِكَ عَلَی اللّٰهِ یَسِیْرٌ",
+    "فَاٰمِنُوْا بِاللّٰهِ وَرَسُوْلِهٖ وَالنُّوْرِ الَّذِیْۤ اَنْزَلْنَا وَاللّٰهُ بِمَا تَعْمَلُوْنَ خَبِیْرٌ",
+    "یَوْمَ یَجْمَعُكُمْ لِیَوْمِ الْجَمْعِ ذٰلِكَ یَوْمُ التَّغَابُنِ وَمَنْ یُّؤْمِنْ بِاللّٰهِ وَیَعْمَلْ صَالِحًا یُّكَفِّرْ عَنْهُ سَیِّاٰتِهٖ وَیُدْخِلْهُ جَنّٰتٍ تَجْرِیْ مِنْ تَحْتِهَا الْاَنْهٰرُ خٰلِدِیْنَ فِیْهَاۤ اَبَدًا ذٰلِكَ الْفَوْزُ الْعَظِیْمُ",
+    "وَالَّذِیْنَ كَفَرُوْا وَكَذَّبُوْا بِاٰیٰتِنَاۤ اُولٰٓىِٕكَ اَصْحٰبُ النَّارِ خٰلِدِیْنَ فِیْهَا وَبِئْسَ الْمَصِیْرُ",
+    "مَاۤ اَصَابَ مِنْ مُّصِیْبَةٍ اِلَّا بِاِذْنِ اللّٰهِ وَمَنْ یُّؤْمِنْ بِاللّٰهِ یَهْدِ قَلْبَهٗ وَاللّٰهُ بِكُلِّ شَیْءٍ عَلِیْمٌ",
+    "وَاَطِیْعُوا اللّٰهَ وَاَطِیْعُوا الرَّسُوْلَ فَاِنْ تَوَلَّیْتُمْ فَاِنَّمَا عَلٰی رَسُوْلِنَا الْبَلٰغُ الْمُبِیْنُ",
+    "اَللّٰهُ لَاۤ اِلٰهَ اِلَّا هُوَ وَعَلَی اللّٰهِ فَلْیَتَوَكَّلِ الْمُؤْمِنُوْنَ",
+    "یٰۤاَیُّهَا الَّذِیْنَ اٰمَنُوْۤا اِنَّ مِنْ اَزْوَاجِكُمْ وَاَوْلَادِكُمْ عَدُوًّا لَّكُمْ فَاحْذَرُوْهُمْ وَاِنْ تَعْفُوْا وَتَصْفَحُوْا وَتَغْفِرُوْا فَاِنَّ اللّٰهَ غَفُوْرٌ رَّحِیْمٌ",
+    "اِنَّمَاۤ اَمْوَالُكُمْ وَاَوْلَادُكُمْ فِتْنَةٌ وَاللّٰهُ عِنْدَهٗۤ اَجْرٌ عَظِیْمٌ",
+    "فَاتَّقُوا اللّٰهَ مَا اسْتَطَعْتُمْ وَاسْمَعُوْا وَاَطِیْعُوْا وَاَنْفِقُوْا خَیْرًا لِّاَنْفُسِكُمْ وَمَنْ یُّوْقَ شُحَّ نَفْسِهٖ فَاُولٰٓىِٕكَ هُمُ الْمُفْلِحُوْنَ",
+    "اِنْ تُقْرِضُوا اللّٰهَ قَرْضًا حَسَنًا یُّضٰعِفْهُ لَكُمْ وَیَغْفِرْ لَكُمْ وَاللّٰهُ شَكُوْرٌ حَلِیْمٌ",
+    "عٰلِمُ الْغَیْبِ وَالشَّهَادَةِ الْعَزِیْزُ الْحَكِیْمُ"
+  ],
+  "bengali": [
+    "যা কিছু রয়েছে আসমানসমূহে এবং যা কিছু রয়েছে যমীনে, সবই আল্লাহর জন্য পবিত্রতা ঘোষণা করে। বাদশাহী তাঁরই এবং প্রশংসা তাঁরই। তিনি সর্ব বিষয়ে সর্বশক্তিমান।",
+    "তিনিই তোমাদেরকে সৃষ্টি করেছেন। অতঃপর তোমাদের মধ্যে কতক কাফির এবং কতক মু’মিন। আর তোমরা যে আমল করছ আল্লাহ তার সম্যক দ্রষ্টা।",
+    "তিনি আসমানসমূহ ও যমীনকে যথার্থভাবে সৃষ্টি করেছেন এবং তোমাদেরকে আকৃতি দান করেছেন এবং সুন্দর করেছেন তোমাদের আকৃতি। আর প্রত্যাবর্তন তো তাঁরই নিকট।",
+    "আসমানসমূহ ও যমীনে যা কিছু আছে তিনি তা জানেন এবং তিনি জানেন যা তোমরা গোপন কর এবং যা তোমরা প্রকাশ কর। আল্লাহ অন্তরসমূহে যা কিছু আছে সে বিষয়ে সম্যক জ্ঞাত।",
+    "ইতঃপূর্বে যারা কুফরী করেছে, তাদের সংবাদ কি তোমাদের নিকট পৌঁছেনি। তারা তাদের কর্মের মন্দ পরিণাম আস্বাদন করেছিল এবং তাদের জন্য রয়েছে যন্ত্রণাদায়ক আযাব।",
+    "এটি এ জন্য যে, তাদের রাসূলগণ তাদের নিকট সুস্পষ্ট নিদর্শনাবলী নিয়ে আসত, অথচ তারা বলত, মানুষই কি আমাদের পথ প্রদর্শন করবে? অতঃপর তারা কুফরী করল এবং মুখ ফিরিয়ে নিল। আর আল্লাহ বে-পরওয়াই দেখালেন এবং আল্লাহ অভাবমুক্ত পরম, প্রশংসিত।",
+    "কাফিররা ধারণা করেছিল যে, তারা কখনোই পুনরুত্থিত হবে না। বল, ‘হ্যাঁ, আমার রবের কসম, তোমরা অবশ্যই পুনরুত্থিত হবে। অতঃপর তোমরা যা আমল করেছিলে তা অবশ্যই তোমাদের জানানো হবে। আর এটি আল্লাহর পক্ষে খুবই সহজ।",
+    "অতএব তোমরা আল্লাহ ও তাঁর রাসূলের এবং আমি যে নূর অবতীর্ণ করেছি তার প্রতি ঈমান আন। আর তোমরা যে আমল করছ আল্লাহ সে বিষয়ে সম্যক অবহিত।",
+    "স্মরণ কর, যেদিন সমাবেশ দিবসের উদ্দেশ্যে আল্লাহ তোমাদের সমবেত করবেন, ঐ দিনই হচ্ছে লাভ-ক্ষতির দিন। আর যে আল্লাহর প্রতি ঈমান আনে ও সৎকর্ম করে তিনি তার পাপসমূহ মোচন করে দিবেন এবং তাকে প্রবেশ করাবেন জান্নাতসমূহে, যার পাদদেশ দিয়ে ঝর্ণাধারা প্রবাহিত হয়, তথায় তারা স্থায়ী হবে। এটাই মহাসাফল্য।",
+    "কিন্তু যারা কুফরী করে এবং আমার আয়াতসমূহ অস্বীকার করে তারাই জাহান্নামের অধিবাসী। তথায় তারা স্থায়ী হবে। আর তা কতইনা নিকৃষ্ট প্রত্যাবর্তনস্থল।",
+    "আল্লাহর অনুমতি ছাড়া কোন বিপদই আপতিত হয় না। যে আল্লাহর প্রতি ঈমান আনে, আল্লাহ তার অন্তরকে সৎপথে পরিচালিত করেন। আল্লাহ প্রত্যেক বিষয়ে সর্বজ্ঞ।",
+    "তোমরা আল্লাহর আনুগত্য কর এবং রাসূলের আনুগত্য কর। কিন্তু তোমরা যদি মুখ ফিরিয়ে নাও, তবে আমার রাসূলের তো একমাত্র দায়িত্ব হচ্ছে স্পষ্টভাবে বাণী পৌঁছে দেয়া।",
+    "আল্লাহ, তিনি ছাড়া কোন ইলাহ নেই এবং আল্লাহর উপরই মুমিনরা যেন তাওয়াক্কুল করে।",
+    "হে মুমিনগণ, তোমাদের স্বামী-স্ত্রী ও সন্তান-সন্ততিদের কেউ কেউ তোমাদের দুশমন।* অতএব তোমরা তাদের ব্যাপারে সতর্কতা অবলম্বন কর। আর যদি তোমরা মার্জনা কর, এড়িয়ে যাও এবং মাফ করে দাও তবে নিশ্চয় আল্লাহ পরম ক্ষমাশীল, অসীম দয়ালু। \n*অর্থাৎ তারা কখনো কখনো আল্লাহর পথে চলা, তাঁর আনুগত্য করা অথবা আল্লাহর যিকর ও আখিরাতের স্মরণ থেকে তোমাদের বিরত রাখতে পারে। এ আয়াতে শত্রুতা ও দুশমনি বলতে এর প্রতিই ইঙ্গিত করা হয়েছে।",
+    "তোমাদের ধন-সম্পদ ও সন্তান-সন্ততি তো কেবল পরীক্ষা বিশেষ। আর আল্লাহর নিকটই মহান প্রতিদান।",
+    "অতএব তোমরা যথাসাধ্য আল্লাহকে ভয় কর, শ্রবণ কর, আনুগত্য কর এবং তোমাদের নিজদের কল্যাণে ব্যয় কর, আর যাদেরকে অন্তরের কার্পণ্য থেকে রক্ষা করা হয়, তারাই মূলত সফলকাম।",
+    "যদি তোমরা আল্লাহকে উত্তম ঋণ দাও, তিনি তা তোমাদের জন্য দ্বিগুন করে দিবেন এবং তোমাদের ক্ষমা করে দিবেন। আল্লাহ গুণগ্রাহী, পরম ধৈর্যশীল।",
+    "দৃশ্য ও অদৃশ্যের জ্ঞানধারী, মহাপরাক্রমশালী, প্রজ্ঞাময়।"
+  ]
+}

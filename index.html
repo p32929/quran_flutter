@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base href="/quran_flutter/">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="A Holy Quran application with Arabic and English translations.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Critical resource preloading for faster loading -->
+  <link rel="preload" href="assets/fonts/indopak.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="assets/data/surahs.json" as="fetch" crossorigin>
+  
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Quran">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>Quran</title>
+  <link rel="manifest" href="manifest.json">
+  
+  <style>
+    /* Ensure no white background anywhere */
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #a1d39a !important;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    /* Immediate loading screen that shows instantly */
+    #instant-loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #a1d39a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+    }
+
+    .pulse-spinner {
+      width: 40px;
+      height: 40px;
+      background: white;
+      border-radius: 50%;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(0.8);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.2);
+        opacity: 0.5;
+      }
+      100% {
+        transform: scale(0.8);
+        opacity: 1;
+      }
+    }
+
+    /* Flutter loading screen (shows after Flutter initializes) */
+    #loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #a1d39a;
+      display: none; /* Hidden initially */
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      z-index: 9999;
+      transition: opacity 0.5s ease-out;
+    }
+
+    #loading h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    #loading p {
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+      opacity: 0.9;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(255, 255, 255, 0.2);
+      border-top: 4px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Hide loading screen smoothly when Flutter renders */
+    .flutter-loaded #loading {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .flutter-loaded #instant-loading {
+      display: none;
+    }
+
+    /* Ensure Flutter app is hidden until first paint */
+    flt-glass-pane, flutter-view {
+      opacity: 0;
+      transition: opacity 0.3s ease-in;
+    }
+
+    .flutter-loaded flt-glass-pane,
+    .flutter-loaded flutter-view {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <!-- Instant loading screen - shows immediately -->
+  <div id="instant-loading">
+    <div class="pulse-spinner"></div>
+  </div>
+
+  <!-- Flutter loading screen - shows when Flutter starts -->
+  <div id="loading">
+    <div class="spinner"></div>
+  </div>
+
+  <script>
+    let flutterReady = false;
+    let firstPaintDetected = false;
+    
+    // Switch from instant loading to Flutter loading when Flutter is detected
+    function showFlutterLoading() {
+      document.getElementById('instant-loading').style.display = 'none';
+      document.getElementById('loading').style.display = 'flex';
+    }
+    
+    // Hide loading screen only when Flutter actually renders
+    function hideLoadingScreen() {
+      if (flutterReady && firstPaintDetected) {
+        document.body.classList.add('flutter-loaded');
+        // Remove loading divs after transition
+        setTimeout(() => {
+          const instantLoading = document.getElementById('instant-loading');
+          const loading = document.getElementById('loading');
+          if (instantLoading) instantLoading.remove();
+          if (loading) loading.remove();
+        }, 500);
+      }
+    }
+    
+    // Detect when Flutter starts loading
+    let flutterDetected = false;
+    const originalConsoleLog = console.log;
+    console.log = function(...args) {
+      if (!flutterDetected && args.some(arg => 
+          typeof arg === 'string' && (
+            arg.includes('Flutter') || 
+            arg.includes('Starting data bootstrap') ||
+            arg.includes('Preparing preferences')
+          )
+        )) {
+        flutterDetected = true;
+        showFlutterLoading();
+      }
+      originalConsoleLog.apply(console, args);
+    };
+    
+    // Also switch to Flutter loading after 3 seconds as fallback
+    setTimeout(() => {
+      if (!flutterDetected) {
+        showFlutterLoading();
+      }
+    }, 3000);
+    
+    // Listen for Flutter ready event
+    window.addEventListener('flutter-first-frame', function() {
+      flutterReady = true;
+      hideLoadingScreen();
+    });
+    
+    // Detect when Flutter actually paints something
+    function detectFlutterPaint() {
+      const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.type === 'childList') {
+            const flutterElements = document.querySelectorAll('flt-glass-pane, flutter-view');
+            if (flutterElements.length > 0) {
+              // Wait a bit to ensure Flutter has actually rendered content
+              setTimeout(() => {
+                firstPaintDetected = true;
+                hideLoadingScreen();
+                observer.disconnect();
+              }, 100);
+            }
+          }
+        });
+      });
+      
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+    }
+    
+    // Start detecting Flutter paint
+    detectFlutterPaint();
+    
+    // Fallback: hide loading screen after 15 seconds max
+    setTimeout(() => {
+      if (!document.body.classList.contains('flutter-loaded')) {
+        document.body.classList.add('flutter-loaded');
+      }
+    }, 15000);
+  </script>
+
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>
