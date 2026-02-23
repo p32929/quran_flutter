@@ -6,9 +6,9 @@
   "author": "p32929.github.io",
   "license": "MIT",
   "scripts": {
-    "predeploy": "flutter build web --release --base-href /quran_flutter/",
+    "predeploy": "flutter build web --release --dart2js-optimization O4 --tree-shake-icons --pwa-strategy offline-first --base-href /quran_flutter/",
     "deploy": "npm run predeploy && gh-pages -d build/web",
-    "build": "flutter build web --release",
+    "build": "flutter build web --release --dart2js-optimization O4 --tree-shake-icons --pwa-strategy offline-first",
     "serve": "python -m http.server 8000 --directory build/web"
   },
   "devDependencies": {

@@ -186,9 +186,6 @@ class _QuranWebAppState extends State<QuranWebApp> {
       // Initialize services
       await initServices();
 
-      // Small delay to show completion, then switch to main app
-      await Future.delayed(const Duration(milliseconds: 500));
-
       setState(() {
         _isInitialized = true;
       });
