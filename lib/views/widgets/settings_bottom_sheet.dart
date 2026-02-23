@@ -284,7 +284,9 @@ class SettingsBottomSheet extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Obx(() => Text(
-                      'In the name of Allah, the Entirely Merciful, the Especially Merciful.',
+                      themeController.translationLanguage.value == 'bengali'
+                          ? 'পরম করুণাময় অতি দয়ালু আল্লাহর নামে।'
+                          : 'In the name of Allah, the Entirely Merciful, the Especially Merciful.',
                       style: TextStyle(
                         fontSize: themeController.englishFontSize.value,
                         color: colorScheme.onSurfaceVariant,
