@@ -55,7 +55,8 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
   @override
   void dispose() {
     // Stop audio when leaving the surah details screen
-    if (audioController.isCurrentlyPlaying(widget.surah.number.toString())) {
+    if (audioController.isCurrentlyPlaying(widget.surah.number.toString()) ||
+        audioController.currentAyahSurah.value == widget.surah.number) {
       audioController.stopAudio();
     }
 
@@ -584,14 +585,37 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
   }) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Card(
-      key: ValueKey('ayah_${ayah.number}_${translationLanguage}_${showArabic}_${showTranslation}'),
-      margin: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-      elevation: 1,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Padding(
+    return Obx(() {
+      final isThisAyahCurrent = audioController.isAyahCurrent(widget.surah.number, ayah.number);
+      final isThisAyahPlaying = audioController.isAyahPlaying(widget.surah.number, ayah.number);
+
+      return AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        margin: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: isThisAyahPlaying
+              ? [
+                  BoxShadow(
+                    color: colorScheme.primary.withOpacity(0.45),
+                    blurRadius: 16,
+                    spreadRadius: 1,
+                  ),
+                ]
+              : null,
+        ),
+        child: Card(
+          key: ValueKey('ayah_${ayah.number}_${translationLanguage}_${showArabic}_${showTranslation}'),
+          margin: EdgeInsets.zero,
+          elevation: 1,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+            side: isThisAyahCurrent
+                ? BorderSide(color: colorScheme.primary, width: 1.5)
+                : BorderSide.none,
+          ),
+          child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -616,6 +640,28 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
                 ),
 
                 const Spacer(),
+
+                // Play/pause button for this ayah
+                audioController.isAyahLoadingFor(widget.surah.number, ayah.number)
+                    ? const SizedBox(
+                        width: 48,
+                        height: 48,
+                        child: Center(
+                          child: SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          ),
+                        ),
+                      )
+                    : IconButton(
+                        icon: Icon(
+                          isThisAyahPlaying ? Icons.pause_circle : Icons.play_circle,
+                          color: colorScheme.primary,
+                        ),
+                        tooltip: isThisAyahPlaying ? 'Pause' : 'Play Ayah',
+                        onPressed: () => audioController.playAyah(widget.surah.number, ayah.number),
+                      ),
 
                 // Bookmark button (using GetBuilder to avoid nesting Obx)
                 GetBuilder<BookmarkController>(builder: (bookmarkCtrl) {
@@ -697,9 +743,11 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
                 ),
               ),
           ],
+            ),
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   void _showAudioBottomSheet(BuildContext context) {

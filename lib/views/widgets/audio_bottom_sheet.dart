@@ -227,6 +227,7 @@ class _AudioBottomSheetState extends State<AudioBottomSheet> {
                       audioController.playAudio(
                         widget.surah.number.toString(),
                         reciter,
+                        totalAyah: widget.surah.totalAyah,
                       );
                     },
                   ),

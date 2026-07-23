@@ -12,6 +12,7 @@ import 'services/quran_service.dart';
 import 'routes/app_routes.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'utils/font_settings_manager.dart';
+import 'utils/snackbar_utils.dart';
 // Sembast bootstrap
 import 'services/quran_repository.dart';
 import 'services/data_bootstrapper.dart';
@@ -238,6 +239,7 @@ class QuranApp extends StatelessWidget {
 
       return Obx(() => GetMaterialApp(
             title: 'Quran App',
+            scaffoldMessengerKey: rootScaffoldMessengerKey,
             theme: themeController.lightTheme,
             darkTheme: themeController.darkTheme,
             themeMode: themeController.useSystemTheme.value ? ThemeMode.system : (themeController.isDarkMode.value ? ThemeMode.dark : ThemeMode.light),

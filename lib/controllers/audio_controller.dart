@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
 import 'dart:async';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import '../utils/snackbar_utils.dart';
 
 class ReciterInfo {
   final String id;
@@ -24,6 +25,25 @@ class AudioController extends GetxController {
   final RxString currentSurahId = ''.obs;
   final RxString currentReciterId = ''.obs;
   final RxList<ReciterInfo> reciters = <ReciterInfo>[].obs;
+
+  // Per-ayah playback state (0 = none)
+  final RxInt currentAyahSurah = 0.obs;
+  final RxInt currentAyahNumber = 0.obs;
+  final RxBool isAyahLoading = false.obs;
+
+  // When surah playback runs as an ayah-by-ayah playlist, this holds the
+  // surah number so the currentIndexStream listener can track which ayah
+  // is sounding (null = not in playlist mode)
+  int? _playlistSurah;
+
+  // Map of the app's reciter ids to everyayah.com per-ayah directories
+  static const Map<String, String> _everyAyahDirs = {
+    '1': 'Alafasy_128kbps', // Mishary Rashid Al-Afasy
+    '2': 'Abu_Bakr_Ash-Shaatree_128kbps', // Abu Bakr Al-Shatri
+    '3': 'Nasser_Alqatami_128kbps', // Nasser Al-Qatami
+    '4': 'Yasser_Ad-Dussary_128kbps', // Yasser Al-Dosari
+  };
+  static const String _defaultEveryAyahDir = 'Alafasy_128kbps';
   
   // Track if we're in web mode with error
   final RxBool hasWebAudioError = false.obs;
@@ -65,6 +85,18 @@ class AudioController extends GetxController {
       _audioPlayer!.processingStateStream.listen((state) {
         if (state == ProcessingState.completed) {
           isPlaying.value = false;
+          // Clear per-ayah state so the glow turns off when playback finishes
+          _playlistSurah = null;
+          currentAyahSurah.value = 0;
+          currentAyahNumber.value = 0;
+        }
+      });
+
+      // Track which ayah is sounding during ayah-by-ayah surah playback
+      _audioPlayer!.currentIndexStream.listen((index) {
+        if (index != null && _playlistSurah != null) {
+          currentAyahSurah.value = _playlistSurah!;
+          currentAyahNumber.value = index + 1;
         }
       });
       
@@ -103,7 +135,7 @@ class AudioController extends GetxController {
     });
   }
 
-  Future<void> playAudio(String surahId, ReciterInfo reciter) async {
+  Future<void> playAudio(String surahId, ReciterInfo reciter, {int? totalAyah}) async {
     // Ensure the audio player is initialized before proceeding
     if (!_isInitialized) {
       _initializeAudioPlayer();
@@ -112,10 +144,9 @@ class AudioController extends GetxController {
     
     // If we have a web audio error, show a message and return
     if (hasWebAudioError.value) {
-      Get.snackbar(
+      SnackbarUtils.show(
         'Audio Not Available',
         'Audio playback is not supported in this browser or environment.',
-        snackPosition: SnackPosition.BOTTOM,
       );
       return;
     }
@@ -138,6 +169,10 @@ class AudioController extends GetxController {
       isLoading.value = true;
       currentSurahId.value = surahId;
       currentReciterId.value = reciter.id;
+
+      // Surah playback takes over from any per-ayah playback
+      currentAyahSurah.value = 0;
+      currentAyahNumber.value = 0;
       
       // Stop any currently playing audio
       if (_audioPlayer != null) {
@@ -149,20 +184,37 @@ class AudioController extends GetxController {
       // If we still don't have an audio player, show error and return
       if (_audioPlayer == null) {
         isLoading.value = false;
-        Get.snackbar(
+        SnackbarUtils.show(
           'Error',
           'Failed to initialize audio player.',
-          snackPosition: SnackPosition.BOTTOM,
         );
         return;
       }
       
       // Add a small artificial delay to ensure the loading UI is visible
       await Future.delayed(const Duration(milliseconds: 500));
-      
-      // Load the audio
-      print('Loading audio from URL: ${reciter.url}');
-      await _audioPlayer!.setUrl(reciter.url);
+
+      // Load the audio.
+      // Preferred: ayah-by-ayah playlist from everyayah.com so the UI can
+      // highlight the exact ayah being recited. Falls back to the single
+      // full-surah file when the reciter has no per-ayah source mapping.
+      final everyAyahDir = _everyAyahDirs[reciter.id];
+      final surahNumber = int.tryParse(surahId);
+      if (everyAyahDir != null && surahNumber != null && totalAyah != null && totalAyah > 0) {
+        print('Loading ayah-by-ayah playlist for surah $surahId ($everyAyahDir)');
+        _playlistSurah = surahNumber;
+        final playlist = ConcatenatingAudioSource(
+          children: [
+            for (int a = 1; a <= totalAyah; a++)
+              AudioSource.uri(Uri.parse(_everyAyahUrl(everyAyahDir, surahNumber, a))),
+          ],
+        );
+        await _audioPlayer!.setAudioSource(playlist);
+      } else {
+        print('Loading audio from URL: ${reciter.url}');
+        _playlistSurah = null;
+        await _audioPlayer!.setUrl(reciter.url);
+      }
       
       // Setup a listener for when playback actually starts 
       final completer = Completer<void>();
@@ -206,24 +258,106 @@ class AudioController extends GetxController {
         hasWebAudioError.value = true;
       }
       
-      Get.snackbar(
+      SnackbarUtils.show(
         'Error',
-        kIsWeb 
+        kIsWeb
             ? 'Audio playback is not supported in this browser environment.'
             : 'Failed to play audio. Please try again.',
-        snackPosition: SnackPosition.BOTTOM,
       );
     }
   }
   
   Future<void> stopAudio() async {
     if (_audioPlayer == null) return;
-    
+
     try {
       await _audioPlayer!.stop();
       isPlaying.value = false;
+      _playlistSurah = null;
+      currentAyahSurah.value = 0;
+      currentAyahNumber.value = 0;
     } catch (e) {
       print('Error stopping audio: $e');
+    }
+  }
+
+  // ---- Per-ayah playback (everyayah.com) ----
+
+  String _everyAyahUrl(String reciterDir, int surahNumber, int ayahNumber) {
+    final s = surahNumber.toString().padLeft(3, '0');
+    final a = ayahNumber.toString().padLeft(3, '0');
+    return 'https://everyayah.com/data/$reciterDir/$s$a.mp3';
+  }
+
+  String _ayahAudioUrl(int surahNumber, int ayahNumber) {
+    // Use the last-selected reciter when it has a per-ayah source, else Alafasy
+    final dir = _everyAyahDirs[currentReciterId.value] ?? _defaultEveryAyahDir;
+    return _everyAyahUrl(dir, surahNumber, ayahNumber);
+  }
+
+  // Is this exact ayah the currently loaded one (playing or paused)?
+  bool isAyahCurrent(int surahNumber, int ayahNumber) {
+    return currentAyahSurah.value == surahNumber && currentAyahNumber.value == ayahNumber;
+  }
+
+  // Is this exact ayah actively playing right now?
+  bool isAyahPlaying(int surahNumber, int ayahNumber) {
+    return isAyahCurrent(surahNumber, ayahNumber) && isPlaying.value;
+  }
+
+  // Is this exact ayah currently buffering/loading?
+  bool isAyahLoadingFor(int surahNumber, int ayahNumber) {
+    return isAyahCurrent(surahNumber, ayahNumber) && isAyahLoading.value;
+  }
+
+  Future<void> playAyah(int surahNumber, int ayahNumber) async {
+    // Ensure the audio player is initialized before proceeding
+    if (!_isInitialized) {
+      _initializeAudioPlayer();
+      await Future.delayed(const Duration(milliseconds: 300));
+    }
+
+    if (_audioPlayer == null) {
+      SnackbarUtils.show('Error', 'Failed to initialize audio player.');
+      return;
+    }
+
+    // Tapping the ayah that's already loaded toggles pause/resume
+    if (isAyahCurrent(surahNumber, ayahNumber) &&
+        _audioPlayer!.processingState != ProcessingState.idle &&
+        !isAyahLoading.value) {
+      if (isPlaying.value) {
+        await _audioPlayer!.pause();
+      } else {
+        await _audioPlayer!.play();
+      }
+      return;
+    }
+
+    try {
+      // Per-ayah playback takes over from any surah playback
+      // (keep currentReciterId so single-ayah playback uses the same reciter)
+      _playlistSurah = null;
+      currentSurahId.value = '';
+
+      currentAyahSurah.value = surahNumber;
+      currentAyahNumber.value = ayahNumber;
+      isAyahLoading.value = true;
+
+      await _audioPlayer!.stop();
+      await _audioPlayer!.setUrl(_ayahAudioUrl(surahNumber, ayahNumber));
+
+      isAyahLoading.value = false;
+      _audioPlayer!.play();
+    } catch (e) {
+      isAyahLoading.value = false;
+      // Only clear state if another ayah hasn't been requested meanwhile
+      if (isAyahCurrent(surahNumber, ayahNumber)) {
+        currentAyahSurah.value = 0;
+        currentAyahNumber.value = 0;
+      }
+      print('Error playing ayah audio: $e');
+      SnackbarUtils.show('Error', 'Failed to play ayah audio. Please try again.');
     }
   }
   

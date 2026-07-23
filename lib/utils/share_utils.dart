@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 import '../models/ayah_model.dart';
 import '../controllers/theme_controller.dart';
+import 'snackbar_utils.dart';
 
 class ShareUtils {
   static void shareAyah(Ayah ayah, int surahNumber, String surahName) async {
@@ -18,13 +19,10 @@ class ShareUtils {
     } catch (e) {
       // Fallback to clipboard if sharing fails (common on web)
       Clipboard.setData(ClipboardData(text: text));
-      Get.snackbar(
+      SnackbarUtils.show(
         'Copied to Clipboard',
         'Sharing not supported on this device. Text copied to clipboard instead.',
-        snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.green.withOpacity(0.7),
-        colorText: Colors.white,
-        margin: const EdgeInsets.all(8),
       );
     }
   }
@@ -37,13 +35,10 @@ class ShareUtils {
     }
     
     Clipboard.setData(ClipboardData(text: text));
-    Get.snackbar(
+    SnackbarUtils.show(
       'Copied to Clipboard',
       'Text has been copied to clipboard',
-      snackPosition: SnackPosition.BOTTOM,
       backgroundColor: Colors.green.withOpacity(0.7),
-      colorText: Colors.white,
-      margin: const EdgeInsets.all(8),
     );
   }
 
