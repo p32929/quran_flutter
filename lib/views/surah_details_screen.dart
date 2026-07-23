@@ -35,6 +35,9 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
   // Add a local loading state to ensure complete loading
   final RxBool isInitializing = true.obs;
 
+  // Follows the currently playing ayah to auto-scroll it into view
+  Worker? _playingAyahWorker;
+
   @override
   void initState() {
     super.initState();
@@ -46,6 +49,13 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
 
     audioController = Get.find<AudioController>();
 
+    // Auto-scroll to the playing ayah when it changes (e.g. playlist advances)
+    _playingAyahWorker = ever(audioController.currentAyahNumber, (int ayahNumber) {
+      if (ayahNumber > 0 && audioController.currentAyahSurah.value == widget.surah.number) {
+        _scrollToPlayingAyahIfNeeded(ayahNumber);
+      }
+    });
+
     // Handle initial data loading first, then check for scrollToAyah in a callback
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadData();
@@ -54,6 +64,8 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
 
   @override
   void dispose() {
+    _playingAyahWorker?.dispose();
+
     // Stop audio when leaving the surah details screen
     if (audioController.isCurrentlyPlaying(widget.surah.number.toString()) ||
         audioController.currentAyahSurah.value == widget.surah.number) {
@@ -151,6 +163,32 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
         }
       }
     }
+  }
+
+  // Scrolls to the playing ayah only when it isn't already fully visible,
+  // so it doesn't fight the user while they're looking right at it
+  void _scrollToPlayingAyahIfNeeded(int ayahNumber) {
+    final targetIndex = ayahNumber - 1;
+    if (targetIndex < 0 || targetIndex >= quranController.ayahs.length) return;
+    if (!itemScrollController.isAttached) return;
+
+    final showArabic = themeController.showArabicText.value;
+    final hasBismillah = widget.surah.number != 1 && widget.surah.number != 9 && showArabic;
+    final headerItemCount = 1 + (hasBismillah ? 1 : 0);
+    final scrollIndex = headerItemCount + targetIndex;
+
+    // Already fully visible? Then leave the scroll position alone
+    final positions = itemPositionsListener.itemPositions.value;
+    final isFullyVisible = positions.any((p) =>
+        p.index == scrollIndex && p.itemLeadingEdge >= 0 && p.itemTrailingEdge <= 1);
+    if (isFullyVisible) return;
+
+    itemScrollController.scrollTo(
+      index: scrollIndex,
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeInOut,
+      alignment: 0.05,
+    );
   }
 
   void _scrollToAyah(int ayahNumber) {

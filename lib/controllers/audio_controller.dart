@@ -72,23 +72,29 @@ class AudioController extends GetxController {
     try {
       _audioPlayer = AudioPlayer();
       
-      // Listen to player state changes
+      // Listen to player state changes.
+      // Note: just_audio keeps `playing == true` after the last track
+      // completes, so treat completed/idle as not playing — otherwise the
+      // play/stop buttons stay stuck in the "playing" state.
       _audioPlayer!.playerStateStream.listen((state) {
-        if (state.playing) {
-          isPlaying.value = true;
-        } else {
-          isPlaying.value = false;
-        }
+        isPlaying.value = state.playing &&
+            state.processingState != ProcessingState.completed &&
+            state.processingState != ProcessingState.idle;
       });
-      
+
       // Handle playback completion
       _audioPlayer!.processingStateStream.listen((state) {
         if (state == ProcessingState.completed) {
           isPlaying.value = false;
-          // Clear per-ayah state so the glow turns off when playback finishes
+          // Clear playback state so the glow turns off and the surah play
+          // button resets when playback finishes
           _playlistSurah = null;
           currentAyahSurah.value = 0;
           currentAyahNumber.value = 0;
+          currentSurahId.value = '';
+          // Reset the player so the next play starts fresh instead of
+          // resuming a completed session
+          _audioPlayer!.stop();
         }
       });
 
