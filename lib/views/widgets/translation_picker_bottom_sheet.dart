@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../controllers/translation_controller.dart';
 import '../../models/translation_edition.dart';
+import '../../utils/app_bottom_sheet.dart';
+import 'translation_manage_bottom_sheet.dart';
 
 /// Bottom sheet that lets the user pick a single active translation edition.
 /// Editions are grouped by language, each showing the translator, a short
@@ -64,7 +66,7 @@ class TranslationPickerBottomSheet extends StatelessWidget {
           const SizedBox(height: 8),
           Flexible(
             child: Obx(() {
-              final grouped = controller.editionsByLanguage;
+              final grouped = controller.installedByLanguage;
               final selectedId = controller.selectedEditionId.value;
               return ListView(
                 shrinkWrap: true,
@@ -79,6 +81,30 @@ class TranslationPickerBottomSheet extends StatelessWidget {
                 ],
               );
             }),
+          ),
+          // Download more translations
+          SafeArea(
+            top: false,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+              child: SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    showAppBottomSheet(
+                      context: context,
+                      builder: (_) => const TranslationManageBottomSheet(),
+                    );
+                  },
+                  icon: const Icon(Icons.download_outlined, size: 20),
+                  label: const Text('Download more languages'),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                  ),
+                ),
+              ),
+            ),
           ),
         ],
       ),

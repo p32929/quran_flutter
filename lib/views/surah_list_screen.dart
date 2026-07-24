@@ -12,6 +12,7 @@ import 'widgets/last_read_bottom_sheet.dart';
 import 'widgets/about_bottom_sheet.dart';
 import 'widgets/theme_bottom_sheet.dart';
 import '../services/quran_service.dart';
+import '../utils/app_bottom_sheet.dart';
 
 class SurahListScreen extends StatefulWidget {
   const SurahListScreen({super.key});
@@ -38,10 +39,8 @@ class _SurahListScreenState extends State<SurahListScreen> {
   void _showLastReadBottomSheet() {
     final lastRead = lastReadController.lastRead.value;
     if (lastRead != null) {
-      showModalBottomSheet(
+      showAppBottomSheet(
         context: context,
-        isScrollControlled: true,
-        backgroundColor: Colors.transparent,
         builder: (context) => LastReadBottomSheet(lastRead: lastRead),
       );
     }
@@ -375,10 +374,8 @@ class _SurahListScreenState extends State<SurahListScreen> {
   }
 
   void _showBookmarksBottomSheet(BuildContext context) {
-    showModalBottomSheet(
+    showAppBottomSheet(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
       builder: (context) => _buildBookmarksContent(context),
     );
   }
@@ -638,19 +635,15 @@ class _SurahListScreenState extends State<SurahListScreen> {
   }
 
   void _showAboutDialog(BuildContext context) {
-    showModalBottomSheet(
+    showAppBottomSheet(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
       builder: (context) => const AboutBottomSheet(),
     );
   }
 
   void _showThemeDialog(BuildContext context) {
-    showModalBottomSheet(
+    showAppBottomSheet(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
       builder: (context) => const ThemeBottomSheet(),
     );
   }
@@ -658,10 +651,8 @@ class _SurahListScreenState extends State<SurahListScreen> {
   void _showMenuBottomSheet(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    showModalBottomSheet(
+    showAppBottomSheet(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
       builder: (context) => Container(
         constraints: BoxConstraints(
           maxHeight: MediaQuery.of(context).size.height * 0.6,

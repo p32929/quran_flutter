@@ -54,6 +54,9 @@ class _AudioBottomSheetState extends State<AudioBottomSheet> {
     final colorScheme = Theme.of(context).colorScheme;
     
     return Container(
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.of(context).size.height * 0.8,
+      ),
       padding: EdgeInsets.only(
         top: 16,
         bottom: MediaQuery.of(context).padding.bottom + 16,
@@ -97,9 +100,9 @@ class _AudioBottomSheetState extends State<AudioBottomSheet> {
             child: Row(
               children: [
                 Obx(() => Text(
-                  isReciterLoading.value 
-                    ? 'Loading audio, please wait...' 
-                    : 'Select a reciter',
+                  isReciterLoading.value
+                    ? 'Loading audio, please wait...'
+                    : 'Tap a name to play · ☆ to set as default',
                   style: TextStyle(
                     fontSize: 14,
                     color: isReciterLoading.value 
@@ -133,7 +136,7 @@ class _AudioBottomSheetState extends State<AudioBottomSheet> {
           Divider(height: 1, color: Colors.grey.withOpacity(0.2)),
           
           // Reciter list
-          Obx(() {
+          Flexible(child: Obx(() {
             if (audioController.reciters.isEmpty) {
               return Container(
                 padding: const EdgeInsets.all(20),
@@ -147,7 +150,7 @@ class _AudioBottomSheetState extends State<AudioBottomSheet> {
                 ),
               );
             }
-            
+
             return ListView.separated(
               shrinkWrap: true,
               physics: const BouncingScrollPhysics(),
@@ -155,7 +158,7 @@ class _AudioBottomSheetState extends State<AudioBottomSheet> {
               separatorBuilder: (context, index) => const Divider(height: 1, indent: 64),
               itemBuilder: (context, index) {
                 final reciter = audioController.reciters[index];
-                final isSelected = audioController.isCurrentlyPlaying(widget.surah.number.toString()) && 
+                final isSelected = audioController.isCurrentlyPlaying(widget.surah.number.toString()) &&
                                audioController.currentReciterId.value == reciter.id;
                 final isLoading = isReciterLoading.value && loadingReciterId.value == reciter.id;
                 
@@ -196,7 +199,7 @@ class _AudioBottomSheetState extends State<AudioBottomSheet> {
                         color: colorScheme.onBackground,
                       ),
                     ),
-                    subtitle: isLoading 
+                    subtitle: isLoading
                       ? Row(
                           children: [
                             Text(
@@ -218,12 +221,40 @@ class _AudioBottomSheetState extends State<AudioBottomSheet> {
                           ],
                         )
                       : null,
+                    // Set-default control: sets the default reciter without
+                    // playing and without closing the sheet. Wrapped in its own
+                    // Obx so it reacts to defaultReciterId changes (itemBuilder
+                    // runs outside the list's outer Obx tracking).
+                    trailing: Obx(() {
+                      final isDefault = audioController.defaultReciterId.value == reciter.id;
+                      return TextButton.icon(
+                        onPressed: isDefault
+                            ? null
+                            : () => audioController.setDefaultReciter(reciter.id),
+                        icon: Icon(
+                          isDefault ? Icons.star : Icons.star_border,
+                          size: 18,
+                          color: isDefault ? colorScheme.primary : colorScheme.onSurfaceVariant,
+                        ),
+                        label: Text(
+                          isDefault ? 'Default' : 'Set default',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: isDefault ? FontWeight.w600 : FontWeight.w500,
+                            color: isDefault ? colorScheme.primary : colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          minimumSize: const Size(0, 36),
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                      );
+                    }),
                     onTap: isLoading ? null : () {
-                      // Set loading state for this specific reciter
+                      // Play this reciter (does not change the default)
                       isReciterLoading.value = true;
                       loadingReciterId.value = reciter.id;
-                      
-                      // Play the audio
                       audioController.playAudio(
                         widget.surah.number.toString(),
                         reciter,
@@ -234,7 +265,7 @@ class _AudioBottomSheetState extends State<AudioBottomSheet> {
                 );
               },
             );
-          }),
+          })),
         ],
       ),
     );

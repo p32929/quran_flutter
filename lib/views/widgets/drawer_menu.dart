@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../routes/app_routes.dart';
 import 'about_bottom_sheet.dart';
+import '../../utils/app_bottom_sheet.dart';
 
 class DrawerMenu extends StatelessWidget {
   const DrawerMenu({super.key});
@@ -70,10 +71,8 @@ class DrawerMenu extends StatelessWidget {
             onTap: () {
               Get.back();
               // Show about dialog
-              showModalBottomSheet(
+              showAppBottomSheet(
                 context: context,
-                isScrollControlled: true,
-                backgroundColor: Colors.transparent,
                 builder: (context) => const AboutBottomSheet(),
               );
             },

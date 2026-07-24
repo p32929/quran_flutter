@@ -11,12 +11,16 @@ class QuranRepository {
   static const String _storeMeta = 'meta';
   static const String _storeSurahIndex = 'surah_index';
   static const String _storeSurahDetail = 'surah_detail';
+  static const String _storeTranslations = 'translation_editions';
 
   late Database _db;
 
   final StoreRef<String, dynamic> _metaStore = StoreRef<String, dynamic>(_storeMeta);
   final StoreRef<int, Map<String, dynamic>> _surahIndexStore = intMapStoreFactory.store(_storeSurahIndex);
   final StoreRef<int, Map<String, dynamic>> _surahDetailStore = intMapStoreFactory.store(_storeSurahDetail);
+  // Downloaded translation editions: key = editionId, value = { "1": [verses], ... }
+  final StoreRef<String, Map<String, dynamic>> _translationStore =
+      stringMapStoreFactory.store(_storeTranslations);
 
   Database get db => _db;
 
@@ -91,6 +95,24 @@ class QuranRepository {
 
   Future<Map<String, dynamic>?> getSurahDetail(int number) async {
     return await _surahDetailStore.record(number).get(_db);
+  }
+
+  // Downloaded translation editions
+  Future<void> putTranslationEdition(String editionId, Map<String, dynamic> versesBySurah) async {
+    await _translationStore.record(editionId).put(_db, versesBySurah);
+  }
+
+  Future<Map<String, dynamic>?> getTranslationEdition(String editionId) async {
+    return await _translationStore.record(editionId).get(_db);
+  }
+
+  Future<List<String>> getDownloadedEditionIds() async {
+    final keys = await _translationStore.findKeys(_db);
+    return keys;
+  }
+
+  Future<void> deleteTranslationEdition(String editionId) async {
+    await _translationStore.record(editionId).delete(_db);
   }
 
   // Maintenance

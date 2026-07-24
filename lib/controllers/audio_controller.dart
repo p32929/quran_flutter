@@ -2,18 +2,25 @@ import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
 import 'dart:async';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:pref/pref.dart';
 import '../utils/snackbar_utils.dart';
 
 class ReciterInfo {
   final String id;
   final String name;
+  final String shortName; // compact label for chips
   final String url;
+  final String everyAyahDir; // everyayah.com per-ayah directory
 
   ReciterInfo({
     required this.id,
     required this.name,
-    required this.url,
+    this.shortName = '',
+    this.url = '',
+    this.everyAyahDir = '',
   });
+
+  String get displayShort => shortName.isNotEmpty ? shortName : name;
 }
 
 class AudioController extends GetxController {
@@ -36,14 +43,42 @@ class AudioController extends GetxController {
   // is sounding (null = not in playlist mode)
   int? _playlistSurah;
 
-  // Map of the app's reciter ids to everyayah.com per-ayah directories
-  static const Map<String, String> _everyAyahDirs = {
-    '1': 'Alafasy_128kbps', // Mishary Rashid Al-Afasy
-    '2': 'Abu_Bakr_Ash-Shaatree_128kbps', // Abu Bakr Al-Shatri
-    '3': 'Nasser_Alqatami_128kbps', // Nasser Al-Qatami
-    '4': 'Yasser_Ad-Dussary_128kbps', // Yasser Al-Dosari
-  };
+  // Curated reciter catalog. Every reciter has a complete set of per-ayah
+  // files on everyayah.com, so all support the ayah-by-ayah playlist + glow.
+  // id == everyayah directory (stable, unique).
+  static final List<ReciterInfo> _reciterCatalog = [
+    ReciterInfo(id: 'Alafasy_128kbps', name: 'Mishary Rashid Al-Afasy', shortName: 'Al-Afasy', everyAyahDir: 'Alafasy_128kbps'),
+    ReciterInfo(id: 'Abu_Bakr_Ash-Shaatree_128kbps', name: 'Abu Bakr Al-Shatri', shortName: 'Al-Shatri', everyAyahDir: 'Abu_Bakr_Ash-Shaatree_128kbps'),
+    ReciterInfo(id: 'Nasser_Alqatami_128kbps', name: 'Nasser Al-Qatami', shortName: 'Al-Qatami', everyAyahDir: 'Nasser_Alqatami_128kbps'),
+    ReciterInfo(id: 'Yasser_Ad-Dussary_128kbps', name: 'Yasser Al-Dosari', shortName: 'Al-Dosari', everyAyahDir: 'Yasser_Ad-Dussary_128kbps'),
+    ReciterInfo(id: 'MaherAlMuaiqly128kbps', name: 'Maher Al-Muaiqly', shortName: 'Al-Muaiqly', everyAyahDir: 'MaherAlMuaiqly128kbps'),
+    ReciterInfo(id: 'Saood_ash-Shuraym_128kbps', name: 'Saud Al-Shuraim', shortName: 'Al-Shuraim', everyAyahDir: 'Saood_ash-Shuraym_128kbps'),
+    ReciterInfo(id: 'Hudhaify_128kbps', name: 'Ali Al-Hudhaify', shortName: 'Al-Hudhaify', everyAyahDir: 'Hudhaify_128kbps'),
+    ReciterInfo(id: 'Husary_128kbps', name: 'Mahmoud Khalil Al-Husary', shortName: 'Al-Husary', everyAyahDir: 'Husary_128kbps'),
+    ReciterInfo(id: 'Minshawy_Murattal_128kbps', name: 'Mohamed Al-Minshawi (Murattal)', shortName: 'Al-Minshawi', everyAyahDir: 'Minshawy_Murattal_128kbps'),
+    ReciterInfo(id: 'Abdul_Basit_Mujawwad_128kbps', name: 'Abdul Basit Abdus Samad (Mujawwad)', shortName: 'Abdul Basit', everyAyahDir: 'Abdul_Basit_Mujawwad_128kbps'),
+    ReciterInfo(id: 'Muhammad_Ayyoub_128kbps', name: 'Muhammad Ayyoub', shortName: 'Ayyoub', everyAyahDir: 'Muhammad_Ayyoub_128kbps'),
+    ReciterInfo(id: 'Muhammad_Jibreel_128kbps', name: 'Muhammad Jibreel', shortName: 'Jibreel', everyAyahDir: 'Muhammad_Jibreel_128kbps'),
+    ReciterInfo(id: 'Abdullaah_3awwaad_Al-Juhaynee_128kbps', name: 'Abdullah Awad Al-Juhani', shortName: 'Al-Juhani', everyAyahDir: 'Abdullaah_3awwaad_Al-Juhaynee_128kbps'),
+    ReciterInfo(id: 'Salah_Al_Budair_128kbps', name: 'Salah Al-Budair', shortName: 'Al-Budair', everyAyahDir: 'Salah_Al_Budair_128kbps'),
+    ReciterInfo(id: 'ahmed_ibn_ali_al_ajamy_128kbps', name: 'Ahmed Al-Ajamy', shortName: 'Al-Ajamy', everyAyahDir: 'ahmed_ibn_ali_al_ajamy_128kbps'),
+    ReciterInfo(id: 'Abdullah_Matroud_128kbps', name: 'Abdullah Al-Matroud', shortName: 'Al-Matroud', everyAyahDir: 'Abdullah_Matroud_128kbps'),
+    ReciterInfo(id: 'Mohammad_al_Tablaway_128kbps', name: 'Mohammad Al-Tablawi', shortName: 'Al-Tablawi', everyAyahDir: 'Mohammad_al_Tablaway_128kbps'),
+  ];
   static const String _defaultEveryAyahDir = 'Alafasy_128kbps';
+  static const String _defaultReciterId = 'Alafasy_128kbps';
+  static const String _defaultReciterPrefKey = 'default_reciter';
+
+  // Persisted preferred reciter, used when tapping the header play button
+  // and for per-ayah playback.
+  final RxString defaultReciterId = _defaultReciterId.obs;
+
+  String? _dirForReciterId(String reciterId) {
+    for (final r in _reciterCatalog) {
+      if (r.id == reciterId) return r.everyAyahDir;
+    }
+    return null;
+  }
   
   // Track if we're in web mode with error
   final RxBool hasWebAudioError = false.obs;
@@ -58,11 +93,36 @@ class AudioController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    // Reciter list is a fixed catalog; make it available immediately
+    reciters.assignAll(_reciterCatalog);
+    // Restore the saved default reciter, if any
+    try {
+      if (Get.isRegistered<BasePrefService>()) {
+        final saved = Get.find<BasePrefService>().get<String>(_defaultReciterPrefKey);
+        if (saved != null && _dirForReciterId(saved) != null) {
+          defaultReciterId.value = saved;
+        }
+      }
+    } catch (_) {}
     // Delay audio initialization to prevent blocking app startup
     // This is especially important for web
     Future.delayed(Duration(milliseconds: 500), () {
       _initializeAudioPlayer();
     });
+  }
+
+  ReciterInfo get defaultReciter =>
+      reciters.firstWhereOrNull((r) => r.id == defaultReciterId.value) ??
+      _reciterCatalog.first;
+
+  Future<void> setDefaultReciter(String reciterId) async {
+    if (_dirForReciterId(reciterId) == null) return;
+    defaultReciterId.value = reciterId;
+    try {
+      if (Get.isRegistered<BasePrefService>()) {
+        await Get.find<BasePrefService>().set(_defaultReciterPrefKey, reciterId);
+      }
+    } catch (_) {}
   }
   
   void _initializeAudioPlayer() {
@@ -127,18 +187,11 @@ class AudioController extends GetxController {
   }
   
   Future<void> loadReciters(Map<String, dynamic> audioData) async {
-    reciters.clear();
-    
-    // Convert audio data to reciter list
-    audioData.forEach((key, value) {
-      if (value is Map<String, dynamic>) {
-        reciters.add(ReciterInfo(
-          id: key,
-          name: value['reciter'] ?? 'Unknown',
-          url: value['originalUrl'] ?? '',
-        ));
-      }
-    });
+    // The reciter list is now a curated everyayah.com catalog (all support
+    // per-ayah playback + glow), independent of the per-surah audio data.
+    if (reciters.length != _reciterCatalog.length) {
+      reciters.assignAll(_reciterCatalog);
+    }
   }
 
   Future<void> playAudio(String surahId, ReciterInfo reciter, {int? totalAyah}) async {
@@ -200,11 +253,12 @@ class AudioController extends GetxController {
       // Add a small artificial delay to ensure the loading UI is visible
       await Future.delayed(const Duration(milliseconds: 500));
 
-      // Load the audio.
-      // Preferred: ayah-by-ayah playlist from everyayah.com so the UI can
-      // highlight the exact ayah being recited. Falls back to the single
-      // full-surah file when the reciter has no per-ayah source mapping.
-      final everyAyahDir = _everyAyahDirs[reciter.id];
+      // Load the audio as an ayah-by-ayah playlist from everyayah.com so the
+      // UI can highlight the exact ayah being recited. Falls back to the
+      // reciter's single full-surah file if no per-ayah directory is set.
+      final everyAyahDir = reciter.everyAyahDir.isNotEmpty
+          ? reciter.everyAyahDir
+          : _dirForReciterId(reciter.id);
       final surahNumber = int.tryParse(surahId);
       if (everyAyahDir != null && surahNumber != null && totalAyah != null && totalAyah > 0) {
         print('Loading ayah-by-ayah playlist for surah $surahId ($everyAyahDir)');
@@ -296,8 +350,10 @@ class AudioController extends GetxController {
   }
 
   String _ayahAudioUrl(int surahNumber, int ayahNumber) {
-    // Use the last-selected reciter when it has a per-ayah source, else Alafasy
-    final dir = _everyAyahDirs[currentReciterId.value] ?? _defaultEveryAyahDir;
+    // Prefer the reciter of the active surah playback, else the default reciter
+    final dir = _dirForReciterId(currentReciterId.value) ??
+        _dirForReciterId(defaultReciterId.value) ??
+        _defaultEveryAyahDir;
     return _everyAyahUrl(dir, surahNumber, ayahNumber);
   }
 

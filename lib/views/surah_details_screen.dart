@@ -12,6 +12,7 @@ import '../models/surah_model.dart';
 import '../models/ayah_model.dart';
 import '../utils/text_styles.dart';
 import '../utils/share_utils.dart';
+import '../utils/app_bottom_sheet.dart';
 import 'widgets/settings_bottom_sheet.dart';
 import 'widgets/audio_bottom_sheet.dart';
 
@@ -806,22 +807,15 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
   }
 
   void _showAudioBottomSheet(BuildContext context) {
-    showModalBottomSheet(
+    showAppBottomSheet(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
       builder: (context) => AudioBottomSheet(surah: widget.surah),
     );
   }
 
   void _showSettingsBottomSheet(BuildContext context) {
-    showModalBottomSheet(
+    showAppBottomSheet(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
       builder: (context) => const SettingsBottomSheet(),
     );
   }

@@ -3,15 +3,14 @@ import 'package:get/get.dart';
 import '../../controllers/theme_controller.dart';
 import '../../controllers/translation_controller.dart';
 import 'translation_picker_bottom_sheet.dart';
+import '../../utils/app_bottom_sheet.dart';
 
 class SettingsBottomSheet extends StatelessWidget {
   const SettingsBottomSheet({super.key});
 
   void _showTranslationPicker(BuildContext context) {
-    showModalBottomSheet(
+    showAppBottomSheet(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
       builder: (_) => const TranslationPickerBottomSheet(),
     );
   }

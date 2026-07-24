@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../controllers/theme_controller.dart';
 import 'widgets/settings_bottom_sheet.dart';
 import 'widgets/about_bottom_sheet.dart';
+import '../utils/app_bottom_sheet.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -188,10 +189,8 @@ class SettingsScreen extends StatelessWidget {
   }
   
   void _showAboutDialog(BuildContext context) {
-    showModalBottomSheet(
+    showAppBottomSheet(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
       builder: (context) => const AboutBottomSheet(),
     );
   }
