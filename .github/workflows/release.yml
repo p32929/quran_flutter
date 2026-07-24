@@ -179,6 +179,8 @@ jobs:
   # ------------------------------------------------------ Publish the release
   release:
     needs: [android, web, linux, windows, macos, ios]
+    # Run even if some platform builds fail — publish whatever succeeded.
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -195,9 +197,11 @@ jobs:
         with:
           tag_name: v${{ inputs.version }}
           name: v${{ inputs.version }}
+          draft: false
           prerelease: ${{ inputs.prerelease }}
+          make_latest: true
           generate_release_notes: true
-          fail_on_unmatched_files: true
+          fail_on_unmatched_files: false
           files: dist/*
           body: |
             ## Quran v${{ inputs.version }}
