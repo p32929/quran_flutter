@@ -1,0 +1,215 @@
+name: Release
+
+# Manually triggered. Click "Run workflow", enter the version name (e.g. 1.2.0),
+# and this builds every platform and publishes a GitHub Release with all downloads.
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version name (e.g. 1.2.0 — no leading v)"
+        required: true
+        type: string
+      prerelease:
+        description: "Mark the release as a pre-release?"
+        required: false
+        type: boolean
+        default: false
+
+env:
+  FLUTTER_VERSION: "3.38.1"
+  FLUTTER_CHANNEL: "stable"
+
+jobs:
+  # ---------------------------------------------------------------- Android APK
+  android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: ${{ env.FLUTTER_CHANNEL }}
+          cache: true
+      - run: flutter pub get
+      - name: Build APK
+        run: flutter build apk --release --build-name=${{ inputs.version }} --build-number=${{ github.run_number }}
+      - name: Rename
+        run: mv build/app/outputs/flutter-apk/app-release.apk quran-${{ inputs.version }}.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android-apk
+          path: quran-${{ inputs.version }}.apk
+          if-no-files-found: error
+
+  # ------------------------------------------------------------------------ Web
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: ${{ env.FLUTTER_CHANNEL }}
+          cache: true
+      - run: flutter pub get
+      - name: Build web
+        run: flutter build web --release --build-name=${{ inputs.version }} --build-number=${{ github.run_number }}
+      - name: Zip
+        run: cd build/web && zip -r ../../quran-web-${{ inputs.version }}.zip .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: web-zip
+          path: quran-web-${{ inputs.version }}.zip
+          if-no-files-found: error
+
+  # ---------------------------------------------------------------------- Linux
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Linux build deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build libgtk-3-dev clang cmake pkg-config
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: ${{ env.FLUTTER_CHANNEL }}
+          cache: true
+      - run: flutter pub get
+      - name: Build Linux
+        run: flutter build linux --release --build-name=${{ inputs.version }} --build-number=${{ github.run_number }}
+      - name: Tarball
+        run: tar -czf quran-linux-${{ inputs.version }}.tar.gz -C build/linux/x64/release/bundle .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux-tar
+          path: quran-linux-${{ inputs.version }}.tar.gz
+          if-no-files-found: error
+
+  # -------------------------------------------------------------------- Windows
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: ${{ env.FLUTTER_CHANNEL }}
+          cache: true
+      - run: flutter pub get
+      - name: Build Windows
+        run: flutter build windows --release --build-name=${{ inputs.version }} --build-number=${{ github.run_number }}
+      - name: Portable zip
+        shell: pwsh
+        run: Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath quran-windows-${{ inputs.version }}.zip
+      - name: Build installer (Inno Setup)
+        shell: pwsh
+        run: |
+          choco install innosetup --no-progress -y
+          & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" /DMyAppVersion=${{ inputs.version }} windows\installer.iss
+          Move-Item installer_output\quran-setup.exe quran-${{ inputs.version }}-setup.exe
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-installer
+          path: |
+            quran-${{ inputs.version }}-setup.exe
+            quran-windows-${{ inputs.version }}.zip
+          if-no-files-found: error
+
+  # ---------------------------------------------------------------------- macOS
+  macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: ${{ env.FLUTTER_CHANNEL }}
+          cache: true
+      - run: flutter pub get
+      - name: Build macOS
+        run: flutter build macos --release --build-name=${{ inputs.version }} --build-number=${{ github.run_number }}
+      - name: Make DMG
+        run: |
+          set -e
+          APP=$(ls -d build/macos/Build/Products/Release/*.app | head -1)
+          echo "Packaging: $APP"
+          mkdir -p dmg_root
+          cp -R "$APP" dmg_root/
+          ln -s /Applications dmg_root/Applications
+          hdiutil create -volname "Quran" -srcfolder dmg_root -ov -format UDZO "quran-${{ inputs.version }}.dmg"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos-dmg
+          path: quran-${{ inputs.version }}.dmg
+          if-no-files-found: error
+
+  # ------------------------------------------------------------- iOS (unsigned)
+  ios:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: ${{ env.FLUTTER_CHANNEL }}
+          cache: true
+      - run: flutter pub get
+      - name: Build iOS (no codesign)
+        run: flutter build ios --release --no-codesign --build-name=${{ inputs.version }} --build-number=${{ github.run_number }}
+      - name: Package unsigned IPA
+        run: |
+          set -e
+          APP=$(ls -d build/ios/iphoneos/*.app | head -1)
+          echo "Packaging: $APP"
+          mkdir -p Payload
+          cp -R "$APP" Payload/
+          zip -r "quran-${{ inputs.version }}-unsigned.ipa" Payload
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ios-ipa
+          path: quran-${{ inputs.version }}-unsigned.ipa
+          if-no-files-found: error
+
+  # ------------------------------------------------------ Publish the release
+  release:
+    needs: [android, web, linux, windows, macos, ios]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - name: List artifacts
+        run: ls -R dist
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ inputs.version }}
+          name: v${{ inputs.version }}
+          prerelease: ${{ inputs.prerelease }}
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+          files: dist/*
+          body: |
+            ## Quran v${{ inputs.version }}
+
+            Download the build for your platform below.
+
+            | Platform | File | Notes |
+            |---|---|---|
+            | Android | `quran-*.apk` | Installs directly. Play Protect may warn (debug-signed). |
+            | Windows | `quran-*-setup.exe` | Installer. SmartScreen may warn (unsigned). |
+            | Windows | `quran-windows-*.zip` | Portable — unzip and run `quran_flutter_v2.exe`. |
+            | macOS | `quran-*.dmg` | Unsigned: right-click → Open the first time, or run `xattr -dr com.apple.quarantine /Applications/<app>`. |
+            | iOS | `quran-*-unsigned.ipa` | **Unsigned** — sideload via AltStore/Sideloadly. Not installable by tapping. |
+            | Linux | `quran-linux-*.tar.gz` | Extract and run the bundled binary. |
+            | Web | `quran-web-*.zip` | Static site — serve the folder. |
