@@ -1,0 +1,128 @@
+[
+ {
+  "id": "eng-khattab",
+  "language": "English",
+  "languageCode": "english",
+  "direction": "ltr",
+  "translator": "Dr. Mustafa Khattab",
+  "title": "The Clear Quran",
+  "description": "Contemporary English translation prioritizing clarity and readability."
+ },
+ {
+  "id": "ben-abubakrzakaria",
+  "language": "Bengali",
+  "languageCode": "bengali",
+  "direction": "ltr",
+  "translator": "Abu Bakr Zakaria",
+  "title": "তাফসীরভিত্তিক অনুবাদ",
+  "description": "Modern scholarly translation with reference notes (Salafi methodology)."
+ },
+ {
+  "id": "ben-muhiuddinkhan",
+  "language": "Bengali",
+  "languageCode": "bengali",
+  "direction": "ltr",
+  "translator": "Muhiuddin Khan",
+  "title": "সহজ সরল অনুবাদ",
+  "description": "The most widely-read Bengali translation in Bangladesh; simple, fluent prose."
+ },
+ {
+  "id": "ben-zohurulhoque",
+  "language": "Bengali",
+  "languageCode": "bengali",
+  "direction": "ltr",
+  "translator": "Zohurul Hoque",
+  "title": "শব্দানুবাদ",
+  "description": "Literal verse-by-verse rendering with a classical tone."
+ },
+ {
+  "id": "urd-fatehmuhammadja",
+  "language": "Urdu",
+  "languageCode": "urdu",
+  "direction": "rtl",
+  "translator": "Fateh Muhammad Jalandhry",
+  "title": "کلاسیکی ترجمہ",
+  "description": "Classic early-20th-century translation; simple, traditional Urdu."
+ },
+ {
+  "id": "urd-muhammadtaqiusm",
+  "language": "Urdu",
+  "languageCode": "urdu",
+  "direction": "rtl",
+  "translator": "Mufti Taqi Usmani",
+  "title": "آسان ترجمہ قرآن",
+  "description": "Contemporary Deobandi translation in clear, modern Urdu."
+ },
+ {
+  "id": "urd-abulaalamaududi",
+  "language": "Urdu",
+  "languageCode": "urdu",
+  "direction": "rtl",
+  "translator": "Abul A'la Maududi",
+  "title": "تفہیم القرآن",
+  "description": "From Tafhim-ul-Quran; explanatory, thematic style."
+ },
+ {
+  "id": "urd-muhammadjunagar",
+  "language": "Urdu",
+  "languageCode": "urdu",
+  "direction": "rtl",
+  "translator": "Muhammad Junagarhi",
+  "title": "ترجمہ محمد جوناگڑھی",
+  "description": "Popular Salafi translation; concise and direct."
+ },
+ {
+  "id": "urd-ahmedali",
+  "language": "Urdu",
+  "languageCode": "urdu",
+  "direction": "rtl",
+  "translator": "Ahmed Ali",
+  "title": "ترجمہ احمد علی",
+  "description": "Fluent literary rendering of the Quran."
+ },
+ {
+  "id": "urd-mahmoodulhassan",
+  "language": "Urdu",
+  "languageCode": "urdu",
+  "direction": "rtl",
+  "translator": "Mahmood ul Hassan (Shaikh-ul-Hind)",
+  "title": "ترجمہ شیخ الہند",
+  "description": "Historic translation by Shaikh-ul-Hind; classical Urdu."
+ },
+ {
+  "id": "urd-muhammadhussain",
+  "language": "Urdu",
+  "languageCode": "urdu",
+  "direction": "rtl",
+  "translator": "Muhammad Hussain Najafi",
+  "title": "ترجمہ نجفی",
+  "description": "Shia scholarly translation."
+ },
+ {
+  "id": "urd-muhammadkaramsh",
+  "language": "Urdu",
+  "languageCode": "urdu",
+  "direction": "rtl",
+  "translator": "Muhammad Karam Shah al-Azhari",
+  "title": "ضیاء القرآن",
+  "description": "Barelvi scholarly translation (Zia-ul-Quran)."
+ },
+ {
+  "id": "urd-muhammadtahirul",
+  "language": "Urdu",
+  "languageCode": "urdu",
+  "direction": "rtl",
+  "translator": "Muhammad Tahir-ul-Qadri",
+  "title": "عرفان القرآن",
+  "description": "Irfan-ul-Quran; eloquent, reverent style."
+ },
+ {
+  "id": "urd-syedzeeshanhaid",
+  "language": "Urdu",
+  "languageCode": "urdu",
+  "direction": "rtl",
+  "translator": "Syed Zeeshan Haider Jawadi",
+  "title": "ترجمہ جوادی",
+  "description": "Shia translation in accessible modern Urdu."
+ }
+]
