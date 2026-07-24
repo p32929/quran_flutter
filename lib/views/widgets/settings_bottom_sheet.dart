@@ -1,13 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../controllers/theme_controller.dart';
+import '../../controllers/translation_controller.dart';
+import 'translation_picker_bottom_sheet.dart';
 
 class SettingsBottomSheet extends StatelessWidget {
   const SettingsBottomSheet({super.key});
 
+  void _showTranslationPicker(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => const TranslationPickerBottomSheet(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final ThemeController themeController = Get.find<ThemeController>();
+    final TranslationController translationController = Get.find<TranslationController>();
     final colorScheme = Theme.of(context).colorScheme;
     
     return Container(
@@ -162,9 +174,9 @@ class SettingsBottomSheet extends StatelessWidget {
                   
                   const Divider(height: 32),
                   
-                  // Translation Language Selection
+                  // Translation Selection
                   Text(
-                    'Translation Language',
+                    'Translation',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -172,33 +184,58 @@ class SettingsBottomSheet extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  
-                  // Radio buttons for language selection
-                  Obx(() => Column(
-                    children: [
-                      RadioListTile(
-                        title: const Text('English'),
-                        value: 'english',
-                        groupValue: themeController.translationLanguage.value,
-                        onChanged: (value) {
-                          themeController.setTranslationLanguage(value.toString());
-                        },
-                        activeColor: colorScheme.primary,
-                        contentPadding: EdgeInsets.zero,
+
+                  // Tappable row showing the current translation; opens the picker
+                  Obx(() {
+                    // .selected reads selectedEditionId.value, so this Obx is reactive
+                    final edition = translationController.selected;
+                    return Material(
+                      color: colorScheme.surfaceVariant.withOpacity(0.5),
+                      borderRadius: BorderRadius.circular(12),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(12),
+                        onTap: () => _showTranslationPicker(context),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                          child: Row(
+                            children: [
+                              Icon(Icons.translate, color: colorScheme.primary, size: 22),
+                              const SizedBox(width: 14),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '${edition.language} · ${edition.translator}',
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600,
+                                        color: colorScheme.onSurface,
+                                      ),
+                                    ),
+                                    if (edition.description.isNotEmpty) ...[
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        edition.description,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                          fontSize: 12.5,
+                                          color: colorScheme.onSurfaceVariant,
+                                        ),
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              ),
+                              Icon(Icons.chevron_right, color: colorScheme.onSurfaceVariant),
+                            ],
+                          ),
+                        ),
                       ),
-                      RadioListTile(
-                        title: const Text('Bengali'),
-                        value: 'bengali',
-                        groupValue: themeController.translationLanguage.value,
-                        onChanged: (value) {
-                          themeController.setTranslationLanguage(value.toString());
-                        },
-                        activeColor: colorScheme.primary,
-                        contentPadding: EdgeInsets.zero,
-                      ),
-                    ],
-                  )),
-                  
+                    );
+                  }),
+
                   const Divider(height: 32),
                   
                   // Arabic Text Size
@@ -283,16 +320,24 @@ class SettingsBottomSheet extends StatelessWidget {
                       color: colorScheme.surfaceVariant,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Obx(() => Text(
-                      themeController.translationLanguage.value == 'bengali'
-                          ? 'পরম করুণাময় অতি দয়ালু আল্লাহর নামে।'
-                          : 'In the name of Allah, the Entirely Merciful, the Especially Merciful.',
-                      style: TextStyle(
-                        fontSize: themeController.englishFontSize.value,
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                      textAlign: TextAlign.center,
-                    )),
+                    child: Obx(() {
+                      final edition = translationController.selected;
+                      // Live preview from the selected edition (Al-Fatiha, ayah 1)
+                      String preview = translationController.verseText(1, 1);
+                      if (preview.isEmpty) {
+                        preview = 'In the name of Allah, the Entirely Merciful, the Especially Merciful.';
+                      }
+                      return Text(
+                        preview,
+                        style: TextStyle(
+                          fontSize: themeController.englishFontSize.value,
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                        textAlign: TextAlign.center,
+                        textDirection:
+                            edition.isRtl ? TextDirection.rtl : TextDirection.ltr,
+                      );
+                    }),
                   ),
                   const SizedBox(height: 24),
                 ],

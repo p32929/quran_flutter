@@ -8,6 +8,7 @@ import 'controllers/theme_controller.dart';
 import 'controllers/bookmark_controller.dart';
 import 'controllers/audio_controller.dart';
 import 'controllers/last_read_controller.dart';
+import 'controllers/translation_controller.dart';
 import 'services/quran_service.dart';
 import 'routes/app_routes.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
@@ -98,6 +99,9 @@ Future<void> initServices() async {
 
   // Initialize last read controller
   Get.put(LastReadController());
+
+  // Initialize translation controller (loads edition catalog + active edition)
+  Get.put(TranslationController());
 }
 
 // Preload all surahs for better offline experience

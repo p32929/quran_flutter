@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 import '../models/ayah_model.dart';
 import '../controllers/theme_controller.dart';
+import '../controllers/translation_controller.dart';
 import 'snackbar_utils.dart';
 
 class ShareUtils {
@@ -42,16 +43,24 @@ class ShareUtils {
     );
   }
 
+  // Translation text for the currently selected edition, falling back to inline data
+  static String _selectedTranslation(Ayah ayah, int surahNumber) {
+    if (Get.isRegistered<TranslationController>()) {
+      final tc = Get.find<TranslationController>();
+      final text = tc.verseText(surahNumber, ayah.number);
+      if (text.isNotEmpty) return text;
+      return ayah.translationFor(tc.selected.languageCode);
+    }
+    final themeController = Get.find<ThemeController>();
+    return ayah.translationFor(themeController.translationLanguage.value);
+  }
+
   static String generateShareText({
     required Ayah ayah,
     required int surahNumber,
     required String surahName,
   }) {
-    // Get the current translation language from theme controller
-    final themeController = Get.find<ThemeController>();
-    final String translationText = themeController.translationLanguage.value == 'bengali' 
-        ? ayah.bengali 
-        : ayah.english;
+    final String translationText = _selectedTranslation(ayah, surahNumber);
 
     return """
 ${ayah.arabic}
@@ -68,13 +77,9 @@ ${translationText}
     required String surahName,
   }) async {
     String text = ayah.arabic;
-    
-    // Get the current translation language
-    final themeController = Get.find<ThemeController>();
-    final String translationText = themeController.translationLanguage.value == 'bengali' 
-        ? ayah.bengali 
-        : ayah.english;
-    
+
+    final String translationText = _selectedTranslation(ayah, surahNumber);
+
     // Add translation
     text += "\n\n${translationText}";
     

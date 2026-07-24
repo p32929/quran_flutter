@@ -112,8 +112,10 @@ class QuranService extends GetxService {
   Future<void> ensureDetailCached(int surahNumber) async {
     if (_cachedSurahDetails.containsKey(surahNumber)) return;
     try {
-      final jsonMap = await _repo.getSurahDetail(surahNumber);
-      if (jsonMap != null) {
+      final record = await _repo.getSurahDetail(surahNumber);
+      if (record != null) {
+        // Sembast returns immutable maps; copy before mutating
+        final jsonMap = Map<String, dynamic>.from(record);
         jsonMap['surahNo'] = jsonMap['surahNo'] ?? surahNumber;
         _cachedSurahDetails[surahNumber] = SurahDetail.fromJson(jsonMap);
       }
@@ -149,9 +151,10 @@ class QuranService extends GetxService {
 
     // DB
     try {
-      final jsonMap = await _repo.getSurahDetail(surahNumber);
-      if (jsonMap != null) {
-        // Ensure consistency
+      final record = await _repo.getSurahDetail(surahNumber);
+      if (record != null) {
+        // Sembast returns immutable maps; copy before mutating
+        final jsonMap = Map<String, dynamic>.from(record);
         jsonMap['surahNo'] = jsonMap['surahNo'] ?? surahNumber;
         final detail = SurahDetail.fromJson(jsonMap);
         _cachedSurahDetails[surahNumber] = detail;

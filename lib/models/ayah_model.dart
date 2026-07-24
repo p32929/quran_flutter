@@ -3,29 +3,49 @@ class Ayah {
   final String arabic;
   final String english;
   final String bengali;
+  final String urdu;
 
   Ayah({
     required this.number,
     required this.arabic,
     required this.english,
     required this.bengali,
+    this.urdu = '',
   });
 
   factory Ayah.fromJson(Map<String, dynamic> json, int index) {
     return Ayah(
       number: index + 1,
-      arabic: json['arabic1'] != null && json['arabic1'].length > index 
-          ? json['arabic1'][index] 
+      arabic: json['arabic1'] != null && json['arabic1'].length > index
+          ? json['arabic1'][index]
           : '',
-      english: json['english'] != null && json['english'].length > index 
-          ? json['english'][index] 
+      english: json['english'] != null && json['english'].length > index
+          ? json['english'][index]
           : '',
-      bengali: json['bengali'] != null && json['bengali'].length > index 
-          ? json['bengali'][index] 
+      bengali: json['bengali'] != null && json['bengali'].length > index
+          ? json['bengali'][index]
+          : '',
+      urdu: json['urdu'] != null && json['urdu'].length > index
+          ? json['urdu'][index]
           : '',
     );
   }
+
+  // Translation text for a given language key, with English fallback
+  String translationFor(String language) {
+    switch (language) {
+      case 'bengali':
+        return bengali;
+      case 'urdu':
+        return urdu;
+      default:
+        return english;
+    }
+  }
 }
+
+// Languages that render right-to-left
+const Set<String> rtlTranslationLanguages = {'urdu'};
 
 // New model for the surah details
 class SurahDetail {
@@ -39,6 +59,7 @@ class SurahDetail {
   final List<String> english;
   final List<String> arabic1;
   final List<String> bengali;
+  final List<String> urdu;
   final List<Ayah> ayahs;
   final Map<String, dynamic>? rawData;
 
@@ -53,6 +74,7 @@ class SurahDetail {
     required this.english,
     required this.arabic1,
     required this.bengali,
+    this.urdu = const [],
     required this.ayahs,
     this.rawData,
   });
@@ -62,6 +84,7 @@ class SurahDetail {
     List<String> englishVerses = List<String>.from(json['english'] ?? []);
     List<String> arabicVerses = List<String>.from(json['arabic1'] ?? []);
     List<String> bengaliVerses = List<String>.from(json['bengali'] ?? []);
+    List<String> urduVerses = List<String>.from(json['urdu'] ?? []);
 
     // Create ayahs list
     List<Ayah> ayahsList = [];
@@ -71,6 +94,7 @@ class SurahDetail {
         arabic: i < arabicVerses.length ? arabicVerses[i] : '',
         english: i < englishVerses.length ? englishVerses[i] : '',
         bengali: i < bengaliVerses.length ? bengaliVerses[i] : '',
+        urdu: i < urduVerses.length ? urduVerses[i] : '',
       ));
     }
 
@@ -85,6 +109,7 @@ class SurahDetail {
       english: englishVerses,
       arabic1: arabicVerses,
       bengali: bengaliVerses,
+      urdu: urduVerses,
       ayahs: ayahsList,
       rawData: json,
     );

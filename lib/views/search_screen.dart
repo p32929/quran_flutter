@@ -799,9 +799,10 @@ class _SearchScreenState extends State<SearchScreen> {
         return result.ayah.bengali;
       case 'english':
         return result.ayah.english;
+      case 'urdu':
+        return result.ayah.urdu;
       default:
-        return themeController.translationLanguage.value == 'bengali' ? 
-            result.ayah.bengali : result.ayah.english;
+        return result.ayah.translationFor(themeController.translationLanguage.value);
     }
   }
 } 

@@ -7,6 +7,7 @@ import '../controllers/theme_controller.dart';
 import '../controllers/bookmark_controller.dart';
 import '../controllers/audio_controller.dart';
 import '../controllers/last_read_controller.dart';
+import '../controllers/translation_controller.dart';
 import '../models/surah_model.dart';
 import '../models/ayah_model.dart';
 import '../utils/text_styles.dart';
@@ -31,6 +32,7 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
   final ThemeController themeController = Get.find<ThemeController>();
   late final AudioController audioController;
   final LastReadController lastReadController = Get.find<LastReadController>();
+  late final TranslationController translationController;
 
   // Add a local loading state to ensure complete loading
   final RxBool isInitializing = true.obs;
@@ -48,6 +50,11 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
     }
 
     audioController = Get.find<AudioController>();
+
+    if (!Get.isRegistered<TranslationController>()) {
+      Get.put(TranslationController());
+    }
+    translationController = Get.find<TranslationController>();
 
     // Auto-scroll to the playing ayah when it changes (e.g. playlist advances)
     _playingAyahWorker = ever(audioController.currentAyahNumber, (int ayahNumber) {
@@ -627,6 +634,12 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
       final isThisAyahCurrent = audioController.isAyahCurrent(widget.surah.number, ayah.number);
       final isThisAyahPlaying = audioController.isAyahPlaying(widget.surah.number, ayah.number);
 
+      // Read the selected edition HERE (inside the Obx closure) so GetX records
+      // the dependency and the card rebuilds when the translation changes.
+      final edition = translationController.selected;
+      String translationText = translationController.verseText(widget.surah.number, ayah.number);
+      if (translationText.isEmpty) translationText = ayah.translationFor(edition.languageCode);
+
       return AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
@@ -760,7 +773,9 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
             // Only add spacing if both Arabic and translation are visible
             if (showArabic && showTranslation) const SizedBox(height: 16),
 
-            // Translation text based on selected language - conditionally displayed
+            // Translation text from the selected edition - conditionally displayed.
+            // `edition`/`translationText` are read in the enclosing Obx closure
+            // so switching editions rebuilds this text live.
             if (showTranslation)
               Container(
                 padding: showArabic ? null : const EdgeInsets.all(16),
@@ -772,12 +787,14 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
                         border: Border.all(color: colorScheme.outline.withOpacity(0.2)),
                       ),
                 child: Text(
-                  translationLanguage == 'bengali' ? ayah.bengali : ayah.english,
+                  translationText,
                   style: TextStyle(
                     fontSize: englishFontSize,
                     height: 1.6,
                     color: colorScheme.onBackground.withOpacity(0.9),
                   ),
+                  textAlign: edition.isRtl ? TextAlign.right : TextAlign.left,
+                  textDirection: edition.isRtl ? TextDirection.rtl : TextDirection.ltr,
                 ),
               ),
           ],
