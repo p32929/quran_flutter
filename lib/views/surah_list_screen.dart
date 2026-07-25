@@ -258,6 +258,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Card(
+      key: ValueKey('surah_tile_${surah.number}'),
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       elevation: 2,
       shape: RoundedRectangleBorder(

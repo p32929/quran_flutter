@@ -13,9 +13,9 @@ on:
 env:
   FLUTTER_VERSION: "3.38.1"
   FLUTTER_CHANNEL: "stable"
-  # Integration test files, run individually. audio_test self-skips where
-  # just_audio has no backend (Windows/Linux).
-  IT_FILES: "database_test settings_test share_clipboard_test url_launcher_test audio_test"
+  # E2E test files, run individually (each launches the real app). The audio
+  # E2E self-skips where just_audio has no backend (Windows/Linux).
+  IT_FILES: "e2e_boot_read_test e2e_bookmark_test e2e_audio_test e2e_translation_download_test"
 
 jobs:
   # ------------------------------------------------- Host-side unit/config test
