@@ -4,10 +4,7 @@ import '../controllers/quran_controller.dart';
 import '../controllers/theme_controller.dart';
 import '../controllers/bookmark_controller.dart';
 import '../controllers/last_read_controller.dart';
-import '../models/last_read_model.dart';
 import '../models/surah_model.dart';
-import '../routes/app_routes.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'widgets/last_read_bottom_sheet.dart';
 import 'widgets/about_bottom_sheet.dart';
 import 'widgets/theme_bottom_sheet.dart';
@@ -49,6 +46,7 @@ class _SurahListScreenState extends State<SurahListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: _buildTopBar(context),
       body: Obx(() {
         // Show loading only during initial surah list fetch
         if (quranController.isLoading.value) {
@@ -98,6 +96,47 @@ class _SurahListScreenState extends State<SurahListScreen> {
     );
   }
 
+  // Standard app bar so the toolbar color, height, status-bar fill and spacing
+  // match every other screen (all driven by the shared appBarTheme).
+  PreferredSizeWidget _buildTopBar(BuildContext context) {
+    return AppBar(
+      title: Row(
+        children: const [
+          Icon(Icons.menu_book, size: 24),
+          SizedBox(width: 12),
+          Text('The Holy Quran'),
+        ],
+      ),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.bookmark),
+          tooltip: 'Bookmarks',
+          onPressed: () => _showBookmarksBottomSheet(context),
+        ),
+        IconButton(
+          tooltip: 'Theme Settings',
+          onPressed: () => _showThemeDialog(context),
+          icon: Obx(() {
+            if (themeController.useSystemTheme.value) {
+              final brightness = MediaQuery.of(context).platformBrightness;
+              return Icon(
+                brightness == Brightness.dark ? Icons.dark_mode : Icons.light_mode,
+              );
+            } else if (themeController.isDarkMode.value) {
+              return const Icon(Icons.dark_mode);
+            }
+            return const Icon(Icons.light_mode);
+          }),
+        ),
+        IconButton(
+          icon: const Icon(Icons.more_vert),
+          tooltip: 'Menu',
+          onPressed: () => _showMenuBottomSheet(context),
+        ),
+      ],
+    );
+  }
+
   Widget _buildSurahsList(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
@@ -105,84 +144,6 @@ class _SurahListScreenState extends State<SurahListScreen> {
       children: [
         Column(
           children: [
-            // Header with app title and controls
-            SafeArea(
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                color: colorScheme.primary,
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.menu_book,
-                      color: colorScheme.onPrimary,
-                      size: 24,
-                    ),
-                    const SizedBox(width: 12),
-                    Text(
-                      'The Holy Quran',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: colorScheme.onPrimary,
-                      ),
-                    ),
-                    const Spacer(),
-                    // Bookmarks icon
-                    IconButton(
-                      icon: const Icon(Icons.bookmark),
-                      tooltip: 'Bookmarks',
-                      color: colorScheme.onPrimary,
-                      onPressed: () => _showBookmarksBottomSheet(context),
-                    ),
-                    // Theme icon
-                    IconButton(
-                      icon: Obx(() {
-                        if (themeController.useSystemTheme.value) {
-                          // Show the actual current theme with a system indicator
-                          final brightness = MediaQuery.of(context).platformBrightness;
-                          return Stack(
-                            alignment: Alignment.bottomRight,
-                            children: [
-                              // Show the actual current theme icon
-                              Icon(brightness == Brightness.dark ? Icons.dark_mode : Icons.light_mode),
-                              // Add a small indicator that it's system-controlled
-                              Container(
-                                height: 10,
-                                width: 10,
-                                decoration: BoxDecoration(
-                                  color: colorScheme.onPrimary,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  Icons.brightness_auto,
-                                  size: 8,
-                                  color: colorScheme.primary,
-                                ),
-                              ),
-                            ],
-                          );
-                        } else if (themeController.isDarkMode.value) {
-                          return const Icon(Icons.dark_mode);
-                        } else {
-                          return const Icon(Icons.light_mode);
-                        }
-                      }),
-                      tooltip: 'Theme Settings',
-                      color: colorScheme.onPrimary,
-                      onPressed: () => _showThemeDialog(context),
-                    ),
-                    // Menu icon
-                    IconButton(
-                      icon: const Icon(Icons.more_vert),
-                      tooltip: 'Menu',
-                      color: colorScheme.onPrimary,
-                      onPressed: () => _showMenuBottomSheet(context),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
             // Enhanced search box that can search both surahs and ayats
             Padding(
               padding: const EdgeInsets.all(16),

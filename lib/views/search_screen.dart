@@ -52,18 +52,7 @@ class _SearchScreenState extends State<SearchScreen> {
     
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Search Quran',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: colorScheme.onPrimary,
-          ),
-        ),
-        centerTitle: false, // Left align the title
-        backgroundColor: colorScheme.primary,
-        foregroundColor: colorScheme.onPrimary,
-        elevation: 0,
+        title: const Text('Search Quran'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Get.back(),

@@ -238,14 +238,9 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: Column(
-        children: [
-          // Custom app bar
-          _buildAppBar(context),
-
-          // Content area - completely scrollable
-          Expanded(
-            child: Obx(() {
+      appBar: _buildAppBar(context),
+      // Content area - completely scrollable
+      body: Obx(() {
               // Show loading only while this screen initializes or controller fetching detail
               final bool showLoading = isInitializing.value || quranController.isLoading.value;
 
@@ -276,10 +271,7 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
 
                     return _buildAyahsList(showArabic: showArabic, arabicFontSize: arabicFontSize, englishFontSize: englishFontSize, showTranslation: showTranslation, translationLanguage: translationLanguage);
                   });
-            }),
-          ),
-        ],
-      ),
+      }),
     );
   }
 
@@ -321,106 +313,54 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
     );
   }
 
-  Widget _buildAppBar(BuildContext context) {
+  PreferredSizeWidget _buildAppBar(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: colorScheme.primary,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
+    return AppBar(
+      // Two-line title: surah name + translation/ayah count. Colors, height,
+      // status-bar fill and spacing all come from the shared appBarTheme.
+      titleSpacing: 0,
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            widget.surah.name,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+          ),
+          Text(
+            "${widget.surah.nameTranslation} • ${widget.surah.totalAyah} Ayahs",
+            style: TextStyle(
+              fontSize: 12,
+              color: colorScheme.onPrimary.withOpacity(0.8),
+              fontWeight: FontWeight.w500,
+            ),
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),
-      child: SafeArea(
-        child: Container(
-          height: 56, // Standard AppBar height
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-          // Back button
-          IconButton(
-            icon: const Icon(Icons.arrow_back),
-            color: colorScheme.onPrimary,
-            tooltip: 'Back',
-            onPressed: () => Get.back(),
-          ),
-
-          // Surah info - single line, left-aligned
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // Surah name
-                  Text(
-                    widget.surah.name,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: colorScheme.onPrimary,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  // Separator dot
-                  Container(
-                    width: 4,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: colorScheme.onPrimary.withOpacity(0.6),
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  // Translation and ayah count
-                  Expanded(
-                    child: Text(
-                      "${widget.surah.nameTranslation} • ${widget.surah.totalAyah} Ayahs",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: colorScheme.onPrimary.withOpacity(0.8),
-                        fontWeight: FontWeight.w500,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
+      actions: [
+        // Audio play button
+        Obx(() => IconButton(
+              icon: Icon(
+                audioController.isCurrentlyPlaying(widget.surah.number.toString()) ? Icons.stop_circle : Icons.play_circle,
               ),
-            ),
-          ),
-
-          // Audio play button
-          Obx(() => IconButton(
-                icon: Icon(
-                  audioController.isCurrentlyPlaying(widget.surah.number.toString()) ? Icons.stop_circle : Icons.play_circle,
-                ),
-                color: colorScheme.onPrimary,
-                tooltip: audioController.isCurrentlyPlaying(widget.surah.number.toString()) ? 'Stop Audio' : 'Play Audio',
-                onPressed: () {
-                  if (audioController.isCurrentlyPlaying(widget.surah.number.toString())) {
-                    audioController.stopAudio();
-                  } else {
-                    _showAudioBottomSheet(context);
-                  }
-                },
-              )),
-
-          // Settings button
-          IconButton(
-            icon: const Icon(Icons.settings),
-            color: colorScheme.onPrimary,
-            tooltip: 'Settings',
-            onPressed: () => _showSettingsBottomSheet(context),
-          ),
-            ],
-          ),
+              tooltip: audioController.isCurrentlyPlaying(widget.surah.number.toString()) ? 'Stop Audio' : 'Play Audio',
+              onPressed: () {
+                if (audioController.isCurrentlyPlaying(widget.surah.number.toString())) {
+                  audioController.stopAudio();
+                } else {
+                  _showAudioBottomSheet(context);
+                }
+              },
+            )),
+        // Settings button
+        IconButton(
+          icon: const Icon(Icons.settings),
+          tooltip: 'Settings',
+          onPressed: () => _showSettingsBottomSheet(context),
         ),
-      ),
+      ],
     );
   }
 

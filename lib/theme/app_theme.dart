@@ -12,9 +12,21 @@ class AppTheme {
       useMaterial3: true,
       colorScheme: colorScheme,
       appBarTheme: AppBarTheme(
-        backgroundColor: colorScheme.primaryContainer,
-        foregroundColor: colorScheme.onPrimaryContainer,
+        backgroundColor: colorScheme.primary,
+        foregroundColor: colorScheme.onPrimary,
         elevation: 0,
+        // Keep the bar a solid, constant color — no Material 3 tint shift when
+        // content scrolls underneath. Ensures every screen looks identical.
+        scrolledUnderElevation: 0,
+        surfaceTintColor: Colors.transparent,
+        centerTitle: false,
+        titleTextStyle: TextStyle(
+          color: colorScheme.onPrimary,
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+        ),
+        iconTheme: IconThemeData(color: colorScheme.onPrimary),
+        actionsIconTheme: IconThemeData(color: colorScheme.onPrimary),
       ),
       cardTheme: CardThemeData(
         elevation: 2,
@@ -46,9 +58,21 @@ class AppTheme {
       useMaterial3: true,
       colorScheme: colorScheme,
       appBarTheme: AppBarTheme(
-        backgroundColor: colorScheme.primaryContainer,
-        foregroundColor: colorScheme.onPrimaryContainer,
+        backgroundColor: colorScheme.primary,
+        foregroundColor: colorScheme.onPrimary,
         elevation: 0,
+        // Keep the bar a solid, constant color — no Material 3 tint shift when
+        // content scrolls underneath. Ensures every screen looks identical.
+        scrolledUnderElevation: 0,
+        surfaceTintColor: Colors.transparent,
+        centerTitle: false,
+        titleTextStyle: TextStyle(
+          color: colorScheme.onPrimary,
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+        ),
+        iconTheme: IconThemeData(color: colorScheme.onPrimary),
+        actionsIconTheme: IconThemeData(color: colorScheme.onPrimary),
       ),
       cardTheme: CardThemeData(
         elevation: 2,
