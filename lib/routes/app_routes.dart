@@ -5,6 +5,7 @@ import '../views/bookmarks_screen.dart';
 import '../views/surah_details_screen.dart';
 import '../views/settings_screen.dart';
 import '../views/search_screen.dart';
+import '../views/memorize_screen.dart';
 import '../models/surah_model.dart';
 import '../controllers/quran_controller.dart';
 
@@ -14,6 +15,7 @@ class AppRoutes {
   static const String bookmarks = '/bookmarks';
   static const String settings = '/settings';
   static const String search = '/search';
+  static const String memorize = '/memorize/:id';
 
   static final routes = [
     GetPage(
@@ -49,6 +51,24 @@ class AppRoutes {
             return SurahDetailsScreen(surah: foundSurah);
           } else {
             return SurahDetailsScreen(surah: Surah(number: surahId, name: 'Loading...', nameArabic: '', nameArabicLong: '', nameTranslation: '', totalAyah: 0, revelationPlace: ''));
+          }
+        }
+      },
+    ),
+    GetPage(
+      name: memorize,
+      page: () {
+        if (Get.arguments is Surah) {
+          return MemorizeScreen(surah: Get.arguments as Surah);
+        } else {
+          final surahId = int.tryParse(Get.parameters['id'] ?? '1') ?? 1;
+          final quranController = Get.find<QuranController>();
+          final foundSurah = quranController.getSurahByNumber(surahId);
+
+          if (foundSurah != null) {
+            return MemorizeScreen(surah: foundSurah);
+          } else {
+            return MemorizeScreen(surah: Surah(number: surahId, name: 'Loading...', nameArabic: '', nameArabicLong: '', nameTranslation: '', totalAyah: 0, revelationPlace: ''));
           }
         }
       },

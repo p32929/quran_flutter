@@ -3,10 +3,12 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:get/get.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:pref/pref.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'controllers/quran_controller.dart';
 import 'controllers/theme_controller.dart';
 import 'controllers/bookmark_controller.dart';
 import 'controllers/audio_controller.dart';
+import 'controllers/memorize_controller.dart';
 import 'controllers/last_read_controller.dart';
 import 'controllers/translation_controller.dart';
 import 'services/quran_service.dart';
@@ -42,6 +44,16 @@ void main() async {
 
 // Full initialization for mobile platforms
 Future<void> _fullInitialization() async {
+  // Must run before any AudioPlayer is created: wires up the foreground
+  // service + notification/lock-screen media controls so playback (incl.
+  // the memorization loop) survives the screen sleeping / app backgrounding,
+  // and headset/bluetooth play-pause buttons work.
+  await JustAudioBackground.init(
+    androidNotificationChannelId: 'app.megamind.quran.channel.audio',
+    androidNotificationChannelName: 'Quran audio playback',
+    androidNotificationOngoing: true,
+  );
+
   // Initialize the pref service first - this should ensure consistent storage across platforms
   final prefService = await PrefServiceShared.init(
     defaults: {
@@ -96,6 +108,9 @@ Future<void> initServices() async {
 
   // Initialize audio controller
   Get.put(AudioController());
+
+  // Initialize memorize controller (needs AudioController already registered)
+  Get.put(MemorizeController());
 
   // Initialize last read controller
   Get.put(LastReadController());

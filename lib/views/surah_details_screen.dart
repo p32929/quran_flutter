@@ -354,6 +354,14 @@ class _SurahDetailsScreenState extends State<SurahDetailsScreen> {
                 }
               },
             )),
+        // Memorize button
+        IconButton(
+          icon: const Icon(Icons.psychology_outlined),
+          tooltip: 'Memorize',
+          onPressed: () {
+            Get.toNamed('/memorize/${widget.surah.number}', arguments: widget.surah);
+          },
+        ),
         // Settings button
         IconButton(
           icon: const Icon(Icons.settings),
