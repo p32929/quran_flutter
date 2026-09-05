@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../utils/snackbar_utils.dart';
 
 class AboutBottomSheet extends StatelessWidget {
   const AboutBottomSheet({super.key});
@@ -53,7 +54,7 @@ class AboutBottomSheet extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Quran App',
+                    'Al Quran',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -204,23 +205,21 @@ class AboutBottomSheet extends StatelessWidget {
           color: Colors.transparent,
           child: InkWell(
             onTap: () async {
+              // canLaunchUrl() is unreliable here: on Android 11+ it needs a
+              // matching <queries> entry in the manifest to even see a
+              // browser is installed, and without it silently returns false
+              // — which was why tapping these links did nothing. Just
+              // attempt the launch directly instead of gating on it.
               try {
-                final Uri uri = Uri.parse(url);
-                // First try to launch in external app
-                if (await canLaunchUrl(uri)) {
-                  if (!await launchUrl(
-                    uri,
-                    mode: LaunchMode.externalApplication,
-                  )) {
-                    // If that fails, try to launch in browser
-                    await launchUrl(
-                      uri,
-                      mode: LaunchMode.platformDefault,
-                    );
-                  }
+                final launched = await launchUrl(
+                  Uri.parse(url),
+                  mode: LaunchMode.externalApplication,
+                );
+                if (!launched) {
+                  SnackbarUtils.show('Error', 'Could not open $url');
                 }
               } catch (e) {
-                print('Could not launch $url: $e');
+                SnackbarUtils.show('Error', 'Could not open $url');
               }
             },
             borderRadius: BorderRadius.circular(8),

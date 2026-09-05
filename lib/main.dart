@@ -227,7 +227,7 @@ class _QuranWebAppState extends State<QuranWebApp> {
 
     // Show loading screen - just circular progress indicator
     return MaterialApp(
-      title: 'Quran',
+      title: 'Al Quran',
       home: Scaffold(
         body: Container(
           color: const Color(0xffa1d39a), // Using the specified green color
@@ -257,7 +257,7 @@ class QuranApp extends StatelessWidget {
       themeController.updateDynamicColorSchemes(lightDynamic, darkDynamic);
 
       return Obx(() => GetMaterialApp(
-            title: 'Quran App',
+            title: 'Al Quran',
             scaffoldMessengerKey: rootScaffoldMessengerKey,
             theme: themeController.lightTheme,
             darkTheme: themeController.darkTheme,

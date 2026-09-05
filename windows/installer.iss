@@ -5,7 +5,7 @@
 #ifndef MyAppVersion
   #define MyAppVersion "1.0.0"
 #endif
-#define MyAppName "Quran"
+#define MyAppName "Al Quran"
 #define MyAppPublisher "Quran"
 #define MyAppExeName "quran_flutter_v2.exe"
 

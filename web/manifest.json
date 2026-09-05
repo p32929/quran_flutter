@@ -1,6 +1,6 @@
 {
-    "name": "quran_flutter_v2",
-    "short_name": "quran_flutter_v2",
+    "name": "Al Quran",
+    "short_name": "Al Quran",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#FFFFFF",
