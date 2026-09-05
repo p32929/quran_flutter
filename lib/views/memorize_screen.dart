@@ -293,14 +293,34 @@ class _MemorizeScreenState extends State<MemorizeScreen> {
         );
       }
 
+      final downloadedIds = memorizeController.downloadedReciterIds;
+      final downloaded = reciters.where((r) => downloadedIds.contains(r.id)).toList();
+      final rest = reciters.where((r) => !downloadedIds.contains(r.id)).toList();
+
       return ListView(
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.only(bottom: 16),
         children: [
-          for (final reciter in reciters) _buildReciterRow(context, reciter),
+          if (downloaded.isNotEmpty) ...[
+            _buildReciterGroupHeader(context, 'Downloaded'),
+            for (final reciter in downloaded) _buildReciterRow(context, reciter),
+          ],
+          if (downloaded.isNotEmpty && rest.isNotEmpty) _buildReciterGroupHeader(context, 'All reciters'),
+          for (final reciter in rest) _buildReciterRow(context, reciter),
         ],
       );
     });
+  }
+
+  Widget _buildReciterGroupHeader(BuildContext context, String label) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+      child: Text(
+        label.toUpperCase(),
+        style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 0.6, color: colorScheme.primary),
+      ),
+    );
   }
 
   Widget _buildReciterRow(BuildContext context, ReciterInfo reciter) {
