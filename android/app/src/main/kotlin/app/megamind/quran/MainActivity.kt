@@ -1,4 +1,4 @@
-package com.example.quran_flutter_v2
+package app.megamind.quran
 
 import android.content.Context
 import com.ryanheise.audioservice.AudioServicePlugin

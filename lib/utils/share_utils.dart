@@ -16,7 +16,7 @@ class ShareUtils {
     );
     
     try {
-      await Share.share(text);
+      await SharePlus.instance.share(ShareParams(text: text));
     } catch (e) {
       // Fallback to clipboard if sharing fails (common on web)
       Clipboard.setData(ClipboardData(text: text));

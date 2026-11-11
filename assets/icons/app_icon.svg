@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="38%" r="75%">
+      <stop offset="0" stop-color="#1d5a52"/>
+      <stop offset="0.55" stop-color="#0f3b3a"/>
+      <stop offset="1" stop-color="#08201f"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f8e3a3"/>
+      <stop offset="0.5" stop-color="#e2b55a"/>
+      <stop offset="1" stop-color="#b9862f"/>
+    </linearGradient>
+    <linearGradient id="page" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fffaf0"/>
+      <stop offset="1" stop-color="#efe2c4"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#f8e3a3" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#f8e3a3" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+  <g transform="translate(512 512) scale(0.8) translate(-512 -530)">
+  <!-- soft light behind -->
+  <circle cx="512" cy="420" r="380" fill="url(#glow)"/>
+  <!-- Rub el Hizb: an eight-point star with a small star inside -->
+  <g transform="translate(512 330)" stroke-linejoin="round">
+    <g fill="#0f3b3a" stroke="url(#gold)" stroke-width="14">
+      <rect x="-150" y="-150" width="300" height="300"/>
+      <rect x="-150" y="-150" width="300" height="300" transform="rotate(45)"/>
+    </g>
+    <rect x="-136" y="-136" width="272" height="272" fill="#0f3b3a"/>
+    <rect x="-136" y="-136" width="272" height="272" transform="rotate(45)" fill="#0f3b3a"/>
+    <circle r="78" fill="none" stroke="url(#gold)" stroke-width="10"/>
+    <g fill="url(#gold)">
+      <rect x="-34" y="-34" width="68" height="68"/>
+      <rect x="-34" y="-34" width="68" height="68" transform="rotate(45)"/>
+    </g>
+  </g>
+  <!-- open book -->
+  <g transform="translate(512 610)">
+    <path d="M0 -150 C -70 -190 -190 -195 -290 -165 L -290 95 C -190 65 -70 70 0 110 Z" fill="url(#page)"/>
+    <path d="M0 -150 C 70 -190 190 -195 290 -165 L 290 95 C 190 65 70 70 0 110 Z" fill="url(#page)"/>
+    <!-- text lines -->
+    <g fill="none" stroke="#c9a65a" stroke-width="9" stroke-linecap="round" opacity="0.8">
+      <path d="M-245 -115 C -180 -133 -100 -133 -40 -110"/>
+      <path d="M-245 -65 C -180 -83 -100 -83 -40 -60"/>
+      <path d="M-245 -15 C -180 -33 -100 -33 -40 -10"/>
+      <path d="M-245 35 C -180 17 -100 17 -40 40"/>
+      <path d="M245 -115 C 180 -133 100 -133 40 -110"/>
+      <path d="M245 -65 C 180 -83 100 -83 40 -60"/>
+      <path d="M245 -15 C 180 -33 100 -33 40 -10"/>
+      <path d="M245 35 C 180 17 100 17 40 40"/>
+    </g>
+    <!-- cover edge -->
+    <path d="M0 110 C -70 70 -190 65 -290 95 L -290 120 C -190 92 -70 98 0 140 C 70 98 190 92 290 120 L 290 95 C 190 65 70 70 0 110 Z" fill="url(#gold)"/>
+    <!-- rehal stand -->
+    <g stroke="url(#gold)" stroke-width="30" stroke-linecap="round">
+      <path d="M-200 135 L 150 290"/>
+      <path d="M200 135 L -150 290"/>
+    </g>
+  </g>
+  </g>
+</svg>
