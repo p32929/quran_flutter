@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:get/get.dart';
 import 'package:pref/pref.dart';
 import '../services/memorization_download_service.dart';
@@ -105,6 +106,12 @@ class MemorizeController extends GetxController {
 
   Future<void> refreshDownloadStatus() async {
     if (surahNumber.value == 0 || reciterId.value.isEmpty || totalAyah.value == 0) return;
+    // A browser can't save files: on the web the recitation is streamed (and
+    // cached by the browser), so there is nothing to download first.
+    if (kIsWeb) {
+      isDownloaded.value = true;
+      return;
+    }
     isCheckingDownload.value = true;
     try {
       isDownloaded.value = await _downloadService.isSurahFullyDownloaded(
@@ -154,7 +161,7 @@ class MemorizeController extends GetxController {
   }
 
   Future<void> deleteDownload() async {
-    if (surahNumber.value == 0 || reciterId.value.isEmpty) return;
+    if (kIsWeb || surahNumber.value == 0 || reciterId.value.isEmpty) return;
     await stopLoop();
     await _downloadService.deleteSurah(surahNumber.value, reciterId.value);
     isDownloaded.value = false;
@@ -173,17 +180,21 @@ class MemorizeController extends GetxController {
 
   Future<void> playLoop() async {
     if (!isDownloaded.value) return;
-    final paths = <String>[];
+    final dir = _everyAyahDir;
+    if (kIsWeb && dir == null) return;
+    final sources = <Uri>[];
     for (int a = rangeStart.value; a <= rangeEnd.value; a++) {
-      paths.add(await _downloadService.ayahFilePath(surahNumber.value, reciterId.value, a));
+      sources.add(kIsWeb
+          ? Uri.parse(_downloadService.everyAyahUrl(dir!, surahNumber.value, a))
+          : Uri.file(await _downloadService.ayahFilePath(surahNumber.value, reciterId.value, a)));
     }
-    if (paths.isEmpty) return;
+    if (sources.isEmpty) return;
 
     isLooping.value = true;
     await _audioController.playLocalRangeLooping(
       surahNumber: surahNumber.value,
       startAyah: rangeStart.value,
-      localFilePaths: paths,
+      sources: sources,
     );
   }
 

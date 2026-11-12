@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/audio_controller.dart';
@@ -172,8 +173,9 @@ class _MemorizeScreenState extends State<MemorizeScreen> {
               'Ayah ${memorizeController.rangeStart.value} – ${memorizeController.rangeEnd.value}',
               style: TextStyle(color: colorScheme.onPrimaryContainer, fontWeight: FontWeight.w600, fontSize: 13),
             ),
-            TextButton(
-              onPressed: memorizeController.deleteDownload,
+            if (!kIsWeb)
+              TextButton(
+                onPressed: memorizeController.deleteDownload,
               style: TextButton.styleFrom(padding: EdgeInsets.zero, minimumSize: const Size(0, 0), tapTargetSize: MaterialTapTargetSize.shrinkWrap),
               child: const Text('Delete download', style: TextStyle(fontSize: 12)),
             ),

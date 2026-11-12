@@ -1,7 +1,9 @@
 // E2E: the Memorize screen downloads a surah's recitation to the device and
-// loops it from the downloaded files. Uses the real download (network ->
+// loops it from the downloaded files (on the web it streams instead, since a
+// browser can't save files). Uses the real download (network ->
 // app documents folder) and real playback, so it fails wherever file storage
 // or local-file audio is broken.
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
@@ -18,18 +20,21 @@ void main() {
     await openSurah(tester, 1);
 
     await tester.tap(find.byTooltip('Memorize'));
-    await pumpUntilFound(tester, find.text('Download 7 ayahs'),
-        timeout: const Duration(seconds: 30),
-        reason: 'the download button on the Memorize screen');
-
     final mem = Get.find<MemorizeController>();
-    await tester.tap(find.text('Download 7 ayahs'));
-    final downloaded = await pumpUntilTrue(
-        tester, () => mem.isDownloaded.value && !mem.isDownloading.value,
-        timeout: const Duration(seconds: 90));
-    expect(downloaded, isTrue,
-        reason: 'all 7 ayahs should be saved on the device');
+    if (!kIsWeb) {
+      await pumpUntilFound(tester, find.text('Download 7 ayahs'),
+          timeout: const Duration(seconds: 30),
+          reason: 'the download button on the Memorize screen');
 
+      await tester.tap(find.text('Download 7 ayahs'));
+      final downloaded = await pumpUntilTrue(
+          tester, () => mem.isDownloaded.value && !mem.isDownloading.value,
+          timeout: const Duration(seconds: 90));
+      expect(downloaded, isTrue,
+          reason: 'all 7 ayahs should be saved on the device');
+    }
+    await pumpUntilFound(tester, find.byIcon(Icons.repeat),
+        timeout: const Duration(seconds: 30), reason: 'the loop button');
     await tester.tap(find.byIcon(Icons.repeat).first);
     final audio = Get.find<AudioController>();
     final played = await pumpUntilTrue(
@@ -41,7 +46,9 @@ void main() {
         reason: 'the downloaded files should play in a loop');
 
     await mem.stopLoop();
-    await mem.deleteDownload();
-    expect(mem.isDownloaded.value, isFalse);
+    if (!kIsWeb) {
+      await mem.deleteDownload();
+      expect(mem.isDownloaded.value, isFalse);
+    }
   });
 }

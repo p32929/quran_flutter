@@ -35,7 +35,7 @@ class MemorizationDownloadService {
     return results.every((downloaded) => downloaded);
   }
 
-  String _everyAyahUrl(String everyAyahDir, int surahNumber, int ayahNumber) {
+  String everyAyahUrl(String everyAyahDir, int surahNumber, int ayahNumber) {
     final s = surahNumber.toString().padLeft(3, '0');
     final a = ayahNumber.toString().padLeft(3, '0');
     return 'https://everyayah.com/data/$everyAyahDir/$s$a.mp3';
@@ -69,7 +69,7 @@ class MemorizationDownloadService {
           final path = await ayahFilePath(surahNumber, reciterId, a);
           final file = File(path);
           if (!await file.exists() || (await file.length()) == 0) {
-            final response = await http.get(Uri.parse(_everyAyahUrl(everyAyahDir, surahNumber, a)));
+            final response = await http.get(Uri.parse(everyAyahUrl(everyAyahDir, surahNumber, a)));
             if (response.statusCode != 200) {
               throw Exception('Failed to download ayah $a (HTTP ${response.statusCode})');
             }

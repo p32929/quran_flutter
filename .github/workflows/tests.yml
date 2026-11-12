@@ -115,6 +115,8 @@ jobs:
           channel: ${{ env.FLUTTER_CHANNEL }}
           cache: true
       - run: flutter pub get
+      # The test machine has no default browser for web links; a real desktop does.
+      - run: xdg-settings set default-web-browser google-chrome.desktop
       - name: Run integration tests (Linux, under xvfb)
         run: |
           xvfb-run -a bash -c '
@@ -175,7 +177,8 @@ jobs:
             flutter drive \
               --driver=test_driver/integration_test.dart \
               --target=integration_test/$f.dart \
-              -d web-server --browser-name chrome --release || bad="$bad $f"
+              -d web-server --browser-name chrome --release \
+              --web-browser-flag=--autoplay-policy=no-user-gesture-required || bad="$bad $f"
             echo "::endgroup::"
           done
           [ -z "$bad" ] || { echo "::error::Failed:$bad"; exit 1; }

@@ -390,12 +390,12 @@ class AudioController extends GetxController {
 
   // Plays a range of already-downloaded local ayah files on a continuous
   // loop, so the user can listen to the same passage repeatedly to
-  // memorize it. `localFilePaths` must be ordered ayah-by-ayah starting at
+  // memorize it. `sources` (files, or web addresses on the web) must be ordered ayah-by-ayah starting at
   // `startAyah`.
   Future<void> playLocalRangeLooping({
     required int surahNumber,
     required int startAyah,
-    required List<String> localFilePaths,
+    required List<Uri> sources,
   }) async {
     if (!_isInitialized) {
       _initializeAudioPlayer();
@@ -407,7 +407,7 @@ class AudioController extends GetxController {
       return;
     }
 
-    if (localFilePaths.isEmpty) return;
+    if (sources.isEmpty) return;
 
     try {
       isLoading.value = true;
@@ -423,9 +423,9 @@ class AudioController extends GetxController {
 
       final playlist = ConcatenatingAudioSource(
         children: [
-          for (int i = 0; i < localFilePaths.length; i++)
+          for (int i = 0; i < sources.length; i++)
             AudioSource.uri(
-              Uri.file(localFilePaths[i]),
+              sources[i],
               tag: _mediaItem(surahNumber, startAyah + i, album: 'Memorizing'),
             ),
         ],
