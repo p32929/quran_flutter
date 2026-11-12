@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kIsWeb, defaultTargetPlatform, TargetPlatform;
 import 'package:get/get.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:pref/pref.dart';
 import 'package:just_audio_background/just_audio_background.dart';
+import 'package:just_audio_media_kit/just_audio_media_kit.dart';
 import 'controllers/quran_controller.dart';
 import 'controllers/theme_controller.dart';
 import 'controllers/bookmark_controller.dart';
@@ -48,11 +49,20 @@ Future<void> _fullInitialization() async {
   // service + notification/lock-screen media controls so playback (incl.
   // the memorization loop) survives the screen sleeping / app backgrounding,
   // and headset/bluetooth play-pause buttons work.
-  await JustAudioBackground.init(
-    androidNotificationChannelId: 'app.megamind.quran.channel.audio',
-    androidNotificationChannelName: 'Quran audio playback',
-    androidNotificationOngoing: true,
-  );
+  // just_audio has no Windows/Linux player of its own: media_kit (libmpv)
+  // plays the audio there. There is no lock-screen service on desktop, so the
+  // background wrapper is only set up on the other platforms.
+  final desktopAudio = defaultTargetPlatform == TargetPlatform.windows ||
+      defaultTargetPlatform == TargetPlatform.linux;
+  if (desktopAudio) {
+    JustAudioMediaKit.ensureInitialized(linux: true, windows: true);
+  } else {
+    await JustAudioBackground.init(
+      androidNotificationChannelId: 'app.megamind.quran.channel.audio',
+      androidNotificationChannelName: 'Quran audio playback',
+      androidNotificationOngoing: true,
+    );
+  }
 
   // Initialize the pref service first - this should ensure consistent storage across platforms
   final prefService = await PrefServiceShared.init(
